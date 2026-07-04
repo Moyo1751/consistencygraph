@@ -64,55 +64,56 @@ def find_location_inconsistencies():
             issues.append(record)
         return issues
 
-# === DEMO SCRIPT ===
 
-print("=" * 50)
-print("WORLD-BUILDING CONSISTENCY CHECKER - DEMO")
-print("=" * 50)
+if __name__ == "__main__":
+    # === DEMO SCRIPT ===
+    print("=" * 50)
+    print("WORLD-BUILDING CONSISTENCY CHECKER - DEMO")
+    print("=" * 50)
 
-clear_database()
+    clear_database()
 
-# Simulate extracted facts from chapters (normally this comes from NLP)
-print("\n[Processing Chapter 1...]")
-print("  Found: Aldric is 27 years old")
-print("  Found: Aldric is in Thornhaven")
-store_character_age("Aldric", 27, 1)
-store_character_location("Aldric", "Thornhaven", 1)
+    # Simulate extracted facts from chapters (normally this comes from NLP)
+    print("\n[Processing Chapter 1...]")
+    print("  Found: Aldric is 27 years old")
+    print("  Found: Aldric is in Thornhaven")
+    store_character_age("Aldric", 27, 1)
+    store_character_location("Aldric", "Thornhaven", 1)
 
-print("\n[Processing Chapter 2...]")
-print("  Found: Aldric is in Mount Kaelos")
-store_character_location("Aldric", "Mount Kaelos", 2)
+    print("\n[Processing Chapter 2...]")
+    print("  Found: Aldric is in Mount Kaelos")
+    store_character_location("Aldric", "Mount Kaelos", 2)
 
-print("\n[Processing Chapter 3...]")
-print("  Found: Aldric is 32 years old")  # INCONSISTENCY: only weeks have passed!
-print("  Found: Aldric is in Thornhaven")
-print("  Found: Aldric is in Mount Kaelos")  # INCONSISTENCY: two places same chapter!
-store_character_age("Aldric", 32, 3)
-store_character_location("Aldric", "Thornhaven", 3)
-store_character_location("Aldric", "Mount Kaelos", 3)
+    print("\n[Processing Chapter 3...]")
+    print("  Found: Aldric is 32 years old")  # INCONSISTENCY: only weeks have passed!
+    print("  Found: Aldric is in Thornhaven")
+    print("  Found: Aldric is in Mount Kaelos")  # INCONSISTENCY: two places same chapter!
+    store_character_age("Aldric", 32, 3)
+    store_character_location("Aldric", "Thornhaven", 3)
+    store_character_location("Aldric", "Mount Kaelos", 3)
 
-# Check for inconsistencies
-print("\n" + "=" * 50)
-print("CONSISTENCY CHECK RESULTS")
-print("=" * 50)
+    # Check for inconsistencies
+    print("\n" + "=" * 50)
+    print("CONSISTENCY CHECK RESULTS")
+    print("=" * 50)
 
-age_issues = find_age_inconsistencies()
-location_issues = find_location_inconsistencies()
+    age_issues = find_age_inconsistencies()
+    location_issues = find_location_inconsistencies()
 
-if not age_issues and not location_issues:
-    print("\n✓ No inconsistencies found!")
-else:
-    if age_issues:
-        print("\n⚠ AGE INCONSISTENCIES:")
-        for issue in age_issues:
-            print(f"  {issue['character']}: age {issue['age1']} in chapter {issue['chapter1']}, "
-                  f"but age {issue['age2']} in chapter {issue['chapter2']}")
-    
-    if location_issues:
-        print("\n⚠ LOCATION INCONSISTENCIES:")
-        for issue in location_issues:
-            print(f"  {issue['character']}: in both {issue['location1']} and {issue['location2']} "
-                  f"during chapter {issue['chapter']}")
+    if not age_issues and not location_issues:
+        print("\n✓ No inconsistencies found!")
+    else:
+        if age_issues:
+            print("\n⚠ AGE INCONSISTENCIES:")
+            for issue in age_issues:
+                print(f"  {issue['character']}: age {issue['age1']} in chapter {issue['chapter1']}, "
+                    f"but age {issue['age2']} in chapter {issue['chapter2']}")
+        
+        if location_issues:
+            print("\n⚠ LOCATION INCONSISTENCIES:")
+            for issue in location_issues:
+                print(f"  {issue['character']}: in both {issue['location1']} and {issue['location2']} "
+                    f"during chapter {issue['chapter']}")
 
-driver.close()
-print("\n" + "=" * 50)
+    driver.close()
+    print("\n" + "=" * 50)
