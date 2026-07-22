@@ -29,18 +29,16 @@ nlp = spacy.load("en_core_web_sm")
 # ## Run it:
 # ## python extract.py
 
-def extract(text, chapter): 
+def extract(text: str, chapter: int) -> list[dict[str, str | int]]: 
     doc = nlp(text)
-    result = []
-
-    for ent in doc.ents:
-        result.append({"text": ent.text, "label": ent.label_, "chapter": chapter, "startChar": ent.start_char, "endChar": ent.end_char})
-
+    
     # returns all labels intentionally — filter at consumer, keeping the RQ1 baseline honest
+    result = [{"text": ent.text, "label": ent.label_, "chapter": chapter, "startChar": ent.start_char, "endChar": ent.end_char} for ent in doc.ents]
+
     return result
 
 
-ext = extract("Aldric Stormborn had not seen the outskirts of Thornton in fifteen years. The last time he had passed through these gates, he was a boy of twelve, fleeing the coup that killed his father, King Aldric the Elder.", 1)
+ext = extract("Aldric Stormborn had not seen the walls of Thornhaven in fifteen years. The last time he had passed through these gates, he was a boy of twelve, fleeing the coup that killed his father, King Aldric the Elder.", 1)
 print(ext)
 for data in ext:
     print(f" {data["text"]} -> {data["label"]} (start: {data["startChar"]}, end: {data["endChar"]}) -> Chapter {data["chapter"]}")
