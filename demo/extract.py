@@ -37,8 +37,6 @@ def extract(text: str, chapter: int) -> list[dict[str, str | int]]:
 
     return result
 
-dummyText = "Aldric Stormborn had not seen the walls of Thornton in fifteen years. The last time he had passed through these gates, he was a boy of twelve, fleeing the coup that killed his father, King Aldric the Elder."
-
 # ext = extract(dummyText, 1)
 # print(ext)
 # for data in ext:
@@ -64,5 +62,9 @@ def pair_character_locations(text, chapter):
 
     return character_location_pairs
 
-pairs = pair_character_locations(dummyText, 1)
-print(pairs)
+
+if __name__ == "__main__":
+    dummyText = "Aldric Stormborn had not seen the walls of Thornton in fifteen years. The last time he had passed through these gates, he was a boy of twelve, fleeing the coup that killed his father, King Aldric the Elder."
+
+    pairs = pair_character_locations(dummyText, 1)
+    print(pairs)
