@@ -128,3 +128,30 @@ more work. This is the entity-vs-relationship-extraction difficulty gap (RQ2/RQ3
 
 Also deferred: pair() and extract() each call nlp(text) separately (two passes).
 Dedupe by creating doc once and passing it to both, once the module split happens.
+
+## CG-11 done — full pipeline round-trip (4 Aug)
+
+End-to-end pipeline working: prose -> spaCy extraction -> same-sentence pairing
+-> store_pairs() loop -> Neo4j. Verified in Neo4j Browser: the sentence
+"Aldric Stormborn had not seen the walls of Thornton..." produced three nodes —
+Character (Aldric Stormborn), Location (Thornton), and a Presence node
+(chapter: 1) linking them via IS_AT and LOCATION. The reification pattern
+(Character -[:IS_AT]-> Presence -[:LOCATION]-> Location, chapter on Presence)
+confirmed working on real extracted data, not hardcoded facts.
+
+Wiring: new file pipeline.py imports pair_character_locations from extract and
+store_character_location/clear_database from demo, defines store_pairs(pairs)
+which loops pairs and calls storage. Option B taken: store functions still use
+the module-global driver (driver-as-parameter refactor deferred to CG-13).
+
+Limitation reconfirmed live: only "Aldric -> Thornton" stored; "King Aldric the
+Elder" in the same test text was NOT paired because a sentence boundary fell
+between him and Thornton. The end-to-end run reproduced the known cross-sentence
+miss (already logged 24 Jul). Nothing to fix — expected behaviour.
+
+Still pending in Foundation: CG-10 (registry — the main unbuilt piece, rescues
+CARDINAL-misclassified locations like Thornhaven), CG-12 (schema — mostly
+designed, needs writing up + sentence_index decision), CG-13 (storage — store
+functions exist; remaining work is driver-as-parameter refactor). Also still
+pending: proper module split (extraction / storage / detection) and dedupe of
+the double nlp() load across extract.py and demo.py.
