@@ -37,8 +37,32 @@ def extract(text: str, chapter: int) -> list[dict[str, str | int]]:
 
     return result
 
+dummyText = "Aldric Stormborn had not seen the walls of Thornton in fifteen years. The last time he had passed through these gates, he was a boy of twelve, fleeing the coup that killed his father, King Aldric the Elder."
 
-ext = extract("Aldric Stormborn had not seen the walls of Thornhaven in fifteen years. The last time he had passed through these gates, he was a boy of twelve, fleeing the coup that killed his father, King Aldric the Elder.", 1)
-print(ext)
-for data in ext:
-    print(f" {data["text"]} -> {data["label"]} (start: {data["startChar"]}, end: {data["endChar"]}) -> Chapter {data["chapter"]}")
+# ext = extract(dummyText, 1)
+# print(ext)
+# for data in ext:
+#     print(f" {data["text"]} -> {data["label"]} (start: {data["startChar"]}, end: {data["endChar"]}) -> Chapter {data["chapter"]}")
+
+
+
+def pair_character_locations(text, chapter): 
+    doc = nlp(text)
+
+    character_location_pairs = []
+
+    for sent in doc.sents: 
+        characters = []
+        locations = []
+        characters = [ent.text for ent in sent.ents if ent.label_ == "PERSON"]
+        locations = [ent.text for ent in sent.ents if ent.label_ == "GPE"]
+
+        if characters and locations:
+             for character in characters:
+                  for location in locations: 
+                        character_location_pairs.append({"character": character, "location": location, "chapter": chapter})
+
+    return character_location_pairs
+
+pairs = pair_character_locations(dummyText, 1)
+print(pairs)

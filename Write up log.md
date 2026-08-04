@@ -98,3 +98,33 @@ character WITH an age. So something has to sit in between and do two jobs:
 
 Job 1 is easy. Job 2 is the hard part and is really relationship extraction, which
 is harder than entity extraction — worth saying so for RQ2/RQ3.
+
+## Crude character–location pairing (24 Jul)
+
+Built pair_character_locations(text, chapter) as the first middle layer between
+extraction and storage. Approach: walk doc.sents; within each sentence collect
+PERSON entities and GPE entities into two lists; emit a pairing for every
+person × location in that sentence. Returns list of dicts:
+{"character", "location", "chapter"}.
+
+Deliberate choices / known limitations (all for the evaluation + RQ3 discussion):
+
+- GPE only. Dropped CARDINAL from the location filter — it was scooping up numbers
+  like "twelve" as locations. Cost: invented names spaCy misreads as CARDINAL
+  (e.g. Thornhaven) are missed here. That's the registry's job (CG-10), not the
+  pairer's. Verified: the Thornhaven sentence correctly returns [] (no pair);
+  the Thornton sentence returns the pair.
+- Same-sentence assumption is crude. If a person and place sit in different
+  sentences, no pair is made — observed directly (King Aldric didn't pair with
+  Thornton because the sentence boundary fell between them). Cross-sentence
+  relationships are missed.
+- No verb/negation awareness. "Aldric had never been to X" would still pair
+  Aldric with X. Same-sentence co-occurrence ≠ actually being there.
+- Over-pairing: N people + M places in one sentence => N×M pairs, some wrong.
+
+Planned improvement (deferred): use dependency parse / preposition + verb evidence
+("in"/"at" vs "never"/"left") instead of raw co-occurrence. More accurate,
+more work. This is the entity-vs-relationship-extraction difficulty gap (RQ2/RQ3).
+
+Also deferred: pair() and extract() each call nlp(text) separately (two passes).
+Dedupe by creating doc once and passing it to both, once the module split happens.
