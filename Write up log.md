@@ -155,3 +155,129 @@ designed, needs writing up + sentence_index decision), CG-13 (storage — store
 functions exist; remaining work is driver-as-parameter refactor). Also still
 pending: proper module split (extraction / storage / detection) and dedupe of
 the double nlp() load across extract.py and demo.py.
+
+## CG-10 registry — started (6 Aug)
+
+Manual entity registry: closes the RQ1 gap from the baseline (spaCy misclassifies
+invented locations by morphology, e.g. Thornhaven -> CARDINAL). Registry keys on
+KNOWN IDENTITY instead of spaCy's guessed label. Chosen design (Path A): a flat
+JSON name->type map, loaded into a dict, looked up with .get() (returns None on
+miss). Kept transparent/explicit rather than spaCy's built-in EntityRuler (Path B)
+so the registry's correction is measurable for RQ1 (can log "spaCy said X, registry
+overrode to Y"). EntityRuler noted as the slicker-but-less-measurable alternative.
+
+Registry values use SCHEMA vocabulary (Character/Location), not spaCy's
+(PERSON/GPE), so no translation needed downstream.
+
+DEFERRED / schema decisions surfaced:
+
+- Organisations (Houses, The Magic Tower, Kerenath, Zemarel) PARKED. The pipeline
+  has no Organisation node type — schema handles Character + Location only.
+  CG-12 needs to decide: what IS a House in the graph? (a Location? a group of
+  Characters? a new node type with its own relationships?). Until then, ORG-type
+  names stay out of the registry. Scratch list to re-add later: The Magic Tower,
+  House Zemarel, House Kerenath, Kerenath, Zemarel.
+- Name-variant aliasing reconfirmed: "Roisen"/"Roisen Vardael"/"Ro"/"Vardael" are
+  one character but four dict keys. Fine for typing (all -> Character), but MERGE
+  keys on exact string, so the graph will treat them as four separate people.
+  Same fragility logged 24 Jul/RQ1 Finding 3. Not solved this sprint.
+
+Corpus note: made-up names used for code testing are THROWAWAY plumbing data —
+findings must only accrue to the real invented names (Thornhaven etc.). The
+evaluation corpus (CG-16) must be the real manuscript. When writing the 3-4 test
+chapters (~1-3k words each), PLANT deliberate, annotated inconsistencies (aim for
+~20 across age/location/timeline) and keep a gold-standard annotation of where
+they are. Optimise for inconsistency COUNT, not word count.
+
+## Planned module split (6 Aug) — DEFERRED, do not do mid-task
+
+pipeline.py is accreting unrelated jobs (registry, storage wiring, resolution).
+Target structure once the pipeline flows and there's a natural pause:
+
+- config.py (or shared.py): the nlp and driver globals, created ONCE and imported
+  everywhere. Also kills the double nlp() load (extract.py + demo.py each load
+  spaCy today).
+- registry.py: JSON load + lookup().
+- extraction.py: extract, pair_character_locations, resolve_entity_types
+  (everything that turns text into resolved facts).
+- storage.py: store_character_location, store_pairs, clear_database.
+- detection.py: find_age_inconsistencies, find_location_inconsistencies.
+- pipeline.py: becomes THIN — imports the above and orchestrates the flow only.
+
+Deliberately NO utils.py: "utilities/helpers/misc" files have no cohesion and
+become a second junk drawer. Group by what code is ABOUT (its domain), not by
+"it's a helper." Only add utils.py if a genuinely generic function emerges from
+real duplication — let it emerge, don't pre-build the bucket.
+
+Not to be done until Foundation code flows end-to-end. This is a tidy-up pass,
+not a feature — must not displace actual build work.
+
+## CG-10 registry integration working — resolve_entity_types (6 Aug)
+
+resolve_entity_types(entities) implements registry-as-authority resolution.
+Per entity, three-step priority: (1) registry lookup on the text wins if hit;
+(2) else translate spaCy label via SPACY_TO_SCHEMA (PERSON->Character,
+GPE->Location); (3) else None. Output keeps spaCy's raw `label` UNTOUCHED and
+adds `resolved_type` — so the before/after is preserved for RQ1.
+
+VERIFIED — the key RQ1 result, in the data:
+Thornhaven -> label=CARDINAL, resolved_type=Location
+spaCy misclassified the invented location as CARDINAL (a number); the registry
+recovered it as Location. Both values coexist in the output, so the correction
+is measurable (spaCy-said vs registry-resolved). This is the empirical payoff of
+the registry and the answer to "does the registry fix the morphology-driven NER
+failure" — yes, and here's the evidence row.
+
+All four branches confirmed on one sentence:
+
+- Thornhaven: CARDINAL -> Location (registry rescued a spaCy failure)
+- Kaldon: GPE -> Location (spaCy right; map translates to schema vocab)
+- King Reveth/Shadow Blade: PERSON -> Character (map, no registry entry needed)
+- fifteen years / twelve: DATE|CARDINAL -> None (no schema home; ignored downstream)
+
+Noticed (not fixed): "King Reveth the Shadow Blade" — spaCy split the epithet, so
+"Shadow Blade" became a phantom PERSON->Character. Entity-boundary fragility, same
+family as baseline NER limitations. Not a resolution bug. Flag for RQ1/RQ3 limits.
+
+Still to do on CG-10: resolve_entity_types is verified in isolation but NOT yet
+wired into the storage flow — pairing/storage still consume raw extract output,
+so Thornhaven's rescue doesn't yet reach Neo4j. Wiring resolution into the
+pipeline is the remaining step.
+
+## CG-10 wiring + a key RQ1 finding: two NER failure modes (14 Aug)
+
+Wired resolution into the storage path (Option B): create doc = nlp(text) ONCE,
+resolve_entity_types(doc) reads doc.ents, orchestrator builds a {text:resolved_type}
+map, pair_character_locations(doc, chapter, resolved_map) now filters on
+resolved_map.get(ent.text) == "Character"/"Location" instead of raw spaCy labels.
+Also imports the single shared nlp from extract (kills the double nlp() load).
+
+Thornhaven half works: resolves CARDINAL -> Location correctly via registry.
+
+BUT running on "Elior Kerenath had not seen the walls of Thornhaven..." produced
+EMPTY pairs. Diagnosis (verified by printing doc.ents):
+Entities found: (Thornhaven, fifteen years, twelve, King Reveth, Shadow Blade)
+"Elior Kerenath" is NOT in doc.ents at all — spaCy never detected it as an entity.
+Shortening to bare "Kerenath" ALSO missed. So the invented name at sentence-start
+isn't picked up, while "King Reveth" IS (the title "King" likely cues spaCy's model).
+
+=> KEY RQ1 FINDING: there are TWO distinct NER failure modes, and the registry
+only addresses one:
+
+1. MISCLASSIFICATION — spaCy finds the entity, wrong type (Thornhaven->CARDINAL).
+   Registry FIXES this (resolve_entity_types overrides the label). ✓
+2. NON-DETECTION — spaCy never emits the entity at all (Elior/Kerenath).
+   Registry CANNOT fix this: resolve_entity_types only loops doc.ents, so a name
+   spaCy didn't find is never looked up. The registry entry for "Elior Kerenath"
+   exists but is never consulted.
+
+Consequence: registry-as-authority-over-spaCy corrects labels but cannot recover
+missed entities. To catch non-detection, the registry must be consulted
+INDEPENDENTLY of spaCy detection — i.e. scan text for registered names directly
+(spaCy PhraseMatcher / EntityRuler injects known names so they BECOME entities).
+That is the genuine "hybrid" pipeline. DEFERRED — real design change, do rested.
+This limitation is itself a strong RQ1/RQ3 result (honest failure-mode taxonomy),
+worth more written up clearly than rushed into a fix tonight.
+
+Also noted: "Shadow Blade" still appears as a phantom PERSON->Character (epithet
+split from "King Reveth the Shadow Blade"). Entity-boundary error, separate issue.
