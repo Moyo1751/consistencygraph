@@ -1,5 +1,10 @@
-from extract import pair_character_locations
+from extract import pair_character_locations, extract, nlp
 from demo import store_character_location, clear_database, find_location_inconsistencies
+
+import json
+
+with open("registry.json") as f:
+    registry = json.load(f)
 
 def store_pairs(pairs):
     for pair in pairs:
@@ -9,18 +14,40 @@ def store_pairs(pairs):
         store_character_location(name, location, chapter)
         print(f"Stored: {name} at {location} in chapter {chapter}")
 
+def lookup(name: str) -> str | None:
+    return registry.get(name)
+
+SPACY_TO_SCHEMA = {
+    "PERSON": "Character",
+    "GPE": "Location",
+}
+
+def resolve_entity_types(doc):
+    resolved_entities = []
+    for ent in doc.ents:
+        text = ent.text
+        label = ent.label_
+        lookup_result = lookup(text)
+        if lookup_result:
+            resolved_entities.append({"text": text, "label": label, "resolved_type": lookup_result})
+        else:
+            resolved_entities.append({"text": text, "label": label, "resolved_type": SPACY_TO_SCHEMA.get(label)})
+
+    return resolved_entities
+
+
+
 
 
 if __name__ == "__main__":
-    # Testing the store_pairs function with dummy data
-    clear_database()  # Clear the database before storing new data
-    dummy_text = "Aldric Stormborn had not seen the walls of Thornton in fifteen years. The last time he had passed through these gates, he was a boy of twelve, fleeing the coup that killed his father, King Aldric the Elder."
-    dummy_pairs = pair_character_locations(dummy_text, 1)
-    print("Storing the following character-location pairs:")
-    store_pairs(dummy_pairs)
-    final_issues = find_location_inconsistencies()
-    if final_issues:
-        print("Inconsistencies found after storing pairs:")
-        for issue in final_issues:
-            print(f"  {issue['character']}: in both {issue['location1']} and {issue['location2']} during chapter {issue['chapter']}")
-
+    text = "King Reveth known to all as the Shadow Blade, lived in Thornhaven, a city of stone and steel."
+    doc = nlp(text)
+    print("Entities found: ", doc.ents)
+    resolved = resolve_entity_types(doc)
+    print("Resolved Entities: ", resolved)
+    resolved_map = {ent["text"]: ent["resolved_type"] for ent in resolved}
+    print("Resolved Map: ", resolved_map)
+    pairs = pair_character_locations(doc, 1, resolved_map)
+    print("Character-Location Pairs: ", pairs)
+    clear_database()  # Clear the database before storing new pairs
+    store_pairs(pairs)
