@@ -44,16 +44,14 @@ def extract(text: str, chapter: int) -> list[dict[str, str | int]]:
 
 
 
-def pair_character_locations(text, chapter): 
-    doc = nlp(text)
-
+def pair_character_locations(doc, chapter, resolved_map): 
     character_location_pairs = []
 
     for sent in doc.sents: 
         characters = []
         locations = []
-        characters = [ent.text for ent in sent.ents if ent.label_ == "PERSON"]
-        locations = [ent.text for ent in sent.ents if ent.label_ == "GPE"]
+        characters = [ent.text for ent in sent.ents if resolved_map.get(ent.text) == "Character"]
+        locations = [ent.text for ent in sent.ents if resolved_map.get(ent.text) == "Location"]
 
         if characters and locations:
              for character in characters:
