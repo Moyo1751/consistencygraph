@@ -2,8 +2,10 @@ from extract import pair_character_locations, extract, nlp
 from demo import store_character_location, clear_database, find_location_inconsistencies
 
 import json
+from pathlib import Path
 
-with open("registry.json") as f:
+REGISTRY_PATH = Path(__file__).parent / "registry.json"
+with open(REGISTRY_PATH) as f:
     registry = json.load(f)
 
 def store_pairs(pairs):
