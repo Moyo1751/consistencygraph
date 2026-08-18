@@ -4,17 +4,13 @@ import os
 from dotenv import load_dotenv
 
 # Setup
-load_dotenv() 
 nlp = spacy.load("en_core_web_sm")
-URI = os.environ["NEO4J_URI"]
-AUTH = (os.environ["NEO4J_USER"], os.environ["NEO4J_PASSWORD"])
-driver = GraphDatabase.driver(URI, auth=AUTH)
 
-def clear_database():
+def clear_database(driver):
     with driver.session() as session:
         session.run("MATCH (n) DETACH DELETE n")
 
-def store_character_age(name, age, chapter):
+def store_character_age(name, age, chapter, driver):
     with driver.session() as session:
         session.run("""
             MERGE (c:Character {name: $name})
@@ -22,7 +18,7 @@ def store_character_age(name, age, chapter):
             CREATE (c)-[:HAS_AGE]->(a)
         """, name=name, age=age, chapter=chapter)
 
-def store_character_location(name, location, chapter):
+def store_character_location(name, location, chapter, driver):
     with driver.session() as session:
         session.run("""
             MERGE (c:Character {name: $name})
@@ -32,7 +28,7 @@ def store_character_location(name, location, chapter):
             CREATE (p)-[:LOCATION]->(l)
         """, name=name, location=location, chapter=chapter)
 
-def find_age_inconsistencies():
+def find_age_inconsistencies(driver):
     with driver.session() as session:
         result = session.run("""
             MATCH (c:Character)-[:HAS_AGE]->(a1:AgeMention)
@@ -48,7 +44,7 @@ def find_age_inconsistencies():
             issues.append(record)
         return issues
 
-def find_location_inconsistencies():
+def find_location_inconsistencies(driver):
     with driver.session() as session:
         result = session.run("""
             MATCH (c:Character)-[:IS_AT]->(p1:Presence)-[:LOCATION]->(l1:Location)
@@ -66,39 +62,44 @@ def find_location_inconsistencies():
 
 
 if __name__ == "__main__":
+    #Setup Neo4j connection
+    load_dotenv() 
+    URI = os.environ["NEO4J_URI"]
+    AUTH = (os.environ["NEO4J_USER"], os.environ["NEO4J_PASSWORD"])
+    driver = GraphDatabase.driver(URI, auth=AUTH)
     # === DEMO SCRIPT ===
     print("=" * 50)
     print("WORLD-BUILDING CONSISTENCY CHECKER - DEMO")
     print("=" * 50)
 
-    clear_database()
+    clear_database(driver)
 
     # Simulate extracted facts from chapters (normally this comes from NLP)
     print("\n[Processing Chapter 1...]")
     print("  Found: Aldric is 27 years old")
     print("  Found: Aldric is in Thornhaven")
-    store_character_age("Aldric", 27, 1)
-    store_character_location("Aldric", "Thornhaven", 1)
+    store_character_age("Aldric", 27, 1, driver)
+    store_character_location("Aldric", "Thornhaven", 1, driver)
 
     print("\n[Processing Chapter 2...]")
     print("  Found: Aldric is in Mount Kaelos")
-    store_character_location("Aldric", "Mount Kaelos", 2)
+    store_character_location("Aldric", "Mount Kaelos", 2, driver)
 
     print("\n[Processing Chapter 3...]")
     print("  Found: Aldric is 32 years old")  # INCONSISTENCY: only weeks have passed!
     print("  Found: Aldric is in Thornhaven")
     print("  Found: Aldric is in Mount Kaelos")  # INCONSISTENCY: two places same chapter!
-    store_character_age("Aldric", 32, 3)
-    store_character_location("Aldric", "Thornhaven", 3)
-    store_character_location("Aldric", "Mount Kaelos", 3)
+    store_character_age("Aldric", 32, 3, driver)
+    store_character_location("Aldric", "Thornhaven", 3, driver)
+    store_character_location("Aldric", "Mount Kaelos", 3, driver)
 
     # Check for inconsistencies
     print("\n" + "=" * 50)
     print("CONSISTENCY CHECK RESULTS")
     print("=" * 50)
 
-    age_issues = find_age_inconsistencies()
-    location_issues = find_location_inconsistencies()
+    age_issues = find_age_inconsistencies(driver)
+    location_issues = find_location_inconsistencies(driver)
 
     if not age_issues and not location_issues:
         print("\n✓ No inconsistencies found!")

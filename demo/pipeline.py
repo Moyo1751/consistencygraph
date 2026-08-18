@@ -1,5 +1,8 @@
 from extract import pair_character_locations, extract, nlp
 from demo import store_character_location, clear_database, find_location_inconsistencies
+from neo4j import GraphDatabase
+import os
+from dotenv import load_dotenv
 
 import json
 from pathlib import Path
@@ -8,12 +11,12 @@ REGISTRY_PATH = Path(__file__).parent / "registry.json"
 with open(REGISTRY_PATH) as f:
     registry = json.load(f)
 
-def store_pairs(pairs):
+def store_pairs(pairs, driver):
     for pair in pairs:
         name = pair["character"]
         location = pair["location"]
         chapter = pair["chapter"]
-        store_character_location(name, location, chapter)
+        store_character_location(name, location, chapter, driver)
         print(f"Stored: {name} at {location} in chapter {chapter}")
 
 def lookup(name: str) -> str | None:
@@ -42,6 +45,11 @@ def resolve_entity_types(doc):
 
 
 if __name__ == "__main__":
+    # Setup Neo4j connection
+    load_dotenv() 
+    URI = os.environ["NEO4J_URI"]
+    AUTH = (os.environ["NEO4J_USER"], os.environ["NEO4J_PASSWORD"])
+    driver = GraphDatabase.driver(URI, auth=AUTH)
     text = "King Reveth known to all as the Shadow Blade, lived in Thornhaven, a city of stone and steel."
     doc = nlp(text)
     print("Entities found: ", doc.ents)
@@ -51,5 +59,6 @@ if __name__ == "__main__":
     print("Resolved Map: ", resolved_map)
     pairs = pair_character_locations(doc, 1, resolved_map)
     print("Character-Location Pairs: ", pairs)
-    clear_database()  # Clear the database before storing new pairs
-    store_pairs(pairs)
+    clear_database(driver)  # Clear the database before storing new pairs
+    store_pairs(pairs, driver)
+    driver.close()
