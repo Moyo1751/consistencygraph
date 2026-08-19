@@ -281,3 +281,95 @@ worth more written up clearly than rushed into a fix tonight.
 
 Also noted: "Shadow Blade" still appears as a phantom PERSON->Character (epithet
 split from "King Reveth the Shadow Blade"). Entity-boundary error, separate issue.
+
+## CG-12 schema design — decided (18 Aug)
+
+Schema document structure (standalone SCHEMA.md, feeds Methodology + Implementation chapters):
+
+1. Entities: Character, Location, Presence, Organisation (+ properties: name, chapter, age)
+2. Relationships: IS_AT, LOCATION, HAS_AGE, MEMBER_OF
+3. Composition: the reification chain — Character-[:IS_AT]->Presence-[:LOCATION]->Location,
+   chapter stored on Presence (the reified occurrence)
+4. Design rationale (STANDALONE section — decided to separate rather than weave, so the
+   reader grasps structure first then reasoning as one narrative; also citable as a unit
+   for the methodology chapter): why reification vs direct edge; why MERGE (Character/Location)
+   vs CREATE (AgeMention/Presence); why chapter-on-Presence; why Organisation-as-flat-node.
+5. Deferred / limitations: rich House structure; name-variant identity fragility; non-detection.
+
+ORGANISATION decision: modelled MINIMALLY — an Organisation node (name) with
+Character-[:MEMBER_OF]->Organisation. Houses, companies, groups, orders are all just
+Organisation nodes differing only by name. The rich structure (lineage, collaterals,
+retainers, knight orders, advisors) is DEFERRED — no inconsistency-detection case requires
+house-internal structure, so modelling it would be world-building scope creep, not RQ work.
+BUILD STATUS (be honest in write-up + viva): Organisation + MEMBER_OF are DESIGNED, NOT
+IMPLEMENTED. Character/Location are built end-to-end; Organisation storage/extraction is a
+small follow-up (re-add ORG entries to registry, map ORG->Organisation, add store fn).
+
+## CG-20 driver-as-parameter refactor — done (18 Aug)
+
+Removed the module-global Neo4j driver. All DB functions (clear_database,
+store_character_age, store_character_location, find_age_inconsistencies,
+find_location_inconsistencies, store_pairs) now take `driver` as the LAST
+parameter, consistently. Entry point (**main**) creates the driver and owns its
+lifecycle (create + close). Pure refactor — output unchanged (Reveth at Thornhaven
+still lands in the graph). Rationale for the write-up: functions that RECEIVE the
+driver are testable (can be handed a test-DB driver) and have no import-time side
+effect, unlike reaching for a module global.
+
+Two follow-ups surfaced (NOT done here):
+
+- pipeline.py's **main** should also driver.close() (entry point owns lifecycle;
+  demo.py does close, pipeline.py currently doesn't). Tidy resource handling —
+  matters for the "good practice" mark and viva. One line.
+- The driver-creation block (load_dotenv / URI / AUTH / GraphDatabase.driver) is
+  now DUPLICATED verbatim in demo.py and pipeline.py. This is concrete motivation
+  for CG-21 (module split): a shared config.py should own driver + nlp creation,
+  imported by both. CG-20 surfaced CG-21's need. Deferred to CG-21.
+
+## CG-15 location-query dedup fix (18 Aug)
+
+Fixed the duplicate-location-inconsistency bug in find_location_inconsistencies.
+Changed WHERE l1.name <> l2.name -> WHERE l1.name < l2.name.
+Why: the query self-joins a character's locations (l1 x l2). <> is SYMMETRIC, so
+both (A,B) and (B,A) survive -> the same clash printed twice ("Mount Kaelos and
+Thornhaven" AND "Thornhaven and Mount Kaelos"). < is ASYMMETRIC (one ordering
+only) and STRICT (excludes A,A self-pairs for free) -> each unordered pair
+appears once, self-pairs excluded, in a single operator. Verified: Aldric now
+yields ONE location-inconsistency line, age inconsistency still fires.
+General idiom: self-join where pair order doesn't matter -> constrain with < to
+get each pair once (SQL and Cypher alike). Age query already used this (< on chapter).
+
+Deferred (part of CG-21): move find_age_inconsistencies / find_location_inconsistencies
+out of demo.py into a proper detection.py. demo.py is a poor home for production
+detection logic (named "demo", still holds the old hardcoded Aldric script, and the
+pipeline importing detection FROM a demo file is a smell). Decided NOT to do a partial
+split now — a half-moved codebase is messier than none. Do the detection slice as part
+of the full CG-21 module split (config/registry/extraction/storage/detection + thin
+pipeline), not ad hoc.
+
+## CG-15 scope + the journey problem (KNOWN LIMITATION, RQ3) (18 Aug)
+
+CG-15 scoped as: same-chapter multi-location clash detection at CHAPTER granularity.
+Dedup fixed (< operator). This is DONE at that scope.
+
+KNOWN LIMITATION (deliberately documented, not yet fixed) — "the journey problem":
+The query flags a character in two different locations in the same chapter as an
+inconsistency. But a character who legitimately TRAVELS within a chapter (Mount
+Kaelos in the morning, Thornhaven by evening) is genuinely in two places and is
+NOT inconsistent. The current query cannot distinguish "in two places at once"
+(real inconsistency) from "moved between two places" (fine), so it produces FALSE
+POSITIVES for legitimate intra-chapter travel.
+
+Why this is an RQ3 result, not just a bug: RQ3 asks which inconsistencies can be
+reliably detected automatically vs. need human judgement. The journey problem is a
+clean example of the limit of automated detection at chapter granularity — worth
+writing up in the evaluation chapter as a precision cost with a clear cause.
+
+DESIGNED FIX (deferred — revisit only when everything else is done):
+Add sentence_index (a monotonic position counter over the text) to the Presence
+node. Two presences in the same chapter but different sentence positions => movement
+(sequential) => not flagged. Two at effectively the same position => simultaneous
+=> flagged. Requires: (a) schema change on Presence (CG-12/CG-13 touch), (b) pairing
+records sentence position, (c) query uses it. Cross-cutting, so deferred. Note:
+reading-order != story-chronology (flashbacks etc.) — a residual limitation even
+after the fix, also an RQ3 point.

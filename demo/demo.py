@@ -49,7 +49,7 @@ def find_location_inconsistencies(driver):
         result = session.run("""
             MATCH (c:Character)-[:IS_AT]->(p1:Presence)-[:LOCATION]->(l1:Location)
             MATCH (c)-[:IS_AT]->(p2:Presence)-[:LOCATION]->(l2:Location)
-            WHERE p1.chapter = p2.chapter AND l1.name <> l2.name
+            WHERE p1.chapter = p2.chapter AND l1.name < l2.name
             RETURN c.name AS character,
                    l1.name AS location1, l2.name AS location2,
                    p1.chapter AS chapter
