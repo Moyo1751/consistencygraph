@@ -1,33 +1,5 @@
-import spacy
-
-nlp = spacy.load("en_core_web_sm")
-
-# text = """
-# Chapter 1: The Return
-
-# Aldric Stormborn had not seen the walls of Thornhaven in fifteen years. 
-# The last time he had passed through these gates, he was a boy of twelve, 
-# fleeing the coup that killed his father, King Aldric the Elder.
-
-# Now he returned as a man grown, with Mira Shadowblade at his side and 
-# the legendary Sword of Dawn strapped to his back. The blade had been 
-# forged in the fires of Mount Kaelos three thousand years ago.
-
-# "The guards will recognise you," Mira warned, her dark eyes scanning 
-# the battlements. "Your face is your father's face."
-
-# Aldric nodded. He was twenty-seven now, the same age his father had been 
-# when he took the throne.
-# """
-
-# doc = nlp(text)
-
-# print("Entities found:")
-# for ent in doc.ents:
-#     print(f"  {ent.text:25} -> {ent.label_}")
-
-# ## Run it:
-# ## python extract.py
+from config import nlp
+from registry import lookup, SPACY_TO_SCHEMA
 
 def extract(text: str, chapter: int) -> list[dict[str, str | int]]: 
     doc = nlp(text)
@@ -36,13 +8,6 @@ def extract(text: str, chapter: int) -> list[dict[str, str | int]]:
     result = [{"text": ent.text, "label": ent.label_, "chapter": chapter, "startChar": ent.start_char, "endChar": ent.end_char} for ent in doc.ents]
 
     return result
-
-# ext = extract(dummyText, 1)
-# print(ext)
-# for data in ext:
-#     print(f" {data["text"]} -> {data["label"]} (start: {data["startChar"]}, end: {data["endChar"]}) -> Chapter {data["chapter"]}")
-
-
 
 def pair_character_locations(doc, chapter, resolved_map): 
     character_location_pairs = []
@@ -61,8 +26,15 @@ def pair_character_locations(doc, chapter, resolved_map):
     return character_location_pairs
 
 
-if __name__ == "__main__":
-    dummyText = "Aldric Stormborn had not seen the walls of Thornton in fifteen years. The last time he had passed through these gates, he was a boy of twelve, fleeing the coup that killed his father, King Aldric the Elder."
+def resolve_entity_types(doc):
+    resolved_entities = []
+    for ent in doc.ents:
+        text = ent.text
+        label = ent.label_
+        lookup_result = lookup(text)
+        if lookup_result:
+            resolved_entities.append({"text": text, "label": label, "resolved_type": lookup_result})
+        else:
+            resolved_entities.append({"text": text, "label": label, "resolved_type": SPACY_TO_SCHEMA.get(label)})
 
-    pairs = pair_character_locations(dummyText, 1)
-    print(pairs)
+    return resolved_entities
