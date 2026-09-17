@@ -6,7 +6,7 @@ Built as the software artefact for an MSc Computing (Software Engineering) disse
 
 ## Prerequisites
 
-- **Python 3.10 or later.** The code uses `X | None` union syntax, which is 3.10+.
+- **Python 3.14.3 or later.**
 - **A running Neo4j instance.** Developed against Neo4j 2026.02 via Neo4j Desktop, reachable on the default Bolt port `7687`.
 - **The `en_core_web_sm` spaCy model.** Pinned in `requirements.txt`, so no separate download step is needed.
 
@@ -65,29 +65,29 @@ consistencygraph/
 
 ### Modules
 
-| Module | Responsibility |
-| --- | --- |
-| `config.py` | Loads `.env`, creates the spaCy pipeline once, and exposes `get_driver()` for Neo4j connections. Nothing else creates either. |
-| `registry.py` | Loads `registry.json` and owns type resolution: `lookup()` for manual overrides, `SPACY_TO_SCHEMA` for the default spaCy-label-to-schema mapping. |
+| Module          | Responsibility                                                                                                                                                      |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `config.py`     | Loads `.env`, creates the spaCy pipeline once, and exposes `get_driver()` for Neo4j connections. Nothing else creates either.                                       |
+| `registry.py`   | Loads `registry.json` and owns type resolution: `lookup()` for manual overrides, `SPACY_TO_SCHEMA` for the default spaCy-label-to-schema mapping.                   |
 | `extraction.py` | `extract()` for raw NER output, `resolve_entity_types()` to apply registry resolution, and `pair_character_locations()` to derive co-occurrence facts per sentence. |
-| `storage.py` | Graph writes: `store_character_age`, `store_character_location`, `store_pairs`, `clear_database`. Takes the driver as a parameter rather than importing it. |
-| `detection.py` | Graph reads: `find_age_inconsistencies` and `find_location_inconsistencies`. |
-| `pipeline.py` | Orchestration only. Creates the driver, sequences the above, closes the driver. |
+| `storage.py`    | Graph writes: `store_character_age`, `store_character_location`, `store_pairs`, `clear_database`. Takes the driver as a parameter rather than importing it.         |
+| `detection.py`  | Graph reads: `find_age_inconsistencies` and `find_location_inconsistencies`.                                                                                        |
+| `pipeline.py`   | Orchestration only. Creates the driver, sequences the above, closes the driver.                                                                                     |
 
 ## Graph schema
 
-| Node | Properties |
-| --- | --- |
-| `Character` | `name` |
-| `Location` | `name` |
-| `Presence` | `chapter` |
+| Node         | Properties       |
+| ------------ | ---------------- |
+| `Character`  | `name`           |
+| `Location`   | `name`           |
+| `Presence`   | `chapter`        |
 | `AgeMention` | `age`, `chapter` |
 
-| Relationship | From | To |
-| --- | --- | --- |
-| `IS_AT` | `Character` | `Presence` |
-| `LOCATION` | `Presence` | `Location` |
-| `HAS_AGE` | `Character` | `AgeMention` |
+| Relationship | From        | To           |
+| ------------ | ----------- | ------------ |
+| `IS_AT`      | `Character` | `Presence`   |
+| `LOCATION`   | `Presence`  | `Location`   |
+| `HAS_AGE`    | `Character` | `AgeMention` |
 
 `Presence` exists as an intermediate node so that a character's location can be qualified by chapter, rather than asserting a single unqualified location per character.
 
