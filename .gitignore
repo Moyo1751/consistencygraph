@@ -216,3 +216,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Manuscript source text (author drafts, not part of the software artefact)
+manuscript/
