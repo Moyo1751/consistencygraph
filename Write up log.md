@@ -373,3 +373,205 @@ node. Two presences in the same chapter but different sentence positions => move
 records sentence position, (c) query uses it. Cross-cutting, so deferred. Note:
 reading-order != story-chronology (flashbacks etc.) — a residual limitation even
 after the fix, also an RQ3 point.
+
+## CG-21 module split — done (18 Sep)
+
+Full split executed in one pass: demo/ renamed to src/, code redistributed
+across config.py, registry.py, extraction.py, storage.py, detection.py and a
+thin pipeline.py. demo.py is gone. Held to the 18 Aug decision not to do this
+partially — a half-moved codebase is messier than none.
+
+METHOD — baseline first. With no test suite, the substitute for tests was a
+captured baseline: ran pipeline.py end to end, teed stdout to a file, and
+recorded node/relationship counts from Neo4j BEFORE touching anything
+(Character 1, Location 1, Presence 1; IS_AT 1, LOCATION 1). The refactor is a
+pure refactor, so that output had to come back byte-identical. It did, and the
+counts matched. Worth stating in the Implementation chapter: the claim "pure
+refactor" is only honest if there is evidence for it, and with no tests the
+evidence has to be a recorded before-state.
+
+Committed in TWO commits deliberately. Git does not store renames, it infers
+them by content similarity at diff time. storage.py (from demo.py) loses both
+detection functions and the whole old demo script, roughly half the file, so
+renaming and gutting in one commit would likely drop below git's similarity
+threshold and break `git log --follow`. Pure renames committed first (all four
+detected at 100%), content redistribution second.
+
+DESIGN DECISIONS taken during the split:
+
+- config.py exposes get_driver() as a FUNCTION, not a module-level driver
+  object. This DEVIATES from the CG-21 ticket text, which specified "nlp and
+  driver globals." The deviation is deliberate and resolves a contradiction
+  between CG-21 and CG-20: CG-20 exists precisely to remove the module-global
+  driver. Two reasons a factory is right: (a) ownership — whoever creates the
+  driver closes it, and a module-level driver has no obvious owner; (b) a
+  module-level driver would mean `from config import nlp` reads os.environ at
+  import time, so audit.py (which needs spaCy and never touches Neo4j) would
+  fail with a KeyError for an unrelated reason if .env were missing. Note for
+  the viva: the tickets contradicted each other and the code resolves it.
+- Modules kept FLAT, no __init__.py. Adding one makes src/ a package, which
+  changes invocation to `python -m src.pipeline` and rewrites every
+  cross-module import. Extra scope for no benefit today. Consequence: the
+  pipeline must be run from inside src/, which is now a README line.
+- SPACY_TO_SCHEMA lives in registry.py alongside lookup(). lookup() is MANUAL
+  type resolution, SPACY_TO_SCHEMA is AUTOMATIC type resolution, and
+  resolve_entity_types tries one then falls back to the other. Putting both in
+  one module means registry.py owns "how an entity's type is decided" rather
+  than merely owning the JSON file.
+- Still no utils.py. Nothing generic emerged, so nothing was pre-built.
+
+The import graph is a DAG: config, registry, storage and detection import
+nothing internal; extraction imports from config and registry; pipeline imports
+from config, extraction and storage. Drawing the graph before moving any code
+was worth the ten minutes. Python does not fail circular imports cleanly — it
+hands the importing module a partially initialised one and raises
+"cannot import name X from partially initialized module", with the failing name
+depending on import order.
+
+CORRECTION to the 14 Aug entry. That entry claimed the double nlp() load was
+killed. It was not. `spacy.load("en_core_web_sm")` was still present in BOTH
+demo.py and extract.py, and since pipeline.py imported from both files, both
+module bodies executed and the model loaded twice on every run. What was
+actually fixed on 14 Aug was that pipeline.py imported the shared nlp; the
+second load in demo.py survived unnoticed for a month. Now genuinely one load,
+in config.py. Methodological note: a fix recorded in the log but never verified
+is not a fix. Worth a sentence in the write-up on the value of the log itself
+being checked against the code.
+
+CORRECTION to the 18 Aug CG-20 entry, in the other direction: the follow-up
+"pipeline.py's __main__ should also driver.close()" was ALREADY DONE by the
+time of the split. Closed, just never logged.
+
+GAP FOUND during the split: pipeline.py imported find_location_inconsistencies
+and never called it. The pipeline stores facts but does not invoke ANY query in
+detection.py. Dropping the dead import changed no behaviour, so the baseline
+held, but the gap is real and is its own ticket. Be honest about this in the
+write-up: detection queries are implemented and verified in isolation, but not
+yet wired into the end-to-end run.
+
+## README and repo hygiene (18 Sep)
+
+README written (was 18 bytes). Covers purpose, prerequisites, setup, how to run,
+a module table, the graph schema, the entity-resolution design, and an explicit
+"Current status" section listing the five known gaps. Writing the limitations
+into the artefact's own README rather than only into the dissertation seems the
+honest move for a submitted artefact.
+
+.env confirmed NEVER committed on any branch (`git log --all -- .env` empty).
+Note for anyone repeating this check: .gitignore does not untrack an
+already-committed file, so `git check-ignore .env` is not the test that matters.
+`git ls-files .env` is, and it must be run from the repo root — run from a
+subdirectory it scopes the pathspec to that subdirectory and gives a misleading
+answer.
+
+REPRODUCIBILITY BUG FOUND: requirements.txt was UTF-16, because PowerShell's
+`pip freeze > requirements.txt` writes UTF-16 by default. pip can fail to parse
+that, which would have made the README's setup instructions untrue for anyone
+cloning the repo, including a marker. Re-encoded as UTF-8. Same PowerShell
+default also produced a UTF-16 baseline capture file. Small, but exactly the
+class of thing that makes an artefact unreproducible on someone else's machine.
+
+Good news found while checking: en_core_web_sm is pinned in requirements.txt as
+a direct wheel URL, so `pip install -r requirements.txt` fetches the model and
+no separate `spacy download` step is needed.
+
+## Registry/manuscript DRIFT — new RQ1/RQ3 limitation (18 Sep)
+
+Extracted chapters 1 and 2 of the real manuscript to plain text (2,247 words
+total) as the first real corpus. Immediately found something that changes how
+the audit must be built.
+
+Word-boundary search of all 19 registry.json keys against the draft:
+
+  Elior 25, Roisen 5, Eli 3, and the OTHER SIXTEEN keys ZERO.
+
+Reveth, Thornhaven, Kaldon, Kedmaon, Urien, Shalvien, Zelkarev, Arnael and
+Vardael appear NOWHERE in the manuscript. Meanwhile the draft's actual cast is
+almost entirely absent from the registry: Oren (12), Alric (8), Arseny (5),
+Talia (3), Ren (3), Malcolm (2), Yaela, plus the places Blackmere and
+Hollowmere. The registry also has "Roisen Vardael Kerenath" where the text now
+says "Roisen Kedvara Kerenath".
+
+Cause: the registry was built on 6 Aug partly from worldbuilding names held in
+mind at the time, and the manuscript has since been revised. Nothing warned that
+they had diverged.
+
+THIS IS ITSELF A FINDING, not just a housekeeping problem. A manually curated
+registry is a static artefact that decays every time the author renames a
+character or cuts a place, and the decay is SILENT — the pipeline keeps running
+and simply resolves fewer entities. That is a real maintenance cost of the
+registry-as-authority design (CG-10) and belongs in the limitations discussion
+alongside the non-detection finding of 14 Aug. It also strengthens the CG-19
+argument: a registry that must be hand-maintained against a moving manuscript is
+more fragile than one whose entries are injected and therefore visibly exercised.
+
+DECISION: do NOT update registry.json to match the current draft. The manuscript
+is still being written, chapters 1 and 2 are unfinished and unannotated, and
+several registry entries are speculative names that will be pruned. Rewriting it
+now is churn. Instead the audit script (CG-22) must REPORT the drift as a
+first-class output. A script that treats "registry key absent from corpus" as
+its own category works correctly at every stage of drafting; one that assumes
+registry and manuscript agree breaks the moment a character is renamed, which
+has already happened once.
+
+## CG-22 extraction audit — scope and method constraints (18 Sep)
+
+New ticket for the script that finally READS the dual label/resolved_type
+storage that resolve_entity_types has been producing since 6 Aug. Until now
+that measurement apparatus has been generating evidence on every run and
+discarding it.
+
+FOUR BUCKETS the script must report, per registry key:
+
+1. In registry, NOT in corpus — speculative or cut names. Excluded from the
+   non-detection rate. Doubles as a pruning list for the author.
+2. In corpus AND in doc.ents — registry consulted, working as designed.
+3. In corpus but NOT in doc.ents — NON-DETECTION. The number that quantifies
+   the second failure mode from 14 Aug, and the evidence that justifies CG-19.
+4. In doc.ents, NOT in registry — registry coverage gap.
+
+Collapsing bucket 1 into bucket 3 would report a catastrophic non-detection rate
+that is actually just a stale file. Given 16 of 19 keys currently sit in bucket
+1, this distinction is not academic.
+
+COUNTING RULES, decided before writing the loop:
+
+- Word boundaries throughout, or "Eli" matches inside "Elior" and "Ro" inside
+  "Roisen". Confirmed live: naive substring matching reports the short aliases
+  as present everywhere.
+- Per-occurrence, NOT per-name boolean. Elior appears 25 times; if spaCy catches
+  19, a boolean records "detected" and hides six misses. Per-occurrence yields a
+  detection rate per name, which is a far more useful table.
+- Nested names (Elior Kerenath contains Elior) need a stated rule, written into
+  the script as a comment. A metric whose definition cannot be stated precisely
+  is not usable in a results chapter.
+
+METHOD CONSTRAINTS to state explicitly in the write-up:
+
+- The chapters are NOT YET ANNOTATED, so there is no gold standard. The registry
+  is a PROXY for ground truth, not ground truth. The audit can report what the
+  system did — entity counts, label distribution, registry overrides,
+  non-detections — but CANNOT report precision or recall against truth. Pre-empt
+  the question rather than have it asked.
+- The first run is a PILOT on ~2,200 words of draft. The instrument is the
+  deliverable; the numbers are a dated snapshot, to be re-run when the manuscript
+  is complete. Stamp corpus size and run date on the CSV so a provisional run is
+  never mistaken for the final one.
+- Write the registry BEFORE seeing which entries spaCy missed, never after.
+  Adding entries in response to observed misses would invalidate the measurement.
+- CSV row-per-entity rather than pre-aggregated, so it can be re-cut without
+  re-running.
+
+Corpus note, updating the 6 Aug plan: CG-16 asked for 3-4 chapters with ~20
+PLANTED, annotated inconsistencies. That is still the right evaluation corpus and
+is NOT what exists today. Today's two chapters are ordinary draft prose with no
+deliberate inconsistencies and no annotation, so they support the RQ1 extraction
+audit but not the RQ3 detection evaluation. Two distinct corpora, two distinct
+purposes — do not let the audit corpus quietly become the evaluation corpus.
+
+ORGANISATION, deferred again and now with a reason: rather than guess whether
+Organisation is worth implementing, wait for the audit's ORG counts. The
+manuscript contains Kerenath Enterprises and the Ravensworth pack, so there is
+something to model, but designing the schema extension from a measurement beats
+designing it from memory. CG-12 already has the minimal design (Organisation
+node + MEMBER_OF); the audit supplies the justification for building it.
