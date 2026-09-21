@@ -181,6 +181,10 @@ DEFERRED / schema decisions surfaced:
   one character but four dict keys. Fine for typing (all -> Character), but MERGE
   keys on exact string, so the graph will treat them as four separate people.
   Same fragility logged 24 Jul/RQ1 Finding 3. Not solved this sprint.
+  [SUPERSEDED 21 Sep] These specific keys no longer match the manuscript. The
+  character is now "Roisen Kedvara Kerenath" and "Vardael"/"Ro" appear nowhere
+  in it. The aliasing fragility still stands as a finding; these particular
+  strings do not. See the registry rebuild entry, 21 Sep.
 
 Corpus note: made-up names used for code testing are THROWAWAY plumbing data —
 findings must only accrue to the real invented names (Thornhaven etc.). The
@@ -252,6 +256,14 @@ map, pair_character_locations(doc, chapter, resolved_map) now filters on
 resolved_map.get(ent.text) == "Character"/"Location" instead of raw spaCy labels.
 Also imports the single shared nlp from extract (kills the double nlp() load).
 
+[CORRECTED 18 Sep] This claim was WRONG and stood uncorrected for a month.
+spacy.load("en_core_web_sm") remained in BOTH demo.py and extract.py, and
+pipeline.py imported from both files, so both module bodies executed and the
+model still loaded TWICE on every run. What was actually fixed here was that
+pipeline.py started importing the shared nlp; the second load survived
+unnoticed. Genuinely fixed at CG-21 (18 Sep), where config.py became the single
+load site. See the CG-21 entry.
+
 Thornhaven half works: resolves CARDINAL -> Location correctly via registry.
 
 BUT running on "Elior Kerenath had not seen the walls of Thornhaven..." produced
@@ -321,10 +333,14 @@ Two follow-ups surfaced (NOT done here):
 - pipeline.py's **main** should also driver.close() (entry point owns lifecycle;
   demo.py does close, pipeline.py currently doesn't). Tidy resource handling —
   matters for the "good practice" mark and viva. One line.
+  [DONE, confirmed present in pipeline.py at the CG-21 split, 18 Sep. Closed
+  at some point between 18 Aug and 18 Sep but never logged.]
 - The driver-creation block (load_dotenv / URI / AUTH / GraphDatabase.driver) is
   now DUPLICATED verbatim in demo.py and pipeline.py. This is concrete motivation
   for CG-21 (module split): a shared config.py should own driver + nlp creation,
   imported by both. CG-20 surfaced CG-21's need. Deferred to CG-21.
+  [DONE at CG-21, 18 Sep. config.py now owns it, exposed as get_driver(),
+  a function rather than the module-level global this entry envisaged.]
 
 ## CG-15 location-query dedup fix (18 Aug)
 
