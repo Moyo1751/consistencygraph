@@ -591,3 +591,504 @@ manuscript contains Kerenath Enterprises and the Ravensworth pack, so there is
 something to model, but designing the schema extension from a measurement beats
 designing it from memory. CG-12 already has the minimal design (Organisation
 node + MEMBER_OF); the audit supplies the justification for building it.
+
+## Corpus v2 frozen, gold standard built, registry rebuilt (21 Sep)
+
+Three days of corpus work between the CG-22 pilot audit and now. This entry
+records what changed and, importantly, what it invalidates.
+
+### The snapshot
+
+Chapters 1 and 2 expanded from 2,247 words to 5,484 and frozen as
+corpus_ch1-2_v2, in three parallel forms: the .docx as authoritative, a .json
+carrying chapters and paragraph indices, and a flat .txt with [ch1:p4] markers.
+v1 is kept for the record and is DEAD as a test corpus.
+
+CORRECT BEFORE FREEZING, and the second reason is the one that matters:
+
+1. Locators shift under every post-freeze correction, so annotations made
+   before the corrections would need redoing.
+2. Typos look like inconsistencies to a consistency checker. Two wrong speaker
+   attributions in chapter 2 put words in the wrong character's mouth, and a
+   broken verb ("he taken every opportunity") is exactly the kind of thing a
+   checker may react to. Left uncorrected, a detection cannot be distinguished
+   from a reaction to a typo, and the precision figure silently absorbs the
+   difference.
+3. Freezing a version already known to be changing defeats the purpose of a
+   frozen snapshot.
+
+Worth stating in the methodology chapter: corpus hygiene is not admin, it is a
+precondition for the precision figure meaning anything.
+
+### Locator scheme
+
+Three fields in order of authority: quoted ANCHOR TEXT (survives any
+renumbering), paragraph index, chapter. All 25 anchors across the 11 live rows
+verified to resolve to the paragraph they claim.
+
+GOTCHA recorded for implementation: the corpus uses typographic punctuation
+(U+2019, U+201C, U+201D). Anchor matching must normalise first or it fails
+SILENTLY. Same failure family as the UTF-16 requirements.txt on 18 Sep: an
+encoding mismatch that produces no error, just wrong results.
+
+### Gold standard v1
+
+13 rows, 11 live, 2 retired. Origin split is deliberately lopsided:
+0 planted, 2 naturally occurring, 9 LEGITIMATE.
+
+Reasoning: recall is easy to measure once real inconsistencies exist, and none
+are planted yet. Precision can only be measured against things that look wrong
+and are not. So the set is precision-first by design, and the current figures
+are a baseline, not a finished evaluation set.
+
+GS-08 is the most valuable row: Alric assigns travelling teams in chapter 1 and
+restates the same assignment in chapter 2 to a different audience, with no
+contradiction. A checker that flags it has failed in the way a real user notices
+first, regardless of its recall.
+
+GS-07 is the most interesting: Roisen places Oren downstairs; Talia says minutes
+later he left for Vienna. A SPEAKER CAN BE WRONG WITHOUT THE NARRATIVE BEING
+WRONG. Flagging it is defensible; resolving it as Roisen not having been told is
+better. That distinction is an RQ3 result in itself, and it is the kind of
+judgement the graph cannot make alone.
+
+RETIREMENT IS ITSELF A FINDING. GS-02's ambiguous pronoun and GS-03's height
+contradiction were both removed by ordinary revision before the tool ever ran.
+An author revising normally fixes some of what the checker exists to catch,
+which bears directly on how such a tool would be used in practice and on what a
+realistic recall target even looks like.
+
+### Registry rebuilt: 19 entries to 103
+
+Rebuilt from the world-building bible rather than from memory.
+Character 75, Location 10, Organisation 18.
+
+SEQUENCING IS CLEAN and worth saying so: the registry was written from the
+bible, BEFORE any audit showed which entries spaCy misses. The 18 Sep
+constraint ("write the registry before seeing which entries were missed, never
+after") was honoured, so the measurement is not contaminated.
+
+The 18 Sep drift finding drove this: 16 of 19 keys did not appear in the
+manuscript at all. That number is now historical, but the phenomenon it named
+is exactly what the rebuild answers.
+
+Registry is now BIBLE-SCOPED, not corpus-scoped: 46 of 103 keys appear in
+chapters 1 and 2, 57 do not, because their scenes are unwritten. Bucket 1 is
+large BY DESIGN. Trimming to the corpus would be fitting the registry to the
+test data.
+
+### The Event gap, and why it must be decided before the schema is fixed
+
+Three types cannot hold what the manuscript already contains. The War of Two
+Monarchs appears in both chapters and does CAUSAL work: it explains Alric's
+standing, and it is why Bloodbane's alpha grew strong while Duskfall lost
+warriors. "The incident" anchors the timeline of the whole book.
+
+The argument for adding Event as a fourth type is the sharpest RQ2/RQ3 point
+the project has produced so far: a checker that cannot represent events cannot
+catch the most valuable class of timeline contradiction, which is not two dates
+disagreeing but two statements placing the same fact on OPPOSITE SIDES of an
+event. "Bloodbane's alpha earned renown during the war" and "Bloodbane's alpha
+was unknown until after the war" contradict each other with no date in either.
+That is reasoning a graph is good at and an LLM alone is not, which is the
+RQ4 comparison in miniature.
+
+Decide now, not later: entity types set node labels and relationship endpoints,
+so retrofitting a type after annotation means revisiting every row that should
+have referenced it. Eight candidate entries with approximate dates are drafted.
+
+CHARACTER IS A CATCH-ALL. It currently holds people, monikers (Cheremen,
+Emissary of Destruction) and offices (High Warlord). Adequate for recognition,
+but a title is a ROLE A PERSON HOLDS, not a person, so it will muddy the graph.
+Titles may want to be relationships rather than nodes. Related to, but distinct
+from, the name-variant fragility logged 24 Jul.
+
+Two entities deliberately excluded: "western territories" and "eastern
+territories" appear once each, lowercase. Either they are proper regions and the
+prose should capitalise them, or they are descriptive and should not be entities
+at all. Case-sensitive matching currently misses them either way.
+
+### CONSEQUENCE: the 18 Sep pilot audit is void
+
+The CG-22 audit ran against v1 (2,247 words) and the 19-entry registry. BOTH
+have been replaced. Every number from that run is superseded:
+
+- 94 entities, the label distribution, the ORG/PERSON inversion
+- the 16% detection rate for "Elior"
+- zero correctly identified locations
+- the four registry/corpus buckets
+
+The FINDINGS may well survive re-running; the FIGURES do not. Do not quote any
+18 Sep number in the dissertation. Re-run against v2 plus the 103-entry
+registry and treat that as the real pilot. The pre-registered prediction and its
+scorecard remain valid as a record of what was expected versus found, but they
+describe a corpus that no longer exists.
+
+This is the "instrument is the deliverable, numbers are a dated snapshot"
+principle from 18 Sep arriving sooner than expected, and it validates having
+built the script to take a path rather than hardcoding the text.
+
+### A built-in control group
+
+The corpus contains real places and invented places in the same prose:
+New York 4, Vienna 1, New Jersey 1 against Blackmere 6, Hollowmere 2. Same text,
+same model, no confound. A natural experiment testing the 17 Jul morphology
+hypothesis on data it was not derived from.
+
+### Registry type-system problems surfaced
+
+24 substring-nesting pairs (Roisen inside Roisen Kedvara inside Roisen Kedvara
+Kerenath; Kerenath inside four keys). Any counting must state its nesting rule.
+
+A flat name->type map cannot express family names. Resolved 22 Sep: bare
+Kerenath retyped to Character (no bare organisational use exists in the corpus);
+Ravensworth and Ravensworths retyped to Organisation, since 4 of their 5 uses
+are the family or pack. Oren Kerenath added, which was missing. 104 entries.
+
+Rule adopted: LONGEST-MATCH-WINS, COUNTED PER OCCURRENCE. One hit when the full
+name appears; separate hits when shorter forms appear alone.
+
+Territories dropped: "eastern territories" and "western territories" are
+lowercase and descriptive, not named places. Capitalising the prose to make them
+match would be a fiction decision taken for a tooling reason.
+
+### What audit.py has to change
+
+Input format. The script currently globs loose chapter_NN.txt files and parses
+the chapter number from the filename. The frozen corpus is a single JSON with
+chapters and paragraph indices. Read the JSON instead, for two reasons: the
+paragraph index is one of the three locator fields the gold standard depends
+on, so any finding the audit reports must be locatable against it; and the JSON
+is the structured form, so no re-parsing of markers is needed.
+
+Anchor normalisation. Typographic apostrophes must be normalised before any
+string matching, per the gotcha above.
+
+### Numbers that do not yet agree, to be reconciled
+
+The target count for annotated inconsistencies now has three values on record:
+CG-16's description says "50+", the 6 Aug log entry says "~20", and the 21 Sep
+handover says "15 to 20". The plant plan's own arithmetic lands at 14. Whichever
+figure is chosen becomes the denominator in the evaluation chapter, so it needs
+settling once and propagating to all three places.
+
+Separately, the handover says "14 specifications sit in the Plant Plan sheet",
+but the plan lists 7 plants (P1 to P7) plus 4 legitimate rows (L1 to L4), which
+is 11 specifications; 14 is the total including the 3 surviving rows. Minor, but
+it is the kind of discrepancy a viva finds.
+
+### State, so nothing is assumed
+
+- No plants are written. The next corpus generation is v3
+- Chapters 3 and 4 are unwritten; they get their OWN snapshot, not an append,
+  so each frozen file keeps its own locator space
+- Bloodbane and Duskfall are placeholder pack names pending a rename
+- The manuscript has already moved on from this snapshot, by design
+
+## Detection wired in, and a storage bug it exposed (22 Sep)
+
+pipeline.py had never invoked anything in detection.py. Facts were stored and no
+query ever ran. Wiring it in was three lines. Both queries returned empty, which
+looked like success.
+
+Age was empty because NOTHING CALLS store_character_age: no AgeMention nodes
+exist, so the query has nothing to match. An unimplemented path, not a bug.
+
+Location was empty because one character in one location cannot clash. Also
+correct, and also uninformative.
+
+### The positive control
+
+Two empty results are consistent with the queries working and with them being
+broken. The CG-15 verification that proved the location query fires was run
+against demo.py's Aldric script, deleted in the CG-21 split, so since the
+refactor neither query had ever returned a row.
+
+Manually inserting a second location for one character in one chapter returned
+TWO IDENTICAL ROWS. Not (A,B) and (B,A), which was the CG-15 symmetry bug, so
+that fix survived the refactor. A second, different duplication source.
+
+### Diagnosis: CREATE versus MERGE
+
+store_character_location used CREATE (p:Presence {chapter: $chapter}), so every
+call made a new Presence node. The detection query self-joins over Presence, so
+duplicate presences multiply into duplicate findings.
+
+Latent since CG-11 and invisible because the pipeline only ever ran on one
+sentence. It would have surfaced the moment the corpus was loaded:
+pair_character_locations emits every character x every location per sentence, so
+a chapter where two entities co-occur five times creates five Presence nodes for
+one fact, and two locations at five presences each is TWENTY-FIVE rows for one
+inconsistency. The precision denominator would have been destroyed by a storage
+artefact rather than a detection error.
+
+### The fix, and the Cypher trap
+
+The obvious fix is wrong: MERGE (p:Presence {chapter: $chapter}) matches ANY
+Presence with that chapter, so every character in chapter 1 would share one
+node. It fails silently and produces a populated-looking graph that is nonsense.
+
+A Presence is identified only by the path it sits on, so the path is merged:
+
+    MERGE (c:Character {name: $name})
+    MERGE (l:Location {name: $location})
+    MERGE (c)-[:IS_AT]->(p:Presence {chapter: $chapter})-[:LOCATION]->(l)
+
+Character and Location stay separate MERGE statements because they are
+identified by name alone.
+
+VERIFIED, three checks: two pipeline runs produce ONE Presence where CREATE
+produced two; a manual second location produces exactly ONE inconsistency row;
+repeated runs do not inflate it.
+
+### Trade-off accepted, and a limitation
+
+MERGE collapses five sentences asserting the same presence into one node. The
+fact survives; WHERE IT WAS ASSERTED does not. That matters twice: the gold
+standard is built on paragraph locators, so a finding that cannot be traced to a
+paragraph is half a finding; and the deferred sentence_index fix for the journey
+problem needs position, which a merged Presence has discarded.
+
+A cheap version keeps both: merge on character/location/chapter and accumulate
+paragraph indices as a list property (ON CREATE SET / ON MATCH SET). Deferred
+until the corpus loader supplies paragraph indices. Logged as a limitation.
+
+store_character_age has the same CREATE pattern and the same latent bug, with a
+different merge key: two DIFFERENT ages in one chapter are the inconsistency, so
+the key must include age. Nothing calls it yet.
+
+### Method note
+
+Two empty results looked like success. The positive control is what found the
+bug. Worth stating in the testing chapter: absence of output is not evidence of
+correctness, and a detection system needs its detectors proven to fire, not just
+proven not to crash.
+
+## Detection metric decided: the three-way split (22 Sep)
+
+The audit's first implementation decided whether a registry name had been
+detected by comparing the registry key to ent.text with EXACT STRING EQUALITY.
+That is wrong in a way that would have inflated the headline number.
+
+spaCy produces spans like "Malcolm's", "Alpha Malcolm Ravensworth" and
+"Knowing Elior". Under exact matching, a name spaCy DID find, but with
+different boundaries, counts as NOT DETECTED. That merges two failure modes
+this project has kept separate since 14 Aug: non-detection (spaCy never
+emitted an entity there) and boundary error (it did, with the wrong span).
+
+Four options were considered.
+
+EXACT ONLY. Strictest. Has a stronger argument than simplicity: the system
+keys identity on exact strings (MERGE (c:Character {name: $name})), so a
+boundary error does not produce a near-miss, it produces a DIFFERENT NODE.
+From the artefact's point of view "Alpha Malcolm Ravensworth" is not a slightly
+wrong detection of Malcolm, it is a character who does not exist. Against: it
+reports boundary errors as non-detection and collapses the taxonomy.
+
+CONTAINMENT. Detected if the occurrence falls inside any span. Preserves the
+taxonomy, but generous: "Elior" inside "Knowing Elior" counts as detected
+though that span is wrong in exactly the way that breaks the MERGE above.
+
+ANY OVERLAP. Too loose to carry information; almost nothing fails it. Rejected.
+
+DOWNSTREAM EFFECT. Detected if the occurrence reaches resolved_map correctly
+typed. Measures what matters for the artefact, but confounds NER performance
+with registry coverage and with SPACY_TO_SCHEMA, so a metric that MOVES WHEN
+YOU EDIT registry.json is not measuring RQ1. Rejected for RQ1; kept as a
+separate end-to-end coverage figure for the evaluation chapter, explicitly
+labelled as not an NER measurement.
+
+DECIDED: report THREE categories per occurrence rather than two.
+[CORRECTED 22 Sep: implemented as FOUR — PARTIAL added. See the CG-22 audit
+results entry at the end of this log.]
+
+    EXACT      an entity span equals the occurrence exactly
+    CONTAINED  the occurrence falls inside a span, boundaries differ
+    ABSENT     no entity span covers it at all
+
+ABSENT is the non-detection figure and the headline number for RQ1. It is the
+one the registry cannot fix and the one CG-19 exists to address. CONTAINED is
+the boundary-error rate and gets its own line.
+
+Why this rather than picking one: computing containment gives exact for free,
+so it costs nothing; a reader can collapse the categories whichever way they
+prefer, so no judgement call needs defending in the viva; and it preserves the
+misclassification / non-detection / boundary-error taxonomy rather than quietly
+merging two of its three branches.
+
+Also corrected in the same pass: the audit documented per-occurrence counting
+but computed buckets over SETS OF REGISTRY KEYS, so Elior occurring 62 times
+and detected 12 times contributed 1. The structural reason is that
+resolve_entity_types returns text, label and resolved_type but no character
+offsets, so span comparison is impossible through it. Fix: iterate doc.ents
+directly for the span work and keep resolve_entity_types for the type analysis.
+
+## Side-effect of adding ORG to SPACY_TO_SCHEMA (22 Sep)
+
+Adding "ORG": "Organisation" was correct in isolation and has a cross-cutting
+consequence worth recording before the numbers are read.
+
+On the 18 Sep run, spaCy's ORG label held TWENTY mentions and NOT ONE
+organisation: Alric 8, Arseny 5, Eli 2, Talia 1, plus fragments like "Knowing
+Elior". Every one a character or part of one.
+
+Previously those resolved to None and were dropped. Now they resolve to
+Organisation. Any ORG-labelled entity with no registry entry is now confidently
+typed as an organisation and wrong.
+
+It does NOT affect pairing, which filters on Character and Location. It DOES
+affect the resolved-type distribution. So the registry's role changes shape:
+it is no longer only rescuing entities that would have been dropped, it is now
+also preventing entities from being actively mistyped. Worth saying in the
+write-up, because it strengthens rather than weakens the registry argument.
+
+## Method note on the side-chat split (22 Sep)
+
+Build work moved to separate chats, with planning and anything touching the
+schema, registry, corpus, gold standard or measurement method staying in one
+place. The boundary is NOT "small versus large": wiring detection in looked
+like three lines and exposed that the pipeline had never touched the corpus,
+and CREATE-to-MERGE looked like one line and was a schema decision affecting
+the precision denominator.
+
+Both problems found in the audit review were exactly the kind the rule exists
+to catch, and neither was escalated. The boundary is right; enforcing it needs
+the reviewing to actually happen rather than the rule being stated.
+
+## CG-22 audit results — corpus_ch1-2_v2, 5,480 words (22 Sep)
+
+First audit run against the frozen dev corpus with the rebuilt registry. These
+figures SUPERSEDE the 18 Sep run entirely and are NOT comparable to it: the
+corpus changed, the registry changed, and nlp() now runs per paragraph rather
+than per chapter. Development-set figures on an unfinished corpus, not final
+results. 502 rows written to audit_report.csv.
+
+### 1. Entities emitted by spaCy — 258 total
+
+    PERSON 83   ORG 58   CARDINAL 37   DATE 29   GPE 28   TIME 5
+    WORK_OF_ART 4   NORP 3   PRODUCT 3   LOC 2   ORDINAL 2   EVENT 2
+    MONEY 1   QUANTITY 1
+
+### 2. Resolved types — 258
+
+    Character 144   None 84   Organisation 18   Location 12
+
+### 3. Registry overrides
+
+AGREEMENTS 73: PERSON→Character 64, GPE→Location 5, ORG→Organisation 4.
+
+CORRECTIONS 86: ORG→Character 47, GPE→Character 22, PERSON→Organisation 7,
+PERSON→Location 5, LOC→Character 2, PRODUCT→Character 2, PRODUCT→Location 1.
+
+The registry CORRECTS MORE THAN IT CONFIRMS — 86 against 73. ORG→Character
+alone (47) is the largest single category, which is the ORG side-effect noted
+above showing up in the numbers: without the registry those 47 would now be
+confidently typed as organisations rather than quietly dropped.
+
+### 4. Coverage — 244 registry-key occurrences found in the corpus
+
+    EXACT      158  (65%)
+    CONTAINED    8  (3%)
+    PARTIAL      1  (0%)
+    ABSENT      77  (32%)
+
+Bucket (a), in registry but not in corpus: 60 keys — expected, the registry is
+bible-scoped and the corpus is two chapters.
+Bucket (d), in doc.ents but not in registry: 66 texts.
+
+### THE HEADLINE NUMBER IS NOT 32%
+
+ELIOR ACCOUNTS FOR 57 OF THE 77 ABSENT OCCURRENCES — 74% of all
+non-detection in the corpus sits on ONE NAME. Elior: occ=62, exact=4,
+contained=1, absent=57. Exact rate 6%, coverage 8%.
+
+Excluding Elior, ABSENT falls to roughly 20 of 182 occurrences, about 11%.
+
+This is a far sharper finding than a flat 32% and it changes what RQ1 can
+claim. Non-detection in this corpus is NOT a broad degradation across invented
+names; it is CONCENTRATED, and the distribution is the result, not the mean.
+The next worst are Marek (occ=7, absent=5), Ren (occ=5, absent=3) and Ric
+(occ=3, absent=3) — all short forms, all low-frequency.
+
+### Invented names are NOT uniformly hard to detect
+
+    Alric      occ=33  exact=32  absent=1
+    Oren       occ=22  exact=18  absent=2
+    Talia      11/11   Kasev  9/9   Arseny  6/6   Eli  5/5
+
+Alric and Oren are invented names of similar shape and length to Elior and
+are detected near-perfectly. A simple morphological explanation — "spaCy fails
+on invented names" — does not survive this. Whatever is happening to Elior is
+not a property of the name class.
+
+### The location finding is sharper than it was
+
+18 Sep recorded "zero correctly identified locations". The span data refines
+that considerably:
+
+    Blackmere   6/6 EXACT   — labelled PERSON every time
+    Hollowmere  similar pattern
+
+Invented locations are DETECTED RELIABLY AND CLASSIFIED WRONGLY. That is a
+misclassification result, not a non-detection result, and it is the precise
+claim the registry answers. The previous phrasing conflated the two.
+
+### The real-world control holds
+
+    New York  4/4 EXACT, correctly GPE
+    Vienna    1/1 EXACT, correctly GPE
+
+Real places in the same prose, same sentences, same model, detected and typed
+correctly. This is the natural control group: the failures are not a property
+of the text or the pipeline, they are a property of the invented names.
+
+### Empirical support for the Event type (CG-12)
+
+"the War of Two Monarchs" was detected as EVENT twice. The Event node type was
+proposed from the schema side; this is corpus evidence that the model already
+emits the label and the information is being discarded. "Lycans" as NORP is a
+second type gap of the same kind.
+
+### Known limitation accepted: bucket (d)
+
+Bucket (d) — texts in doc.ents with no registry entry — still uses exact
+string comparison, so it does not exclude spans that overlap a registry-key
+occurrence. Its 66 entries therefore contain the predicted boundary noise:
+"Knowing Elior", "Alpha Malcolm Ravensworth", "Seems Oren's" alongside genuine
+non-registry entities ("Ahem", "bush", "Chelsea", "grey jeans").
+
+The cheap fix is to exclude entity spans overlapping any registry-key
+occurrence, since both span sets are already computed per paragraph. NOT DOING
+IT. Bucket (d) is diagnostic, not a reported metric — the reported figures come
+from the four-way span classification, which is unaffected. Recorded as a known
+limitation with nine days to submission.
+
+### Correction to the three-way decision recorded above
+
+The entry above records DECIDED: three categories. The implementation is
+FOUR: PARTIAL was added during the build because the three-way spec put spans
+NARROWER than the occurrence into ABSENT — "Hollowmere" detected where the
+registry key is "Hollowmere pack" is a boundary error, not a non-detection, and
+the three-way scheme would have inflated the headline figure. PARTIAL fired
+once in this run, so the correction changes the result by a single occurrence,
+but the spec was wrong and the taxonomy is now complete: EXACT, CONTAINED and
+PARTIAL are all detections with differing boundaries; ABSENT alone means spaCy
+emitted nothing.
+## Write-up log integrity — fourth loss event (22 Sep)
+
+Recorded because it has now happened four times and the cause is finally clear.
+
+Before this entry was written the file on disk had REVERTED: all five 22 Sep
+entries were gone and the 21 Sep entry had changed back to its longer form,
+with LF line endings replaced by CRLF. CRLF is the signature of a git checkout
+under core.autocrlf, so the working-tree version was discarded by a BRANCH
+OPERATION, not by a failed write. The 22 Sep entries had never been committed.
+
+Separately, the working-tree version that was lost contained a CONDENSED
+rewrite of the 21 Sep entry that had itself silently dropped four subsections,
+including the Event gap argument — the sharpest RQ2/RQ3 point in the log. Both
+versions were merged by hand rather than one overwriting the other.
+
+RULE ADOPTED: commit the write-up log before any branch operation, and verify
+the byte count on disk after every write. An uncommitted log is not saved, it
+is staged for deletion by the next checkout.
