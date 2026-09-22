@@ -11,4 +11,5 @@ def lookup(name: str) -> str | None:
 SPACY_TO_SCHEMA = {
     "PERSON": "Character",
     "GPE": "Location",
+    "ORG": "Organisation",
 }

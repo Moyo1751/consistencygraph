@@ -6,8 +6,7 @@ def store_character_age(name, age, chapter, driver):
     with driver.session() as session:
         session.run("""
             MERGE (c:Character {name: $name})
-            CREATE (a:AgeMention {age: $age, chapter: $chapter})
-            CREATE (c)-[:HAS_AGE]->(a)
+            MERGE (c)-[:HAS_AGE]->(a:AgeMention {age: $age, chapter: $chapter})
         """, name=name, age=age, chapter=chapter)
 
 def store_character_location(name, location, chapter, driver):
@@ -15,10 +14,22 @@ def store_character_location(name, location, chapter, driver):
         session.run("""
             MERGE (c:Character {name: $name})
             MERGE (l:Location {name: $location})
-            CREATE (p:Presence {chapter: $chapter})
-            CREATE (c)-[:IS_AT]->(p)
-            CREATE (p)-[:LOCATION]->(l)
+            MERGE (c)-[:IS_AT]->(p:Presence {chapter: $chapter})-[:LOCATION]->(l)
         """, name=name, location=location, chapter=chapter)
+
+def store_organisation(name, driver):
+    with driver.session() as session:
+        session.run("""
+            MERGE (o:Organisation {name: $name})
+        """, name=name)
+
+def store_membership(character, organisation, driver):
+    with driver.session() as session:
+        session.run("""
+            MERGE (c:Character {name: $character})
+            MERGE (o:Organisation {name: $organisation})
+            MERGE (c)-[:MEMBER_OF]->(o)
+        """, character=character, organisation=organisation)
 
 def store_pairs(pairs, driver):
     for pair in pairs:

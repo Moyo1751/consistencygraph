@@ -219,3 +219,7 @@ __marimo__/
 
 # Manuscript source text (author drafts, not part of the software artefact)
 manuscript/
+
+# Frozen evaluation corpus (author drafts + gold standard, not part of the software artefact)
+corpus/
+audit_report.csv
