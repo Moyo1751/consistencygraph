@@ -1,0 +1,503 @@
+corpus_name,corpus_words,run_date,source,chapter,paragraph_index,text,spacy_label,resolved_type,classification
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,1,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,2,minutes,TIME,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,2,dozens,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,2,the last ten years,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,2,billion-dollar,MONEY,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,3,ten years ago,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,3,Kristopher,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,3,Kristopher,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,3,eighty years before,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,3,Kerenath,ORG,Organisation,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,3,two hundred and,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,3,the past hundred and fifty years,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,3,Kerenath Enterprises,PERSON,Organisation,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,3,Kristopher,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,3,Kristopher,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,3,Kerenath,,Organisation,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,3,Kerenath Enterprises,,Organisation,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,4,the years,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,4,three,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,5,another week,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,5,6'7,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,5,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,6,late autumn,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,6,Lycans,NORP,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,6,Chelsea,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,6,several days,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,7,Arseny Kerenath,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,7,six months,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,7,Arseny Kerenath,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,7,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,9,Ahem,ORG,Organisation,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,9,Arseny,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,9,Arseny,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,10,Arseny,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,10,one,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,10,Arseny,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,10,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,11,Arseny,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,11,Eli,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,11,Knowing Elior,WORK_OF_ART,,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,11,Arseny,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,11,Eli,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,11,Elior,,Character,CONTAINED
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,12,Arseny,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,12,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,12,Arseny,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,12,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,13,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,14,Ravensworth,LOC,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,14,Alpha Malcolm Ravensworth,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,14,Ravensworth,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,14,Malcolm Ravensworth,,Character,CONTAINED
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,15,ten minutes,TIME,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,17,first,ORDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,17,three,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,18,Roisen Kedvara Kerenath,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,18,Roisen Kedvara Kerenath,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,19,one,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,19,two,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,19,two,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,19,French,NORP,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,20,Arseny,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,20,Arseny,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,21,Arsen,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,21,Arsen,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,21,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,21,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,22,Roisen,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,22,decades,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,22,bush,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,22,five-inch,QUANTITY,,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,22,Roisen,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,23,Malcolm,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,23,Elior,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,23,Malcolm,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,23,Elior,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,24,three weeks,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,24,three,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,24,a week,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,24,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,25,one,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,25,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,25,one,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,25,Roisen,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,25,a few days,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,25,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,25,Roisen,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,26,Lia,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,26,Ren,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,26,Lia,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,26,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,28,Alpha Malcolm,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,28,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,28,Malcolm,,Character,CONTAINED
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,28,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,29,New York,GPE,Location,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,29,three weeks,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,29,New York,,Location,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,30,New York,GPE,Location,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,30,Blackmere,PERSON,Location,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,30,New York,,Location,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,30,Blackmere,,Location,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,31,Ric,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,31,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,32,four days,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,32,Roisen,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,32,Roisen,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,33,Roisen,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,33,Talia,GPE,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,33,Oren,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,33,Roisen,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,33,Talia,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,33,Oren,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,35,Roisen,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,35,New Jersey Sightings,ORG,Organisation,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,35,NEGATIVE,ORG,Organisation,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,35,Trail,GPE,Location,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,35,Roisen,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,35,New Jersey,,Location,CONTAINED
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,35,Urien,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,36,Lycans,NORP,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,36,Talia,GPE,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,36,Yaela,GPE,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,36,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,36,Talia,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,36,Yaela,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,37,Seems Oren's,WORK_OF_ART,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,37,two,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,37,four,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,37,grey jeans,ORG,Organisation,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,37,Oren,,Character,CONTAINED
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,38,Elior,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,38,Elior,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,38,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,39,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,40,Eight months,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,43,two,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,44,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,51,Eli,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,51,Eli,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,51,Ren,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,54,Where's Oren?,WORK_OF_ART,,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,54,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,54,Oren,,Character,CONTAINED
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,55,Lily,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,57,two days,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,58,Vienna,GPE,Location,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,58,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,58,third,ORDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,58,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,58,Vienna,,Location,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,58,Ric,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,58,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,59,Kasev,GPE,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,59,Dara,GPE,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,59,Johann,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,59,Mira,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,59,Marek,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,59,Kasev,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,59,Dara,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,59,Johann,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,59,Mira,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,59,Marek,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,61,thirty,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,61,the War of Two Monarchs,EVENT,,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,61,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,61,High Warlord,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,62,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,62,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,64,Alric,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,64,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,66,Blackmere,PERSON,Location,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,66,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,66,Blackmere,,Location,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,67,three,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,67,two,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,67,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,67,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,68,Malcolm,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,68,the hundred and ten,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,68,Malcolm,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,68,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,69,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,69,three,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,69,Kasev,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,69,Dara,GPE,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,69,three,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,69,Two,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,69,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,69,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,69,Kasev,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,69,Dara,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,69,Marek,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,69,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,70,Johann,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,70,two,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,70,five,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,70,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,70,Mira,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,70,Johann,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,70,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,71,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,72,Dara,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,72,Kasev,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,72,Dara,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,72,Kasev,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,72,Dara,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,72,Kasev,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,72,Dara,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,72,Kasev,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,72,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,73,Mira,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,73,Johann,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,73,Kasev,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,73,Dara,GPE,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,73,two days,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,73,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,73,Mira,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,73,Johann,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,73,Kasev,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,73,Dara,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,73,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,73,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,74,two days,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,75,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,75,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,75,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,76,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,76,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,77,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,78,two days,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,78,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,78,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,79,Talia,GPE,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,79,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,79,Talia,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,80,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,80,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,81,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,1,82,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,82,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,83,Ric,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,1,83,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,1,Oren,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,1,Arseny,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,1,Oren,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,1,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,1,years,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,1,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,1,Oren,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,1,Arseny,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,1,Oren,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,1,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,1,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,2,Oren,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,2,Two days,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,2,Talia,GPE,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,2,Oren,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,2,years,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,2,Oren,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,2,Talia,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,2,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,2,Oren,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,3,Frosty,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,3,Oren,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,3,Frosty,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,3,Oren,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,4,Oren,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,4,Ren,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,4,Oren,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,4,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,4,Ren,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,5,Eli,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,5,Eli,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,6,a whole year,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,6,Ren,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,6,Ravensworths,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,6,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,6,Ren,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,6,Ravensworths,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,7,Blackmere,PERSON,Location,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,7,Oren,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,7,Blackmere,,Location,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,7,Oren,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,8,two,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,8,grey eyes,ORG,Organisation,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,9,Oren,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,9,Oren,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,10,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,10,Eli,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,10,Oren,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,10,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,10,Eli,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,10,Oren,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,11,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,11,Elior,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,11,Hollowmere,PERSON,Organisation,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,11,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,11,Elior,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,11,Hollowmere pack,,Organisation,PARTIAL
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,12,Ahem,ORG,Organisation,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,12,Oren,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,12,Oren,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,14,Oren,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,14,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,14,Oren,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,15,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,15,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,16,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,16,Oren,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,16,Talia,GPE,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,16,Yaela,GPE,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,16,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,16,Oren,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,16,Talia,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,16,Yaela,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,17,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,18,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,18,four,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,18,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,18,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,19,Talia,GPE,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,19,Yaela,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,19,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,19,Talia,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,19,Yaela,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,20,Talia,GPE,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,20,last minute,TIME,,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,20,Talia,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,21,Oren,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,21,Oren,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,22,Talia,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,22,two days,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,22,four,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,22,Talia,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,23,Talia,GPE,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,23,Oren,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,23,Kerenath,,Organisation,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,23,Talia,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,24,Ahem,ORG,Organisation,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,25,Oren,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,25,Elior,PRODUCT,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,25,Oren,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,25,Elior,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,26,Oren,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,26,Oren,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,27,Lia,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,27,Lia,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,27,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,28,Oren,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,28,Oren,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,29,Blackmere,PERSON,Location,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,29,Blackmere,,Location,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,29,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,30,Oren,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,30,Oren,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,31,Eli,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,31,Talia,GPE,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,31,Eli,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,31,Talia,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,31,Ren,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,32,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,32,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,33,New York,GPE,Location,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,33,nine hours,TIME,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,33,three,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,33,Kasev,GPE,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,33,Dara,GPE,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,33,Marek,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,33,Alric,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,33,New York,,Location,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,33,Kasev,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,33,Dara,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,33,Marek,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,33,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,35,Dara and,WORK_OF_ART,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,35,Kasev,GPE,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,35,New York,GPE,Location,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,35,Malcolm,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,35,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,35,Dara,,Character,CONTAINED
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,35,Kasev,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,35,New York,,Location,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,35,Malcolm,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,35,Marek,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,35,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,36,Ravensworth,LOC,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,36,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,36,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,36,Marek,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,36,Ravensworth,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,36,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,36,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,37,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,38,Bloodbane,PERSON,Organisation,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,38,Duskfall,ORG,Organisation,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,38,a decade,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,38,Bloodbane,,Organisation,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,38,Duskfall,,Organisation,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,38,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,39,Bloodbane,PERSON,Organisation,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,39,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,39,Bloodbane,,Organisation,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,39,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,40,the War of Two Monarchs,EVENT,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,40,Bloodbane,PERSON,Organisation,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,40,Duskfall,ORG,Organisation,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,40,Bloodbane,,Organisation,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,40,Duskfall,,Organisation,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,40,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,41,Bloodbane,PERSON,Organisation,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,41,the years,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,41,Bloodbane,,Organisation,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,42,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,43,Bloodbane,PERSON,Organisation,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,43,Bloodbane,,Organisation,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,43,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,44,Hector,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,44,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,44,Hector,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,44,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,45,One,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,45,Count Halborn,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,45,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,46,centuries,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,46,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,46,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,47,Blackmere,PRODUCT,Location,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,47,Blackmere,,Location,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,47,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,48,Arsen,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,48,Blackmere,PERSON,Location,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,48,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,48,Arsen,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,48,Blackmere,,Location,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,48,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,49,Kiva,PRODUCT,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,49,Kiva,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,49,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,50,Alric,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,50,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,51,the end of the month,DATE,,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,51,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,51,Hector,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,52,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,52,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,53,Alric,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,53,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,54,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,55,Nine hours later,TIME,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,55,Ravensworths,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,55,almost twenty,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,55,Over two dozen,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,55,Ravensworths,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,56,three,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,56,one,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,56,three,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,56,twelve,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,56,five,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,56,Dara,GPE,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,56,Kasev,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,56,Marek,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,56,Marek,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,56,Dara,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,56,Kasev,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,57,Kasev,GPE,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,57,Dara,GPE,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,57,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,57,Talia,GPE,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,57,Yaela,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,57,Alric,ORG,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,57,Roisen,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,57,Kasev,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,57,Dara,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,57,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,57,Oren,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,57,Talia,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,57,Yaela,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,57,Alric,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,57,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,57,Roisen,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,57,Elior,,Character,ABSENT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,58,Roisen,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,58,Roisen,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,59,Alpha,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,60,two,CARDINAL,,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,60,Hollowmere,ORG,Organisation,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,60,Alpha Roisen,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,60,Hollowmere,,Organisation,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,60,Roisen,,Character,CONTAINED
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,62,Roisen,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,62,Gabriel,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,62,Everett,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,62,Roisen,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,62,Gabriel,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,62,Everett,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,63,Everett,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,63,Everett,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,64,Evelyn,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,doc_ents,2,64,Roisen,PERSON,Character,
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,64,Evelyn,,Character,EXACT
+corpus_ch1-2_v2.json,5480,2026-09-22,registry_search,2,64,Roisen,,Character,EXACT
