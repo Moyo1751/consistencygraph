@@ -1310,3 +1310,182 @@ against.
 
 Not doing: loosening pairing to paragraph level. The ceiling of twelve makes it
 not worth the precision cost.
+## CG-19 registry injection: built and measured (23 Sep)
+
+PhraseMatcher over the 103 registry keys. Spans spaCy never emitted are added to
+doc.ents labelled REGISTRY. Provenance rides on the LABEL rather than a custom
+Span extension, because labels are stored on the tokens and survive
+reassignment of doc.ents; span extension data is keyed on character offsets and
+was not verifiable without a live spaCy to test against.
+
+audit.py DELIBERATELY DOES NOT CALL IT. The audit is the spaCy-only baseline and
+has to stay that way or the before arm is destroyed.
+
+### Measured on corpus_ch1-2_v2
+
+                                 BEFORE    AFTER
+    entities in doc.ents            258      335
+    sentences with a Character      114      171
+    sentences with a Location        12       12
+    sentences with BOTH               3        5
+    pairs                             4        6
+    distinct Location names           4        4
+    distinct Character names         35       39
+
+    resolved BEFORE  Character 144  Organisation 18  Location 12  None 84
+    resolved AFTER   Character 220  Organisation 19  Location 12  None 84
+    sources  AFTER   spacy 257      registry 78
+
+78 spans injected, 13 distinct names, ZERO NOISE. Every one a genuine registry
+proper noun: Elior 57, Marek 5, Ren 3, Ric 3, Oren 2, Urien, High Warlord,
+Alric, Mira, Hollowmere pack, Kerenath, Count Halborn, Hector.
+
+THE RECONCILIATION IS EXACT. The 22 Sep audit counted 77 ABSENT occurrences.
+Injection added 78 spans: the 77 ABSENT plus one PARTIAL. Two instruments built
+independently, agreeing to the unit. Strongest evidence so far that the audit
+measures what it claims to.
+
+One spaCy span was displaced, and it is the right one: "Hollowmere" (PERSON) at
+ch2 p11 lost to the registry's longer "Hollowmere pack", which types correctly
+as Organisation. A boundary error fixed as a side effect.
+
+LOCATIONS UNCHANGED AT 12, exactly as predicted. Injection rescues characters.
+It does not and cannot fix the location scarcity, because that was never a
+detection failure.
+
+## CG-23 closed: paragraph provenance (23 Sep)
+
+Presence stays keyed on chapter. Paragraph index is carried as a
+non-identifying p.paragraphs list, deduplicated by a CASE clause. Six pairs, six
+Presence nodes, p.paragraphs populated on every row. All six triples distinct,
+so the dedup branch of the CASE was never exercised and remains untested.
+
+Both detection queries still return empty. NO CHARACTER IS AT TWO DIFFERENT
+LOCATIONS IN ONE CHAPTER. The graph is richer after injection and still cannot
+express a contradiction, because the prose does not contain one in the dimension
+the query models.
+
+## CG-17 LLM arm: first run, and it earned its place (23 Sep)
+
+Anthropic API. Model, effort and token budget pinned in config.py, because a run
+at one effort setting and a run at another are DIFFERENT EXPERIMENTS and the
+write-up has to name which produced the numbers.
+
+    LLM_MODEL       claude-sonnet-5
+    LLM_EFFORT      medium
+    LLM_MAX_TOKENS  32000
+
+One call for both chapters, so cross-chapter contradictions are reachable. The
+corpus is built by the same loader the pipeline uses, so the LLM and the graph
+read identical text.
+
+### THE DETERMINISM CLAIM WAS REVISED ON EVIDENCE
+
+The plan was temperature=0 as the reproducibility control. CURRENT CLAUDE MODELS
+DO NOT ACCEPT temperature AT ALL; the SDK removed it and the API rejects it. So
+that control does not exist.
+
+What remains is the control that mattered anyway: log every raw call, and run
+the evaluation several times to REPORT THE SPREAD rather than a single figure.
+This is a stronger position to defend, not a weaker one. It claims no
+reproducibility the method cannot deliver.
+
+Three failures before the first successful run, all recorded because each one is
+a methodological fact and not just a bug:
+
+1. temperature rejected outright.
+2. TWO RUNS DIED ON BUDGET. stop_reason max_tokens, first at 4,096 then at
+   16,000 output tokens, ENTIRELY THINKING, no text block. Adaptive thinking
+   counts against max_tokens and "high" is the default effort on this model, so
+   raising the budget alone changed nothing. Fixed by lowering effort to medium
+   AND raising the budget to 32,000.
+3. The SDK refuses a non-streaming call whose budget could exceed ten minutes.
+   Switched to streaming with get_final_message().
+
+Correction to my own reasoning, recorded: the thinking block was logged on the
+argument that it would give the model's reasoning as RQ4 evidence. IT DOES NOT.
+The block carries a 15,696-character signature and an EMPTY thinking field. The
+reasoning is encrypted. Logging the blocks was still right, since it is what
+diagnosed the budget failure, but the stated justification was wrong.
+
+### Successful run: 11,865 in / 10,543 out, $0.13, stop_reason end_turn
+
+TWO FINDINGS.
+
+    [low]    number / within-chapter    ch1:p61, ch1:p68
+             "over thirty" warriors against "the hundred and ten warriors here"
+
+    [medium] other / cross-chapter      ch1:p73, ch2:p35
+             Kasev and Dara "will leave in two days" against "have gone ahead
+             and arrived in New York"
+
+### Scored against the gold standard
+
+    recall, naturally occurring      0 / 2     missed GS-01 and GS-07
+    strict precision                 0 / 2
+    correct rejections, legitimate   8 / 9
+
+Finding 2 IS GS-08, same two locators. GS-08 is the row whose own notes read
+"the most valuable precision row in the set... A checker that flags this scores
+badly." It fired on the first run. The gold standard did its job.
+
+Finding 1 was not in the gold standard and was adjudicated by the author: NOT a
+contradiction. The thirty are the travelling party, five teams, with Dara, Kasev
+and Marek contributing twenty between them and the remaining ten to Mira and
+Johann. The hundred and ten are the garrison to be trained, whom Mira and Johann
+stay behind to train. Added as GS-14, a set-binding precision row, companion to
+GS-10 which binds intervals to subjects.
+
+Eight legitimate rows correctly went unflagged, including the clothing change,
+the two intervals bound to different subjects, and every alias row.
+
+### BOTH FALSE POSITIVES ARE BINDING ERRORS, WHICH IS WHAT THE GRAPH FIXES
+
+GS-08: read "will leave in two days" and "have gone ahead" as contradicting,
+when the second is the first having happened. Binding across TIME.
+
+GS-14: read two counts of different populations as two counts of one.
+Binding across SETS.
+
+In both the model had every word it needed and still attached a fact to the
+wrong entity. A graph does not make that error, because
+(c:Character)-[:IS_AT]->(p:Presence) binds by construction rather than by
+inference.
+
+THIS IS THE HYBRID ARGUMENT DEMONSTRATED RATHER THAN ASSERTED. The LLM reaches
+contradictions the graph cannot model at all, and loses precision on exactly the
+binding problems the graph solves structurally. Neither arm is sufficient.
+
+It correctly rejected GS-10, which is also a binding case. So it is not
+incapable at binding, it is UNRELIABLE at it. The inconsistency is the finding.
+
+### A THIRD CATEGORY THE GOLD STANDARD DOES NOT YET HAVE
+
+The author's ruling on GS-08 was that Eli "taking point" means acting as the
+point of contact, not travelling with the advance team, AND THAT A READER COULD
+PLAUSIBLY MAKE THE SAME MISREADING THE MODEL DID.
+
+So the narrative is consistent, the flag is a false positive against ground
+truth, and the text is genuinely ambiguous. For a tool whose user is the AUTHOR,
+a flag saying "a reader may think Eli went with them" is useful output, not a
+malfunction. GS-07 already distinguishes "a speaker can be wrong without the
+narrative being wrong". This is its neighbour: THE TEXT CAN MISLEAD WITHOUT THE
+NARRATIVE BEING WRONG.
+
+DECIDED: report precision twice. Strict precision against ground truth, and
+separately how many false positives identified a real ambiguity. Neither figure
+is honest alone.
+
+Consequence, deferred: if the "take point" line is revised, v2 is frozen so the
+change lands in v3 with the plants and GS-08's locators move. It is also a live
+instance of the retirement finding from GS-02 and GS-03, except THIS TIME THE
+TOOL CAUSED THE REVISION rather than ordinary editing. Worth its own line in the
+evaluation chapter.
+
+### Known limitations of this run
+
+One run, not three, so no variance figure yet. Effort fixed at medium; high at a
+64,000 budget is a second condition worth running as a reasoning-budget versus
+detection-quality comparison. Verification mode is not built: the graph flags
+nothing on the natural corpus, so there is nothing to verify until the plants
+land.
