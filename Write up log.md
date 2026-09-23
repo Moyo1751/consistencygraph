@@ -732,7 +732,10 @@ built the script to take a path rather than hardcoding the text.
 
 The corpus contains real places and invented places in the same prose:
 New York 4, Vienna 1, New Jersey 1 against Blackmere 6, Hollowmere 2. Same text,
-same model, no confound. A natural experiment testing the 17 Jul morphology
+same model, no confound.
+[CORRECTED 23 Sep: Hollowmere is an ORGANISATION, not a place, and belongs in
+neither column. The control is New York 4 + Vienna 1 + New Jersey 1 against
+Blackmere 6. See the CG-23 entry.] A natural experiment testing the 17 Jul morphology
 hypothesis on data it was not derived from.
 
 ### Registry type-system problems surfaced
@@ -744,6 +747,12 @@ A flat name->type map cannot express family names. Resolved 22 Sep: bare
 Kerenath retyped to Character (no bare organisational use exists in the corpus);
 Ravensworth and Ravensworths retyped to Organisation, since 4 of their 5 uses
 are the family or pack. Oren Kerenath added, which was missing. 104 entries.
+[CORRECTED 23 Sep: NONE OF THIS WAS EVER APPLIED. Verified by lookup: Kerenath
+is still Organisation, Ravensworths still Character, Oren Kerenath absent. The
+file holds 103 entries (Character 75, Organisation 18, Location 10). These
+edits were agreed and logged but never typed into registry.json; commit
+9386dd4 captured the 21 Sep rebuild instead, despite its message. Still
+outstanding. See the CG-23 entry.]
 
 Rule adopted: LONGEST-MATCH-WINS, COUNTED PER OCCURRENCE. One hit when the full
 name appears; separate hits when shorter forms appear alone.
@@ -1026,8 +1035,11 @@ not a property of the name class.
 18 Sep recorded "zero correctly identified locations". The span data refines
 that considerably:
 
-    Blackmere   6/6 EXACT   — labelled PERSON every time
+    Blackmere   6/6 EXACT   — labelled PERSON every time (5 PERSON, 1 PRODUCT)
     Hollowmere  similar pattern
+[CORRECTED 23 Sep: the Hollowmere line is wrong. Hollowmere is an Organisation,
+not a location, so it does not belong in a location finding at all. It occurs
+twice and spaCy detects both. See the CG-23 entry.]
 
 Invented locations are DETECTED RELIABLY AND CLASSIFIED WRONGLY. That is a
 misclassification result, not a non-detection result, and it is the precise
@@ -1092,3 +1104,209 @@ versions were merged by hand rather than one overwriting the other.
 RULE ADOPTED: commit the write-up log before any branch operation, and verify
 the byte count on disk after every write. An uncommitted log is not saved, it
 is staged for deletion by the next checkout.
+## CG-23: pipeline over the corpus, and what it actually showed (23 Sep)
+
+pipeline.py processed the manuscript for the first time. Everything before this
+ran on one hardcoded sentence.
+
+### The run
+
+148 paragraphs of corpus_ch1-2_v2, nlp() per paragraph, normalise() before
+nlp() so the pipeline and audit.py see identical text. clear_database once
+before the loop, detection once after.
+
+    Processed 148 paragraphs, stored 4 pairs
+
+    Character 4    Location 2    Presence 4
+    IS_AT 4        LOCATION 4
+
+FOUR PAIRS FROM 5,480 WORDS. One Presence per pair, no duplicates, which
+independently confirms the CG-11 CREATE-to-MERGE fix is holding under real
+volume.
+
+Both detection queries returned empty. Age is empty because nothing calls
+store_character_age; that is CG-14 and expected.
+
+THE LOCATION RESULT MUST BE STATED PRECISELY. The query looks for one character
+attached to two Presences in the same chapter. No character in this graph has
+two. So the empty result is NOT evidence that the manuscript is consistent. It
+is evidence that THE GRAPH IS TOO SPARSE TO EXPRESS A CONTRADICTION. Those are
+different claims and only the second is true. Writing "no inconsistencies
+found" would be a misreport.
+
+### The funnel (src/funnel.py, diagnostic, no Neo4j)
+
+    148 paragraphs, 439 sentences, 258 entities
+
+    Resolved types   Character 144   None 84   Organisation 18   Location 12
+
+    Distinct Location names    4      Blackmere 6, New York 4, Trail 1, Vienna 1
+    Distinct Character names  35      Alric 32, Oren 18, Talia 11, Roisen 9, ...
+
+    sentences                439
+    with a Character         114   (26%)
+    with a Location           12   (2.7%)
+    with BOTH                  3
+
+    Pairs: ch2 Oren->Blackmere, Kasev->New York, Arsen->Blackmere,
+           Alric->Blackmere
+
+THE BOTTLENECK IS NOT THE PAIRING RULE. Sentences containing a Location (12)
+equals total Location resolutions (12), so every location mention sits alone in
+its sentence. The ceiling on pairs is twelve whatever the pairing rule is.
+Loosening sentence-level co-occurrence to paragraph level reaches perhaps ten
+pairs and costs precision. It cannot fix this.
+
+### Verified against audit_report_ch1-2_v2.csv
+
+Of the TEN Location-typed registry keys, only FOUR occur in chapters 1 and 2:
+
+    key              occ   EXACT  CONTAINED  PARTIAL  ABSENT
+    Blackmere          6       6          0        0       0
+    New York           4       4          0        0       0
+    New Jersey         1       0          1        0       0
+    Vienna             1       1          0        0       0
+    Asheville          0       -          -        -       -
+    Demon Mountain     0       -          -        -       -
+    Hudson Valley      0       -          -        -       -
+    Kaldon             0       -          -        -       -
+    Kedmaon            0       -          -        -       -
+    Thornhaven         0       -          -        -       -
+
+EVERY LOCATION NAME PRESENT IN THE CORPUS WAS DETECTED. Eleven of twelve
+occurrences EXACT, one CONTAINED, ZERO ABSENT. The six with no occurrences are
+bucket (a), bible-scoped keys whose scenes are unwritten, not detection
+failures.
+
+So spaCy's non-detection is NOT the location bottleneck. The manuscript names
+places twelve times in 5,480 words and two of the four names are real-world.
+The scarcity is a property of the PROSE, not of the model.
+
+What the registry does is still visible and the contrast is clean:
+
+    Blackmere        6/6 detected, NEVER ONCE GPE (5 PERSON, 1 PRODUCT)
+                     reaches the graph only because the registry overrides it
+    New York, Vienna always GPE, correct without the registry
+
+That is the invented-versus-real result with a matched control in one table.
+
+### CH1 P35 IS A DOUBLE FAILURE IN ONE PARAGRAPH
+
+spaCy emitted "New Jersey Sightings" as ORG, swallowing the real place name
+(this is the CONTAINED row above). In the same paragraph it emitted "Trail" as
+GPE, which SPACY_TO_SCHEMA turned into a Location. So one paragraph LOSES a
+real location and INVENTS a false one. "Trail" is the noise entry in the funnel
+output. Worth quoting in the evaluation: the two error modes are not
+independent, they co-occur.
+
+### Registry-key occurrences by type
+
+    Character 220    Organisation 12    Location 12
+
+Ninety percent of what the registry does in this corpus is character names.
+
+### CORRECTIONS TO MY OWN READING OF 22 SEP
+
+Three claims made yesterday and repeated in this log were wrong. Recorded here
+rather than quietly fixed.
+
+1. "Six of ten Location keys are invisible to the pipeline." WRONG. They are
+   absent from the text, not invisible to it. Zero occurrences each.
+
+2. "Hollowmere is lost to a boundary mismatch between the span spaCy emits and
+   the registry key 'Hollowmere pack'." WRONG twice. spaCy detects Hollowmere
+   both times it occurs (ch2 p11 as PERSON, ch2 p60 as ORG), and the registry
+   types it Organisation deliberately. HOLLOWMERE IS A PACK, NOT A PLACE: a
+   body of individuals and families, per the world-building bible. The registry
+   is correct and there is no bug.
+
+3. The speculation that a flat name-to-type map cannot express a name denoting
+   both a place and the group occupying it was an invented problem. It does not
+   arise here.
+
+### THE REGISTRY IS NOT IN THE STATE THIS LOG CLAIMS
+
+Verified by direct lookup, 23 Sep:
+
+    lookup('Kerenath')       -> 'Organisation'
+    lookup('Oren Kerenath')  -> None
+    lookup('Ravensworths')   -> 'Character'
+
+    Counter: Character 75, Organisation 18, Location 10   TOTAL 103
+
+NONE of the three registry edits recorded against 22 Sep are in the file. The
+totals match the 21 Sep rebuild state exactly, untouched. The 21 Sep entry
+above claims all three and states 104 entries; commit 9386dd4's message claims
+two of them.
+
+Traced through git the same day:
+
+    9386dd4^  registry.json    19 entries (Character 16, Location 3)
+    9386dd4   registry.json   103 entries (Character 75, Organisation 18,
+                              Location 10), Kerenath 'Organisation',
+                              Oren Kerenath absent, Ravensworths 'Character'
+
+NOT A LOSS EVENT. What 9386dd4 captured was the 21 SEP REBUILD, 19 entries to
+103, which had never been committed until then. The three 22 Sep retypes were
+decided in conversation, recorded in this log in the past tense, and NEVER
+TYPED INTO THE FILE. Nothing was overwritten. The work was never performed, and
+the commit message repeated the log rather than describing its own diff.
+
+This is a DIFFERENT FAILURE from the four write-up log losses and needs a
+different guard. Those were a git problem, answered by committing before branch
+operations. This is bookkeeping: agreement was mistaken for execution.
+
+GUARD ADOPTED: a change is recorded as done only after it is VERIFIED IN THE
+ARTEFACT IT CLAIMS TO CHANGE. For a registry edit that means a lookup; for
+code, a run. Agreement in discussion is not evidence.
+
+Incidental but worth keeping: the pre-rebuild registry was 19 entries,
+Character 16 and Location 3. That is the baseline the 18 Sep drift finding
+measured against, now recoverable from git rather than from memory.
+
+STILL OUTSTANDING: the three retypes are unapplied. Before applying them they
+need re-checking against the corpus rather than re-adopting from this log,
+since the Hollowmere reasoning that once sat alongside them has been withdrawn.
+
+Method note: the git check first returned nothing because it was run from src/,
+where the pathspec src/registry.json matches nothing. GIT PATHSPECS RESOLVE
+RELATIVE TO CWD.
+
+### WHAT THIS DOES TO THE CG-19 ARGUMENT
+
+The case made on 22 Sep was that registry injection had moved from
+recommendation to dependency, because without it there was nothing in the graph
+to detect. THE VERIFIED DATA DOES NOT SUPPORT THAT.
+
+Total ABSENT across all registry keys is 77, of which 57 are "Elior", a
+CHARACTER. Zero are locations. So injection would rescue character mentions and
+would add NOT ONE location to the graph. It would also not fix the CONTAINED
+cases: under filter_spans a PhraseMatcher hit on "New Jersey" loses to spaCy's
+longer "New Jersey Sightings" span.
+
+CG-19 is still worth building, but for a DIFFERENT REASON than the one given
+yesterday. It is the INTERVENTION ARM FOR RQ1: 77 ABSENT occurrences before,
+some number after, measured on the same corpus with the same instrument. That
+is a real experimental result and it is a better contribution than the static
+figure alone. What it is not is the thing that unblocks the evaluation.
+
+THE THING THAT UNBLOCKS THE EVALUATION IS THE PLANTS. If chapters 1 and 2 name
+places twelve times, corpus v3 has to name them deliberately and repeatedly in
+the planted passages or the location query has nothing to compare. CG-16 is the
+critical path, not CG-19.
+
+### DECIDED (23 Sep)
+
+Both CG-17 and CG-19 stay in scope. Ordering changed on the evidence above:
+
+    1. Plants into corpus v3 (CG-16)
+    2. CG-19 registry injection, as the RQ1 intervention arm
+    3. CG-17 LLM integration
+
+That ordering protects the evaluation chapter if the days run out. The
+spaCy-only baseline in audit_report_ch1-2_v2.csv must survive in the write-up
+alongside any hybrid figure, or the intervention has nothing to be measured
+against.
+
+Not doing: loosening pairing to paragraph level. The ceiling of twelve makes it
+not worth the precision cost.
