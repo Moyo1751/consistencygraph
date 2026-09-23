@@ -4,37 +4,22 @@ from spacy.util import filter_spans
 from config import nlp
 from registry import lookup, registry, SPACY_TO_SCHEMA
 
-# CG-19. Registry injection.
-#
-# resolve_entity_types() only ever consulted the registry for spans spaCy had
-# already emitted, so a registry key spaCy failed to DETECT was invisible to
-# the whole pipeline no matter what the registry said about it. The 22 Sep
-# audit put that at 77 ABSENT occurrences out of 244.
-#
-# The matcher is built once at import. Tokenising 103 keys on each of 148
-# paragraphs would dominate runtime.
+# CG-19. resolve_entity_types only consults the registry for spans spaCy already
+# emitted, so keys it misses entirely never reach the pipeline. Matcher built once
+# at import; tokenising the keys per paragraph would dominate runtime.
 _REGISTRY_MATCHER = PhraseMatcher(nlp.vocab)
 _REGISTRY_MATCHER.add("REGISTRY", list(nlp.tokenizer.pipe(registry.keys())))
 
-# Provenance is carried by the LABEL, not by a custom Span extension. Entity
-# labels are stored on the tokens and survive reassignment of doc.ents; span
-# extension data is keyed on character offsets in doc.user_data and is easier
-# to lose silently. Anything labelled REGISTRY was injected here.
+# label carries provenance — survives doc.ents reassignment, unlike a Span extension
 REGISTRY_LABEL = "REGISTRY"
 
 
 def inject_registry_entities(doc):
-    """Add registry keys that spaCy failed to detect to doc.ents.
+    """Add registry keys spaCy missed to doc.ents.
 
-    Rescues ABSENT occurrences ONLY. Where spaCy already emitted a span that
-    overlaps a key, filter_spans keeps the longer span, so CONTAINED and
-    PARTIAL boundary errors are NOT fixed by this: "New Jersey" stays lost
-    inside spaCy's "New Jersey Sightings" (ch1 p35).
-
-    spaCy's own spans are listed first and filter_spans sorts stably, so an
-    exact duplicate keeps spaCy's label and the baseline is never overwritten.
-
-    Mutates doc.ents in place and returns doc.
+    Rescues non-detections only. filter_spans keeps the longer span, so a key
+    swallowed by a wider spaCy entity stays lost, and an exact duplicate keeps
+    spaCy's own label.
     """
     injected = [
         doc[start:end]
