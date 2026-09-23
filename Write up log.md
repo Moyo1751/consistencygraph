@@ -1489,3 +1489,106 @@ One run, not three, so no variance figure yet. Effort fixed at medium; high at a
 detection-quality comparison. Verification mode is not built: the graph flags
 nothing on the natural corpus, so there is nothing to verify until the plants
 land.
+## CG-17 verification arm, and the result the whole project was for (23 Sep)
+
+Verification was going to wait for plants, on the reasoning that the graph flags
+nothing so there is nothing to verify. WRONG. The gold standard IS a candidate
+set: 11 live rows, each with locators, anchors and an author-adjudicated ground
+truth. No plants and no graph required.
+
+### Method
+
+One call per row. The verifier receives THE TYPE, THE ENTITIES AND THE PASSAGES,
+which is what the graph would hand it. It NEVER receives the gold standard's own
+"what the contradiction is" column, because for several rows that column
+telegraphs the answer; GS-08's reads "by the same speaker to a different
+audience", which is most of the reasoning.
+
+Ground truth is taken mechanically from the Origin column: naturally occurring
+means a real contradiction, legitimate means not. No judgement applied at
+scoring time.
+
+Same model, effort and budget as the detection run. Every call logged to
+llm_runs/ under its row id.
+
+### Scorecard
+
+    true positives    0     false negatives  2     GS-01, GS-07
+    true negatives    8     false positives  1     GS-05
+    unparseable       0
+
+### GS-08 FLIPPED, AND THAT IS THE ARGUMENT
+
+Detection, reading the whole corpus, called GS-08 a CONTRADICTION at medium
+confidence. A false positive.
+
+Verification, handed the SAME TWO PASSAGES plus a type label, called it
+CONSISTENT at HIGH confidence:
+
+    "The passages describe sequential events, Kasev and Dara depart first,
+     then later arrive in New York ahead of the others, which is a natural
+     progression, not a contradiction."
+
+Same model. Same text. Opposite and correct answer. The only difference is that
+the candidate arrived PRE-BOUND instead of having to be found.
+
+This is a controlled comparison inside one model, not a comparison between
+systems, and it is stronger evidence for the hybrid than either arm's raw score.
+The architecture is not "LLM plus graph because two is better than one". It is
+"the LLM's failure mode is binding, and binding is what the graph does".
+
+### ALL THREE ERRORS HAVE ONE CAUSE
+
+GS-01 (missed): "the passages never mention Ciaran, Roisen, or Elior, so no
+contradiction involving those named individuals is present." It is RIGHT. The
+two paragraphs do not name them. The contradiction exists only if you know who
+the three generations are, which lives in the family graph.
+
+GS-07 (missed): could not resolve who "he" refers to.
+
+GS-05 (false positive): bound "she" in ch1 p21 to Elior, the nearest named
+antecedent, and concluded Elior changes gender.
+
+Every failure is ENTITY RESOLUTION THE PASSAGES DO NOT CONTAIN. That is exactly
+what a graph supplies and a passage does not. Three independent failures, one
+cause, and it is the cause the architecture predicts.
+
+### THE GS-05 FALSE POSITIVE IS PARTLY AN ARTEFACT OF MY TEST
+
+Checked p21 against p20 and p22. The paragraph is about Roisen throughout; she is
+named in p22. The model saw ...," thought Elior. She pulled up the long
+sleeves... and bound the pronoun to Elior. The prose is correct.
+
+But the test handed it p21 IN ISOLATION, because candidates were built from the
+gold standard's anchor locators alone. With the neighbours attached the pronoun
+is unambiguous. So this false positive measures my context window, not the
+architecture.
+
+SPECIFICATION DERIVED FROM THIS: a hybrid candidate must carry resolved entities
+AND adjacent paragraphs, not only the anchor passages. That is not a design
+guess, it is three failures with a shared cause pointing at the same fix.
+
+Craft note, not an error: the name "Elior" sits between "her desk" and "She
+pulled up", so the pronoun chain is briefly ambiguous around an intervening
+name. Same family as the "take point" case. Author's call; no change recommended.
+
+### Detection versus verification, same corpus, same day
+
+                        DETECTION        VERIFICATION
+    input               whole corpus     2 passages + type
+    recall (natural)    0 / 2            0 / 2
+    precision           0 / 2            0 / 1
+    correct rejections  8 / 9            8 / 9
+    GS-08               CONTRADICTION    CONSISTENT (high)
+
+NEITHER ARM DETECTED EITHER NATURALLY OCCURRING CONTRADICTION. Both missed GS-01
+and GS-07, for the same reason, in both modes. That negative result is consistent
+across two independent experiments and should be reported as prominently as the
+flip.
+
+### Known limitations
+
+One run per row, no variance figure. Effort fixed at medium. Candidates built
+from anchors only, which is the GS-05 artefact above. Ground truth for GS-07 is
+itself an author judgement about an ambiguous passage, so counting it as a
+contradiction the tool should catch is defensible but not neutral.

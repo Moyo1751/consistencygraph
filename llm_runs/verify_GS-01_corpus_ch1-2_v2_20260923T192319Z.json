@@ -1,0 +1,22 @@
+{
+  "kind": "verify_GS-01",
+  "model": "claude-sonnet-5",
+  "corpus": "corpus_ch1-2_v2.json",
+  "timestamp": "20260923T192319Z",
+  "input_tokens": 424,
+  "output_tokens": 391,
+  "stop_reason": "end_turn",
+  "prompt": "A consistency checker has flagged the passages below as a possible Timeline contradiction involving: Ciaran; Roisen; Elior; Kerenath Enterprises.\n\nDecide whether they actually contradict. Two statements contradict only if they cannot both be true of the same story world. Statements about different people, different times, different places or different groups do not contradict, and neither does a change that can legitimately occur.\n\nReturn JSON only:\n\n{\"verdict\": \"CONTRADICTION|CONSISTENT\", \"confidence\": \"high|medium|low\", \"reason\": \"one sentence\"}\n\nPASSAGES:\n\n[ch1:p3] He'd only taken up the role ten years ago, from his uncle Kristopher. His mother had left Kristopher in charge of their mundane-world business eighty years before. His grandfather had started the Kerenath shipping company two hundred and thirty years ago to serve as a legitimate front and a base for their activities in the mundane world. Over the past hundred and fifty years it had expanded rapidly under his mother's leadership. Today Kerenath Enterprises was one of the largest privately owned companies in the world.\n\n[ch1:p4] Most of the mundane world's occupants believed it had been passed down from generation to generation over the years. If only they knew it had only passed through three generations.\n",
+  "content": [
+    {
+      "signature": "EvQICpABCBIYAipAZawzwhXBMO69W0m/Ax268vYVD3s2RsacsQi4qiVnjv+wBsgeWsGXt33xCDTcJ4y4aGHCxIE9Hbm8HZQ+SxgV6TIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRmMTkyMGY0MC1kNzAxLTQyYzQtOTc5Zi1hMjRlZjlmYTVkNTeoAabO0NUGEgxGBkcgUHK8SXo+S2waDL+Gs/doUQCwp2PK9yIwCSj5h/vBNj3flOAUh1/AH9jnlEdKq2aaJrEA2+q97MR8lmy7GMKzx6K7IvJ+P3BmKpAHLIBXXaZaBbNfsLMFNKq1Jk9vVpXWyGOEVTcd5u5FW8RGl6Yvf5i2PHW1Ws1P2GIF7Bl57COnzabSTlSCCmxAUKT0aEndZngNAcrEFyCHhA0nhiXW5FzyYWZWmw79Zcn+n42DCeWelhfjcooimf2G76A51MoacU/nvmW1xnMiQBEhKII9NJzujYwQBaUtoy6L7JsPzcxrXLxmhIaOJCMMFE4UroFBKH44wU7OexfoxKjOfoef/7f5nlzKqxJpjTv67r72ToQouCA/rPrDo81xqogi4u+uBhPXh8ojL4oQqj7NQ2IJ/bnrNNVZ38KLgEPk8CEL4oTbobJS6YoBeLiHkofksGYOOJO1BdeIXfohYEN9iNA4hrlq8aDkdVde/UpFACZzRHNPx3yXPCyYO1nASGaieE/ciZ1LqB16lJJxrF67N9f7dMeSjY+Wmy+kdMu+UvcaS48YMl8JocHhrtz0nem+dK8UYjx8ZUMGrT5MFrdrTX8MZ3YNQeCmKIeZl9y5u+BpQ9aQ+L0JQ/SyJxNilwLXI+JWTICt5kdH8NfVFXWx0s6t9zefiIf6vzDltL/J0B6J+tQQt+pJYiWuo2+9L6oqKHKkskOD3QGI4KCXrTNLY6gtRU/9/phHH6aLldZJ+b4JWksMnACJB0T2WQDgsnoTMd14O0yqG9N7ZpcA4YyprghCJAUP5J7EKd6of+t5B2EAcziD5rsh7TZjwh3GN7f07JehpT6deju5KTTLLQrlCXkcJ3Zmr1aKQ8QmsAvAjzj9in9VVi8zgdtgEMmMipqvoSzYrOM/gGdsFZop58O1vGkGq9R4RgTojh5l1GsJK5Bqy8s9P2Qi/zW2bqij/H7gP2Gm74rNcJloWzHSdqLL9pelZj+vS3fEPdAZx9iRhTkiw6q5bv3Rilsx/v/pR/9rGvcHmNRfmFHZe52eMGW3QpThQ5ac2ipUtkLrZnFJLx9wmNy/W/vJwVBfLaqJ98tPVZqisS8o3wegrV1HzGUYPRzryfd+nLjvQMN53awWnP4M+RtH1guo91p765e/u/escvr+oWeVt2GUb5ogKoCJgpZqIXcqmZMM7JiTdGF6ZH5VuFpblVRnf/oJI6QJdtAfqI3LZLoi8zDrPDvKLrpvmeuqRVcEIVclY/FHs/wjwcArvL4ZnToyAIf/2SwtYyAJNulqXu6ZVZibeVfaeqx3UB90H0c2hnCe9ZYJf2FpGAE=",
+      "thinking": "",
+      "type": "thinking"
+    },
+    {
+      "citations": null,
+      "text": "{\"verdict\": \"CONSISTENT\", \"reason\": \"The passages describe a plausible three-generation succession (grandfather, mother, current head with uncle as steward) and never mention Ciaran, Roisen, or Elior, so no contradiction involving those named individuals is present.\"}",
+      "type": "text"
+    }
+  ]
+}
