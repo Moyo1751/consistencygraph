@@ -4,13 +4,11 @@ from spacy.util import filter_spans
 from config import nlp
 from registry import lookup, registry, SPACY_TO_SCHEMA
 
-# CG-19. resolve_entity_types only consults the registry for spans spaCy already
-# emitted, so keys it misses entirely never reach the pipeline. Matcher built once
-# at import; tokenising the keys per paragraph would dominate runtime.
+# CG-19. Matcher built once at import; tokenising the keys per paragraph would
+# dominate runtime.
 _REGISTRY_MATCHER = PhraseMatcher(nlp.vocab)
 _REGISTRY_MATCHER.add("REGISTRY", list(nlp.tokenizer.pipe(registry.keys())))
 
-# label carries provenance — survives doc.ents reassignment, unlike a Span extension
 REGISTRY_LABEL = "REGISTRY"
 
 
