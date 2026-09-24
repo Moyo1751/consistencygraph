@@ -1734,3 +1734,332 @@ between a house name and a surname; it sidesteps it by enumerating the longer
 forms. That works while the forms are known and fails silently on any new one,
 which is the same fragility recorded on 24 Jul for name variants, surfacing in
 a third place.
+
+## v3 frozen, both LLM arms balanced, and the corrections they forced (24 Sep, evening)
+
+Second entry for 24 Sep. The morning entry covers the registry retypes. This one
+covers everything from the v3 freeze onward: the corpus, the gold standard schema
+change, the plants, both LLM arms at n=3, the funnel rewrite, and the corrections
+owed. Every figure below was re-derived from the files on disk or from the logs
+in llm_runs/, not carried over from discussion.
+
+### Corpus v3 frozen
+
+    corpus/corpus_ch1-2_v3.{docx,json,txt}, mirrored to Dissertation\corpus\
+    150 paragraphs (84 ch1, 66 ch2, heading at index 0 in each)
+    148 prose paragraphs after load_paragraphs skips the headings
+    5,587 words in the snapshot, 5,583 as the audit counts them
+    source_sha256 c0129f8feb837829...   derived_from v2
+    changes_from_v2 embedded in the JSON, eleven entries
+    src/corpus.py CORPUS_PATH -> v3
+
+v2 is untouched. It is the only comparison point for anything measured before
+today, and the v2 audit is the spaCy-only RQ1 baseline.
+
+DO NOT RE-CUT v3 WITHOUT A VERY GOOD REASON. It would invalidate three detection
+runs and six verification passes.
+
+### Gold standard: truth separated from provenance
+
+New column, Ground truth label, holding CONTRADICTION or CONSISTENT. Scoring reads
+it directly. Truth used to be inferred from Origin, which silently scored every
+Planted row as consistent the moment Origin gained a third value. ORIGIN IS NOW
+PROVENANCE ONLY: Naturally occurring, Legitimate, Planted. A plant can be either
+a contradiction or a consistent case, so the two are different facts and are
+stored separately.
+
+    20 rows, 18 live, 6 CONTRADICTION, 12 CONSISTENT
+
+Rows planted or reclassified for v3: GS-15 to GS-20. GS-07's anchors moved with
+the prose into v3; its mechanism is unchanged. All 18 live rows' anchor text is
+present in v3, checked by loading every candidate through load_candidates().
+
+The labels moved five times today as rows were adjudicated. Three of the five
+moves made the tool look worse. That is reported as a strength: ground truth came
+from author rulings, not from fitting the key to the results.
+
+### Code
+
+    verify.py      truth read from the Ground truth label column
+                   code-fence strip before json.loads (GS-09 came back bare on
+                   v2 and fenced on v3 from the same prompt, scored UNPARSEABLE)
+    extraction.py  age regex: "and" removed from the number-word alternation and
+                   allowed only as a connector, because "turned and started
+                   walking" matched turned <N>
+    funnel.py      rewritten to measure BEFORE and AFTER injection in one run,
+                   one parse per paragraph (see below)
+
+### Deterministic arm, identical on every run
+
+    pipeline      148 paragraphs, 12 pairs, 2 ages
+      Age         Malcolm 520 ch1 / 630 ch2          GS-16
+      Location    Zelkarev Kaldon / Thornhaven ch1    GS-15
+    control_age   positive 1 inconsistency, negative 0
+
+    flags 2   true 2   precision 1.00   recall 2/6 = 0.33
+
+control_age.py still earns its place: v3 states no character's age twice in
+agreement, so it is the only negative case the age query has.
+
+### LLM detection, three runs on v3
+
+    run          findings  TP  FP              precision  recall  out tokens
+    1 141050Z        2      1  1 (GS-18)          0.50     0.17     8,254
+    2 164232Z        2      1  1 (GS-14)          0.50     0.17     8,022
+    3 164756Z        3      2  1 (GS-18)          0.67     0.33     9,244
+    pooled           7      4  3                  0.57     0.22
+
+GS-16 found in all three runs, GS-19 in run 3 only. Detection never reads the gold
+standard, so it rescores from the logs for free whenever labels move.
+
+### LLM verification: three superseded passes, three balanced passes
+
+The first three passes were UNBALANCED. They are kept in llm_runs/ and reported
+as superseded, not deleted:
+
+    pass A 141141Z   n=15   tp 1  fn 3  tn 11  fp 0   precision 1.00
+    pass B 151205Z   n=15   tp 1  fn 3  tn  9  fp 2   precision 0.33
+    pass C 151956Z   n=16   tp 1  fn 3  tn 12  fp 0   precision 1.00
+
+GS-19 and GS-20 were never called in A to C, and GS-18 only in C.
+
+Three fresh passes over all 18 live rows, run by me from the repo root:
+
+    pass    TP  FN  TN  FP   precision  recall   F1    out tokens
+    D        2   4  11   1     0.67      0.33   0.44     2,862
+    E        3   3  11   1     0.75      0.50   0.60     2,726
+    F        2   4  11   1     0.67      0.33   0.44     2,448
+    pooled   7  11  33   3     0.70      0.39
+
+Checked against the logs, not the console. Every call stop_reason end_turn, none
+unparseable, model claude-sonnet-5 throughout. EVERY ROW'S PROMPT WAS
+BYTE-IDENTICAL ACROSS ALL SIX PASSES (sha256 of the logged prompt), so the spread
+is the model's own run-to-run variation and nothing else.
+
+Verdict identical in all three balanced passes on 17 of 18 rows (GS-01 is the
+exception). Confidence identical on 13 of 18.
+
+REASON CHECK. All seven true positives in D to F cite the contradiction their row
+records: GS-16 three times (520 against 630), GS-19 three times (Kaldon against
+Vienna), GS-01 once (the p3 dates, after the re-scope below). Verdict and reason
+agree on every hit, so the verdict-level table stands without a second column.
+
+### Per contradiction row, all three arms
+
+    row     graph                    detection   verification D-F
+    GS-01   not modelled                0/3          1/3
+    GS-07   not modelled                0/3          0/3
+    GS-15   found every run             0/3          0/3
+    GS-16   found every run             3/3          3/3
+    GS-19   missed (binds to speaker)   1/3          3/3 high
+    GS-20   missed (2nd place unnamed)  0/3          0/3
+
+False positives on consistent rows:
+
+    GS-05   detection 0/3   verification D-F 3/3 (medium, high, high)
+    GS-14   detection 1/3   verification D-F 0/3
+    GS-18   detection 2/3   verification D-F 0/3, all low confidence
+
+### GS-15 AND GS-19 ARE MIRROR IMAGES
+
+GS-15: the graph returns it on every run. NINE LLM CALLS HAVE SEEN IT, three
+detection and six verification, and all nine called it consistent.
+
+GS-19: the graph misses it, because the cartesian rule binds Kaldon to Arseny,
+the speaker, and nothing places Roisen in Vienna as a graph fact. Verification
+finds it three times out of three at high confidence.
+
+The two arms fail on different rows for different reasons. Caveat that goes with
+GS-19: verification was handed the gold standard's passages, so its recall is an
+UPPER BOUND no graph-fed architecture can reach. In a pipeline where the graph
+proposes candidates, verification would never see GS-19.
+
+### DECIDED: THE LLM IS NOT A GATE ON THE GRAPH
+
+The Chapter 4 plan said the LLM must not verify what the queries found, on
+model-as-judge circularity grounds. That was written before the LLM arm existed.
+GS-15 now proves it empirically: a pipeline where the graph proposes and the LLM
+disposes would have filtered out the graph's only unique true positive.
+
+RQ4 STAYS AN ABLATION. Arms independent, both scored against the external,
+author-adjudicated gold standard. Verification is a second detection mode under a
+narrower input condition, not a check on the queries. The 23 Sep line "binding is
+what the graph does" survives as the explanation of why the arms fail
+differently. It does not license wiring one into the other.
+
+### CG-19 measured on v3: funnel BEFORE and AFTER
+
+    Corpus: 148 paragraphs, 443 sentences
+
+                                  BEFORE   AFTER
+      entities in doc.ents           273     349
+      resolved Character             145     221
+      resolved Location               18      18
+      resolved Organisation           23      23
+      resolved None                   87      87
+      distinct Location names          7       7
+      distinct Character names        34      39
+      sentences                      443     443
+      with a Character               115     173
+      with a Location                 17      17
+      with BOTH                        7       9
+      pairs                           10      12
+
+    Pairs injection added: 2
+      ch1 p66   Elior -> Blackmere
+      ch2 p29   Elior -> Blackmere
+
+76 spans injected (349 - 273), RECONCILING EXACTLY WITH THE v3 AUDIT'S 76 ABSENT
+OCCURRENCES. Two independently built instruments agreeing to the unit, as on v2,
+where 78 injected matched 77 ABSENT plus 1 PARTIAL.
+
+Zero noise: Organisation, Location and None are identical in both columns. Every
+injected span resolved to Character. Elior goes from 4 detections to 61 of 62
+occurrences, which is where both new pairs come from.
+
+LOCATIONS UNCHANGED AT 18. Injection rescues characters and cannot fix location
+scarcity, because that was never a detection failure. Predicted on v2, holds on
+v3.
+
+Residual false positives that survive resolution, for the 4.3 limitations:
+Chelsea (from "black Chelsea boots"), bush, Lily, bare "Alpha", and Trail from
+ch1 p35, the same paragraph where spaCy swallowed New Jersey inside "New Jersey
+Sightings". One paragraph loses a real location and invents a false one.
+
+Calibration before committing: BEFORE 273 entities matches audit.py, BEFORE 10
+pairs matches the old funnel, AFTER 12 pairs matches pipeline.py. audit.py stays
+spaCy-only and untouched.
+
+### Gold standard now tracked in git
+
+The gold standard is now tracked in git; manuscript snapshots remain ignored. Its
+labels changed five times on 24 September as rows were adjudicated, and from this
+commit forward that history is in the repository rather than resting on the
+Notes column alone. The change required corpus/* with a negation rather than
+corpus/, because git will not re-include a file inside an excluded directory.
+
+    .gitignore   corpus/*
+                 !corpus/corpus_gold_standard.csv
+
+Verified by reading .gitignore back off disk.
+
+### AUTHOR RULINGS TODAY
+
+GS-01, RE-SCOPED. The row claimed "passed through three generations" was
+premature because Elior is only a proxy. THAT CLAIM IS WRONG. The company passed
+from Ciaran, to Roisen and Kristopher, to Elior, which is three generations, and
+verification passes D and F said so. The real error is in the same paragraph and
+I had not seen it: founded 230 years ago, 150 years under Roisen, left to
+Kristopher 80 years ago, passed to Elior 10 years ago. 150 + 70 + 10 = 230, so
+Ciaran never ran the company he founded, and "over the past hundred and fifty
+years" read literally overlaps Kristopher's eighty.
+
+Pass E flagged exactly that. A NATURALLY OCCURRING CONTRADICTION THE AUTHOR DID
+NOT KNOW ABOUT, SURFACED BY THE TOOL AND THEN ADJUDICATED. It counts as found only
+from my ruling, under the guard in correction 1 below. It is a weak signal: one
+verification pass in three, no detection run, and verification was handed the
+passage rather than finding it.
+
+Why re-scope the row rather than flip it to CONSISTENT and add a new one: the
+verification question is whether the passages contradict, and they do, through
+p3. Label, type, origin, locators and entities are unchanged, so every logged call
+received exactly the passages the row now describes and nothing needs re-running.
+The original wording is preserved in the row's Notes. The company dates get
+reworked when the manuscript is next edited; v3 stays frozen.
+
+GS-14. Twenty warriors travel: fourteen went ahead and six followed on the plane.
+Supersedes the 23 Sep line "The thirty are the travelling party". The thirty are
+the people in the training room at ch1 p61. Label unchanged, still CONSISTENT.
+
+GS-19. The Vienna estate is Kaldon's Earth-side seat in canon, but the corpus never
+says so. On the text alone "her study at Kaldon" contradicts the Vienna scene and
+the label stands. The plant works only if Kaldon is read as the capital, and the
+verifier had no access to canon, so it is a weaker plant than GS-15 or GS-16. NOT
+EXPLAINED IN THE CORPUS: v3 is frozen, and stating it in the text would make "at
+Kaldon" correct and dissolve the plant. Revisit when chapters 3 and 4 unfreeze
+the text.
+
+GS-20. Elior finds Talia and Yaela in the crossing room. Oren had already run off
+to Vienna (ch1 p57). The contradiction binds to Talia and the label stands.
+
+### CORRECTIONS
+
+A change is recorded as done only after it is verified in the artefact it claims
+to change. Each of these failed that test at some point today.
+
+1. THE TWO "UNPROMPTED CATCHES" WERE WRONG. Claude twice claimed the tool had
+   caught author errors I did not know about, and called GS-18 "the strongest
+   single piece of evidence you have". GS-18 is not a contradiction; the manor is
+   on the outskirts of Vienna. GS-19 is a plant. At the time of the claim the
+   artefact had caught zero unknown errors. GUARD EXTENDED: a finding is a true
+   positive only after the author has adjudicated it. (GS-01 above is the first
+   finding to pass that guard.)
+
+2. GS-18 WAS CALLED REPRODUCIBLE BEFORE THERE WAS A THIRD RUN: a catch on n=1,
+   then on n=2. It is a reproducible FALSE POSITIVE, 2 of 3 detection runs.
+
+3. A PROPER NOUN FROM A VOICE-TRANSCRIPTION ERROR WAS WRITTEN INTO GS-15's NOTES
+   without checking the bible. Removed from every file; the row records the
+   correction without naming it. It never reached the manuscript, the snapshot,
+   the code or any logged model response.
+
+4. device_commit_files REPORTED "WRITTEN" AND THE FILE DID NOT LAND, because the
+   same staged path was reused. GS-18 was missing from disk during a verification
+   run, which is why that run scored 15 rows and not 16. RULE: read every file
+   back off disk after every write.
+
+5. GS-19 WAS NEVER CALLED IN VERIFICATION PASSES A TO C, not only GS-20. The
+   handover named GS-20 alone.
+
+6. THE VARIANCE HEADLINE WAS MEASURED ON AN UNBALANCED DESIGN. Precision
+   1.00 / 0.33 / 1.00 came from passes that never asked two of the six
+   contradiction rows. Balanced, it is 0.67 / 0.75 / 0.67. The variance is real
+   but smaller, and it lives at row level. An unbalanced design inflates
+   precision by not asking the hard questions.
+
+7. GS-05 WAS DESCRIBED AS A ONE-OFF FLIP IN PASS B. It is a false positive in 3 of
+   3 balanced passes and 4 of 6 overall, from a byte-identical prompt. "13 of 15
+   verdicts stable" was a small-sample reading.
+
+8. PASS C WAS ORIGINALLY REPORTED AS fn 4 / tn 11, scored while GS-18 was still
+   labelled CONTRADICTION. Under the final labels it is tp 1, fn 3, tn 12, fp 0.
+
+9. THE funnel.py OMISSION OF inject_registry_entities WAS NEVER A DECISION. The only
+   deliberate exclusion on record is audit.py's. Funnel was run in both states for
+   the v2 CG-19 measurement and left in the BEFORE state, so the 10-against-12
+   figure on v3 was correct by accident and would have broken silently the first
+   time pipeline.py changed and funnel did not. Fixed, measured, committed.
+
+10. GS-01 PASS E WAS FIRST REPORTED AS VERIFICATION CATCHING THE ROW'S NATURAL
+    CONTRADICTION. Its reason was a different contradiction from the one the row
+    then recorded. Resolved by the author ruling above, which found the row's
+    recorded reason was the thing that was wrong.
+
+11. GS-20's DESCRIPTION SAID ELIOR FINDS TALIA AND OREN. The text has Talia and
+    Yaela. Corrected in the row. verify.py sends only the anchor paragraphs, p33
+    and p37, so the model never saw p36, which names Yaela. Pass F's reason ("the
+    two women could be Talia and Oren if Oren is a female name") comes from that
+    missing paragraph, the same anchors-only artefact as GS-05 on 23 Sep.
+
+12. THE FIRST WRITE OF THAT CORRECTION BROKE THE CSV. The new description contained
+    a comma, the field was unquoted, and GS-20's label parsed as "WITH YAELA".
+    Caught by parsing the read-back through load_candidates(); rewritten with the
+    field quoted within minutes; no run read the broken file. A byte comparison
+    alone would NOT have caught it, because the broken file was exactly what had
+    been written. RULE EXTENDED: a CSV read-back is parsed through the loader, not
+    only compared.
+
+13. GS-14: the 23 Sep entry says "The thirty are the travelling party". Superseded
+    by the ruling above: twenty travel. The handover repeated the thirty.
+
+14. GS-15 AND GS-20 NOTES WERE OUT OF DATE ("3 of 3 verification runs", "never
+    been called"). Dated UPDATE lines appended; the original text is kept.
+
+### Open
+
+- Company dates in ch1 p3 to rework when the manuscript is next edited.
+- GS-19 to recheck when chapters 3 and 4 unfreeze the text.
+- verify.py builds candidates from anchor paragraphs only. GS-05 and GS-20 both
+  show the cost. The 23 Sep specification stands: candidates need adjacent
+  paragraphs and resolved entities.
+- Optional second condition never run: effort high at a 64,000 budget.
