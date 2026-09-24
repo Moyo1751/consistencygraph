@@ -1,0 +1,17 @@
+{
+  "kind": "verify_GS-01",
+  "model": "claude-sonnet-5",
+  "corpus": "corpus_ch1-2_v3.json",
+  "timestamp": "20260924T151956Z",
+  "input_tokens": 424,
+  "output_tokens": 123,
+  "stop_reason": "end_turn",
+  "prompt": "A consistency checker has flagged the passages below as a possible Timeline contradiction involving: Ciaran; Roisen; Elior; Kerenath Enterprises.\n\nDecide whether they actually contradict. Two statements contradict only if they cannot both be true of the same story world. Statements about different people, different times, different places or different groups do not contradict, and neither does a change that can legitimately occur.\n\nReturn JSON only:\n\n{\"verdict\": \"CONTRADICTION|CONSISTENT\", \"confidence\": \"high|medium|low\", \"reason\": \"one sentence\"}\n\nPASSAGES:\n\n[ch1:p3] He'd only taken up the role ten years ago, from his uncle Kristopher. His mother had left Kristopher in charge of their mundane-world business eighty years before. His grandfather had started the Kerenath shipping company two hundred and thirty years ago to serve as a legitimate front and a base for their activities in the mundane world. Over the past hundred and fifty years it had expanded rapidly under his mother's leadership. Today Kerenath Enterprises was one of the largest privately owned companies in the world.\n\n[ch1:p4] Most of the mundane world's occupants believed it had been passed down from generation to generation over the years. If only they knew it had only passed through three generations.\n",
+  "content": [
+    {
+      "citations": null,
+      "text": "{\"verdict\": \"CONSISTENT\", \"confidence\": \"high\", \"reason\": \"Both passages describe the same succession (grandfather, mother, Kristopher, then current holder as fourth in line to run it, but only three generations - grandfather, mother, and current holder's generation), with no factual timeline conflict about Ciaran, Roisen, or Elior mentioned.\"}",
+      "type": "text"
+    }
+  ]
+}

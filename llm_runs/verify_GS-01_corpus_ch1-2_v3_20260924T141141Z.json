@@ -1,0 +1,22 @@
+{
+  "kind": "verify_GS-01",
+  "model": "claude-sonnet-5",
+  "corpus": "corpus_ch1-2_v3.json",
+  "timestamp": "20260924T141141Z",
+  "input_tokens": 424,
+  "output_tokens": 598,
+  "stop_reason": "end_turn",
+  "prompt": "A consistency checker has flagged the passages below as a possible Timeline contradiction involving: Ciaran; Roisen; Elior; Kerenath Enterprises.\n\nDecide whether they actually contradict. Two statements contradict only if they cannot both be true of the same story world. Statements about different people, different times, different places or different groups do not contradict, and neither does a change that can legitimately occur.\n\nReturn JSON only:\n\n{\"verdict\": \"CONTRADICTION|CONSISTENT\", \"confidence\": \"high|medium|low\", \"reason\": \"one sentence\"}\n\nPASSAGES:\n\n[ch1:p3] He'd only taken up the role ten years ago, from his uncle Kristopher. His mother had left Kristopher in charge of their mundane-world business eighty years before. His grandfather had started the Kerenath shipping company two hundred and thirty years ago to serve as a legitimate front and a base for their activities in the mundane world. Over the past hundred and fifty years it had expanded rapidly under his mother's leadership. Today Kerenath Enterprises was one of the largest privately owned companies in the world.\n\n[ch1:p4] Most of the mundane world's occupants believed it had been passed down from generation to generation over the years. If only they knew it had only passed through three generations.\n",
+  "content": [
+    {
+      "signature": "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",
+      "thinking": "",
+      "type": "thinking"
+    },
+    {
+      "citations": null,
+      "text": "{\"verdict\": \"CONSISTENT\", \"confidence\": \"medium\", \"reason\": \"The timeline (grandfather founded 230 years ago, mother led for ~150 years, uncle Kristopher held it 80 years ago, Ciaran took over 10 years ago) fits three generations without conflict, and Roisen/Elior aren't even mentioned here to create any contradiction.\"}",
+      "type": "text"
+    }
+  ]
+}
