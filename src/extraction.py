@@ -24,8 +24,10 @@ _TENS = {"twenty": 20, "thirty": 30, "forty": 40, "fifty": 50, "sixty": 60,
          "seventy": 70, "eighty": 80, "ninety": 90}
 _SCALES = {"hundred": 100, "thousand": 1000}
 
-_NUM_WORDS = "|".join(list(_UNITS) + list(_TENS) + list(_SCALES) + ["and"])
-_NUMBER = rf"(?:\d+|(?:{_NUM_WORDS})(?:[\s\-](?:{_NUM_WORDS}))*)"
+# "and" joins number words but is never one itself. In the alternation it could
+# stand alone, so "turned and started walking" matched the turned <N> pattern.
+_NUM_WORDS = "|".join(list(_UNITS) + list(_TENS) + list(_SCALES))
+_NUMBER = rf"(?:\d+|(?:{_NUM_WORDS})(?:[\s\-](?:and[\s\-])?(?:{_NUM_WORDS}))*)"
 
 # CG-14. Four surface forms, nothing inferred. No birthdays, no date arithmetic.
 _AGE_PATTERNS = [

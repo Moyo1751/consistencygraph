@@ -34,8 +34,9 @@ PASSAGES:
 def load_candidates():
     """Live gold standard rows as verification candidates.
 
-    Ground truth comes from Origin: naturally occurring rows are real
-    contradictions, legitimate rows are not.
+    Ground truth is read from the Ground truth label column. Inferring it from
+    Origin scored every planted row as consistent the moment Origin gained a
+    third value.
     """
     paragraphs = {(p.chapter, p.index): normalise(p.text) for p in load_paragraphs()}
     candidates = []
@@ -56,9 +57,7 @@ def load_candidates():
                     "id": row["ID"],
                     "type": row["Type"],
                     "entities": row["Entities involved"],
-                    "truth": "CONTRADICTION"
-                    if row["Origin"].strip().lower().startswith("natural")
-                    else "CONSISTENT",
+                    "truth": row["Ground truth label"].strip().upper(),
                     "passages": "\n\n".join(
                         f"[ch{c}:p{i}] {paragraphs[(c, i)]}" for c, i in locators
                     ),
@@ -91,6 +90,10 @@ def verify_candidate(candidate, client=None):
         block.text for block in message.content if getattr(block, "type", None) == "text"
     )
     log_path = _log_run(f"verify_{candidate['id']}", prompt, message)
+
+    # the model fences the JSON at its own discretion: GS-09 came back bare on
+    # v2 and fenced on v3, from the same prompt.
+    response_text = re.sub(r"^```(?:json)?\s*|\s*```$", "", response_text.strip())
 
     try:
         result = json.loads(response_text)

@@ -1,0 +1,17 @@
+{
+  "kind": "verify_GS-17",
+  "model": "claude-sonnet-5",
+  "corpus": "corpus_ch1-2_v3.json",
+  "timestamp": "20260924T151247Z",
+  "input_tokens": 295,
+  "output_tokens": 67,
+  "stop_reason": "end_turn",
+  "prompt": "A consistency checker has flagged the passages below as a possible Entity resolution / name form contradiction involving: Malcolm.\n\nDecide whether they actually contradict. Two statements contradict only if they cannot both be true of the same story world. Statements about different people, different times, different places or different groups do not contradict, and neither does a change that can legitimately occur.\n\nReturn JSON only:\n\n{\"verdict\": \"CONTRADICTION|CONSISTENT\", \"confidence\": \"high|medium|low\", \"reason\": \"one sentence\"}\n\nPASSAGES:\n\n[ch2:p33] \"Alright, as you all already know we will be in New York in nine hours for the birthday of Alpha Malcolm Ravensworth. Malcolm will be turning six hundred and thirty years old. We'll have three teams with us led by Kasev, Dara, and Marek,\" said Alric as he looked them all in the eye.\n",
+  "content": [
+    {
+      "citations": null,
+      "text": "{\"verdict\": \"CONSISTENT\", \"confidence\": \"high\", \"reason\": \"Both passages refer to the same individual, Malcolm Ravensworth, with no conflicting name forms presented.\"}",
+      "type": "text"
+    }
+  ]
+}

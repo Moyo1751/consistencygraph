@@ -1,0 +1,22 @@
+{
+  "kind": "verify_GS-01",
+  "model": "claude-sonnet-5",
+  "corpus": "corpus_ch1-2_v3.json",
+  "timestamp": "20260924T202317Z",
+  "input_tokens": 424,
+  "output_tokens": 282,
+  "stop_reason": "end_turn",
+  "prompt": "A consistency checker has flagged the passages below as a possible Timeline contradiction involving: Ciaran; Roisen; Elior; Kerenath Enterprises.\n\nDecide whether they actually contradict. Two statements contradict only if they cannot both be true of the same story world. Statements about different people, different times, different places or different groups do not contradict, and neither does a change that can legitimately occur.\n\nReturn JSON only:\n\n{\"verdict\": \"CONTRADICTION|CONSISTENT\", \"confidence\": \"high|medium|low\", \"reason\": \"one sentence\"}\n\nPASSAGES:\n\n[ch1:p3] He'd only taken up the role ten years ago, from his uncle Kristopher. His mother had left Kristopher in charge of their mundane-world business eighty years before. His grandfather had started the Kerenath shipping company two hundred and thirty years ago to serve as a legitimate front and a base for their activities in the mundane world. Over the past hundred and fifty years it had expanded rapidly under his mother's leadership. Today Kerenath Enterprises was one of the largest privately owned companies in the world.\n\n[ch1:p4] Most of the mundane world's occupants believed it had been passed down from generation to generation over the years. If only they knew it had only passed through three generations.\n",
+  "content": [
+    {
+      "signature": "EqMGCpABCBIYAipA7wz1KqA+V6WnI0Cozv5A+KqDieM3Crb0Zqpo4lVyN3cS5VHWfxEuGBGQxFzYSoupE3yMcvgrL+/Ep0BZJdDmAjIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRmMTkyMGY0MC1kNzAxLTQyYzQtOTc5Zi1hMjRlZjlmYTVkNTeoAbaN1tUGEgzVyHUdBP377zS3F8YaDBmz4JuPvvGEtoQRAyIwkyfXimzqoUzDz/M9N3lhq6dTXSaO8QfLc79nyyxu4tfTDhLXtigCkEzWbeYG3w+HKr8E+RoqDmQrKuqzGGg/wWSrxqINW3Sr/oV3vfNhB0C/fHdaFifaBrHKW3JgXUOBV2Jh6+D+MduehWU0bkwhRyfZzQo7x+S5d7yhb6yfnPaijHdAWoB8g3F+GrBh/yNXNyG2j6iZoyrmhAbz0IwcoSqSID36zk6mxiiGYwSFMCYWOipgbIDRGJF/E/DR/FecidI2NtALIXmwgSVGlenzfplx1u1q1pkpc9Bod7vDsRwmdMhG0ifjkNW9NXL2AHl3jTS0hQ91zo3vRMDHPOzITVsyFiuEgyJ1k3Kub99e8ybqgEIsiYfdVV0jT0digwPaTMCrxwnN7bxc/Q3GC6IiwEY2ljBySxYI+WrcAQavFRMkGfhufdewo0ULe3hDQk2JYImMzyDl74AuzkLG2dLVGS+V6YKzgG+G/uwnMZ9KsqXcaqzxW22kKy4iUSpnfR/rmIhgaVjsadHuAbuoJXfpXlb23ijrREBuHjwmhJXzPDeDpzmWtHrdcf9lNQosjd5sLxfTngTvOixGvdGZ9QJKUguEIoOTnupHxoDlrfIo/sWb7JGYv9N3VnwHs7ML622Cub1k8l5ikVEDN44TDNB0cq6Abmg+uPLc7UkbvX4/qTO8D318VQgfEpnA5k2LVPY3Vb4g6V2gZB5BBKtFvOzX+SvLIAN8otLFLm0bdBbt5KH1nu+bEOQh7oxTLKccRVVUONouY5lZKD1DIR7+TriZDNgYRdejxzjjJRzgPzcVG2+ly1AL6IB9udUceyMpvkmCG5EYAQ==",
+      "thinking": "",
+      "type": "thinking"
+    },
+    {
+      "citations": null,
+      "text": "{\"verdict\": \"CONSISTENT\", \"confidence\": \"medium\", \"reason\": \"Kristopher is the mother's sibling (same generation), so grandfather, mother/Kristopher, and current narrator span exactly three generations.\"}",
+      "type": "text"
+    }
+  ]
+}

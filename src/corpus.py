@@ -5,7 +5,10 @@ import json
 # Anchored to this file's own location, not the working directory the
 # process happens to be started from (same pattern as registry.py's
 # REGISTRY_PATH, one directory up since corpus/ is a sibling of src/).
-CORPUS_PATH = Path(__file__).parent.parent / "corpus" / "corpus_ch1-2_v2.json"
+# Pinned to a frozen snapshot, never the working manuscript. Every run reported
+# in the evaluation has to name the version it read, and v2's numbers stay
+# comparable only while v2 stays on disk untouched.
+CORPUS_PATH = Path(__file__).parent.parent / "corpus" / "corpus_ch1-2_v3.json"
 
 # The corpus uses typographic (curly) punctuation throughout. Anchors in the
 # gold standard and entries in registry.json use plain ASCII quotes, so
