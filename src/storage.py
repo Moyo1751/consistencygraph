@@ -9,13 +9,31 @@ def store_character_age(name, age, chapter, driver):
             MERGE (c)-[:HAS_AGE]->(a:AgeMention {age: $age, chapter: $chapter})
         """, name=name, age=age, chapter=chapter)
 
-def store_character_location(name, location, chapter, driver):
+def store_ages(mentions, driver):
+    for mention in mentions:
+        store_character_age(
+            mention["character"], mention["age"], mention["chapter"], driver
+        )
+
+def store_character_location(name, location, chapter, paragraph, driver):
     with driver.session() as session:
         session.run("""
             MERGE (c:Character {name: $name})
             MERGE (l:Location {name: $location})
             MERGE (c)-[:IS_AT]->(p:Presence {chapter: $chapter})-[:LOCATION]->(l)
-        """, name=name, location=location, chapter=chapter)
+            SET p.paragraphs = CASE
+                WHEN $paragraph IN coalesce(p.paragraphs, [])
+                THEN p.paragraphs
+                ELSE coalesce(p.paragraphs, []) + $paragraph
+            END
+        """, name=name, location=location, chapter=chapter, paragraph=paragraph)
+
+
+def store_pairs(pairs, driver):
+    for pair in pairs:
+        store_character_location(
+            pair["character"], pair["location"], pair["chapter"], pair["paragraph"], driver
+        )
 
 def store_organisation(name, driver):
     with driver.session() as session:
@@ -30,11 +48,3 @@ def store_membership(character, organisation, driver):
             MERGE (o:Organisation {name: $organisation})
             MERGE (c)-[:MEMBER_OF]->(o)
         """, character=character, organisation=organisation)
-
-def store_pairs(pairs, driver):
-    for pair in pairs:
-        name = pair["character"]
-        location = pair["location"]
-        chapter = pair["chapter"]
-        store_character_location(name, location, chapter, driver)
-        print(f"Stored: {name} at {location} in chapter {chapter}")

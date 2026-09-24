@@ -732,7 +732,10 @@ built the script to take a path rather than hardcoding the text.
 
 The corpus contains real places and invented places in the same prose:
 New York 4, Vienna 1, New Jersey 1 against Blackmere 6, Hollowmere 2. Same text,
-same model, no confound. A natural experiment testing the 17 Jul morphology
+same model, no confound.
+[CORRECTED 23 Sep: Hollowmere is an ORGANISATION, not a place, and belongs in
+neither column. The control is New York 4 + Vienna 1 + New Jersey 1 against
+Blackmere 6. See the CG-23 entry.] A natural experiment testing the 17 Jul morphology
 hypothesis on data it was not derived from.
 
 ### Registry type-system problems surfaced
@@ -744,6 +747,12 @@ A flat name->type map cannot express family names. Resolved 22 Sep: bare
 Kerenath retyped to Character (no bare organisational use exists in the corpus);
 Ravensworth and Ravensworths retyped to Organisation, since 4 of their 5 uses
 are the family or pack. Oren Kerenath added, which was missing. 104 entries.
+[CORRECTED 23 Sep: NONE OF THIS WAS EVER APPLIED. Verified by lookup: Kerenath
+is still Organisation, Ravensworths still Character, Oren Kerenath absent. The
+file holds 103 entries (Character 75, Organisation 18, Location 10). These
+edits were agreed and logged but never typed into registry.json; commit
+9386dd4 captured the 21 Sep rebuild instead, despite its message. Still
+outstanding. See the CG-23 entry.]
 
 Rule adopted: LONGEST-MATCH-WINS, COUNTED PER OCCURRENCE. One hit when the full
 name appears; separate hits when shorter forms appear alone.
@@ -1026,8 +1035,11 @@ not a property of the name class.
 18 Sep recorded "zero correctly identified locations". The span data refines
 that considerably:
 
-    Blackmere   6/6 EXACT   — labelled PERSON every time
+    Blackmere   6/6 EXACT   — labelled PERSON every time (5 PERSON, 1 PRODUCT)
     Hollowmere  similar pattern
+[CORRECTED 23 Sep: the Hollowmere line is wrong. Hollowmere is an Organisation,
+not a location, so it does not belong in a location finding at all. It occurs
+twice and spaCy detects both. See the CG-23 entry.]
 
 Invented locations are DETECTED RELIABLY AND CLASSIFIED WRONGLY. That is a
 misclassification result, not a non-detection result, and it is the precise
@@ -1092,3 +1104,574 @@ versions were merged by hand rather than one overwriting the other.
 RULE ADOPTED: commit the write-up log before any branch operation, and verify
 the byte count on disk after every write. An uncommitted log is not saved, it
 is staged for deletion by the next checkout.
+## CG-23: pipeline over the corpus, and what it actually showed (23 Sep)
+
+pipeline.py processed the manuscript for the first time. Everything before this
+ran on one hardcoded sentence.
+
+### The run
+
+148 paragraphs of corpus_ch1-2_v2, nlp() per paragraph, normalise() before
+nlp() so the pipeline and audit.py see identical text. clear_database once
+before the loop, detection once after.
+
+    Processed 148 paragraphs, stored 4 pairs
+
+    Character 4    Location 2    Presence 4
+    IS_AT 4        LOCATION 4
+
+FOUR PAIRS FROM 5,480 WORDS. One Presence per pair, no duplicates, which
+independently confirms the CG-11 CREATE-to-MERGE fix is holding under real
+volume.
+
+Both detection queries returned empty. Age is empty because nothing calls
+store_character_age; that is CG-14 and expected.
+
+THE LOCATION RESULT MUST BE STATED PRECISELY. The query looks for one character
+attached to two Presences in the same chapter. No character in this graph has
+two. So the empty result is NOT evidence that the manuscript is consistent. It
+is evidence that THE GRAPH IS TOO SPARSE TO EXPRESS A CONTRADICTION. Those are
+different claims and only the second is true. Writing "no inconsistencies
+found" would be a misreport.
+
+### The funnel (src/funnel.py, diagnostic, no Neo4j)
+
+    148 paragraphs, 439 sentences, 258 entities
+
+    Resolved types   Character 144   None 84   Organisation 18   Location 12
+
+    Distinct Location names    4      Blackmere 6, New York 4, Trail 1, Vienna 1
+    Distinct Character names  35      Alric 32, Oren 18, Talia 11, Roisen 9, ...
+
+    sentences                439
+    with a Character         114   (26%)
+    with a Location           12   (2.7%)
+    with BOTH                  3
+
+    Pairs: ch2 Oren->Blackmere, Kasev->New York, Arsen->Blackmere,
+           Alric->Blackmere
+
+THE BOTTLENECK IS NOT THE PAIRING RULE. Sentences containing a Location (12)
+equals total Location resolutions (12), so every location mention sits alone in
+its sentence. The ceiling on pairs is twelve whatever the pairing rule is.
+Loosening sentence-level co-occurrence to paragraph level reaches perhaps ten
+pairs and costs precision. It cannot fix this.
+
+### Verified against audit_report_ch1-2_v2.csv
+
+Of the TEN Location-typed registry keys, only FOUR occur in chapters 1 and 2:
+
+    key              occ   EXACT  CONTAINED  PARTIAL  ABSENT
+    Blackmere          6       6          0        0       0
+    New York           4       4          0        0       0
+    New Jersey         1       0          1        0       0
+    Vienna             1       1          0        0       0
+    Asheville          0       -          -        -       -
+    Demon Mountain     0       -          -        -       -
+    Hudson Valley      0       -          -        -       -
+    Kaldon             0       -          -        -       -
+    Kedmaon            0       -          -        -       -
+    Thornhaven         0       -          -        -       -
+
+EVERY LOCATION NAME PRESENT IN THE CORPUS WAS DETECTED. Eleven of twelve
+occurrences EXACT, one CONTAINED, ZERO ABSENT. The six with no occurrences are
+bucket (a), bible-scoped keys whose scenes are unwritten, not detection
+failures.
+
+So spaCy's non-detection is NOT the location bottleneck. The manuscript names
+places twelve times in 5,480 words and two of the four names are real-world.
+The scarcity is a property of the PROSE, not of the model.
+
+What the registry does is still visible and the contrast is clean:
+
+    Blackmere        6/6 detected, NEVER ONCE GPE (5 PERSON, 1 PRODUCT)
+                     reaches the graph only because the registry overrides it
+    New York, Vienna always GPE, correct without the registry
+
+That is the invented-versus-real result with a matched control in one table.
+
+### CH1 P35 IS A DOUBLE FAILURE IN ONE PARAGRAPH
+
+spaCy emitted "New Jersey Sightings" as ORG, swallowing the real place name
+(this is the CONTAINED row above). In the same paragraph it emitted "Trail" as
+GPE, which SPACY_TO_SCHEMA turned into a Location. So one paragraph LOSES a
+real location and INVENTS a false one. "Trail" is the noise entry in the funnel
+output. Worth quoting in the evaluation: the two error modes are not
+independent, they co-occur.
+
+### Registry-key occurrences by type
+
+    Character 220    Organisation 12    Location 12
+
+Ninety percent of what the registry does in this corpus is character names.
+
+### CORRECTIONS TO MY OWN READING OF 22 SEP
+
+Three claims made yesterday and repeated in this log were wrong. Recorded here
+rather than quietly fixed.
+
+1. "Six of ten Location keys are invisible to the pipeline." WRONG. They are
+   absent from the text, not invisible to it. Zero occurrences each.
+
+2. "Hollowmere is lost to a boundary mismatch between the span spaCy emits and
+   the registry key 'Hollowmere pack'." WRONG twice. spaCy detects Hollowmere
+   both times it occurs (ch2 p11 as PERSON, ch2 p60 as ORG), and the registry
+   types it Organisation deliberately. HOLLOWMERE IS A PACK, NOT A PLACE: a
+   body of individuals and families, per the world-building bible. The registry
+   is correct and there is no bug.
+
+3. The speculation that a flat name-to-type map cannot express a name denoting
+   both a place and the group occupying it was an invented problem. It does not
+   arise here.
+
+### THE REGISTRY IS NOT IN THE STATE THIS LOG CLAIMS
+
+Verified by direct lookup, 23 Sep:
+
+    lookup('Kerenath')       -> 'Organisation'
+    lookup('Oren Kerenath')  -> None
+    lookup('Ravensworths')   -> 'Character'
+
+    Counter: Character 75, Organisation 18, Location 10   TOTAL 103
+
+NONE of the three registry edits recorded against 22 Sep are in the file. The
+totals match the 21 Sep rebuild state exactly, untouched. The 21 Sep entry
+above claims all three and states 104 entries; commit 9386dd4's message claims
+two of them.
+
+Traced through git the same day:
+
+    9386dd4^  registry.json    19 entries (Character 16, Location 3)
+    9386dd4   registry.json   103 entries (Character 75, Organisation 18,
+                              Location 10), Kerenath 'Organisation',
+                              Oren Kerenath absent, Ravensworths 'Character'
+
+NOT A LOSS EVENT. What 9386dd4 captured was the 21 SEP REBUILD, 19 entries to
+103, which had never been committed until then. The three 22 Sep retypes were
+decided in conversation, recorded in this log in the past tense, and NEVER
+TYPED INTO THE FILE. Nothing was overwritten. The work was never performed, and
+the commit message repeated the log rather than describing its own diff.
+
+This is a DIFFERENT FAILURE from the four write-up log losses and needs a
+different guard. Those were a git problem, answered by committing before branch
+operations. This is bookkeeping: agreement was mistaken for execution.
+
+GUARD ADOPTED: a change is recorded as done only after it is VERIFIED IN THE
+ARTEFACT IT CLAIMS TO CHANGE. For a registry edit that means a lookup; for
+code, a run. Agreement in discussion is not evidence.
+
+Incidental but worth keeping: the pre-rebuild registry was 19 entries,
+Character 16 and Location 3. That is the baseline the 18 Sep drift finding
+measured against, now recoverable from git rather than from memory.
+
+STILL OUTSTANDING: the three retypes are unapplied. Before applying them they
+need re-checking against the corpus rather than re-adopting from this log,
+since the Hollowmere reasoning that once sat alongside them has been withdrawn.
+
+Method note: the git check first returned nothing because it was run from src/,
+where the pathspec src/registry.json matches nothing. GIT PATHSPECS RESOLVE
+RELATIVE TO CWD.
+
+### WHAT THIS DOES TO THE CG-19 ARGUMENT
+
+The case made on 22 Sep was that registry injection had moved from
+recommendation to dependency, because without it there was nothing in the graph
+to detect. THE VERIFIED DATA DOES NOT SUPPORT THAT.
+
+Total ABSENT across all registry keys is 77, of which 57 are "Elior", a
+CHARACTER. Zero are locations. So injection would rescue character mentions and
+would add NOT ONE location to the graph. It would also not fix the CONTAINED
+cases: under filter_spans a PhraseMatcher hit on "New Jersey" loses to spaCy's
+longer "New Jersey Sightings" span.
+
+CG-19 is still worth building, but for a DIFFERENT REASON than the one given
+yesterday. It is the INTERVENTION ARM FOR RQ1: 77 ABSENT occurrences before,
+some number after, measured on the same corpus with the same instrument. That
+is a real experimental result and it is a better contribution than the static
+figure alone. What it is not is the thing that unblocks the evaluation.
+
+THE THING THAT UNBLOCKS THE EVALUATION IS THE PLANTS. If chapters 1 and 2 name
+places twelve times, corpus v3 has to name them deliberately and repeatedly in
+the planted passages or the location query has nothing to compare. CG-16 is the
+critical path, not CG-19.
+
+### DECIDED (23 Sep)
+
+Both CG-17 and CG-19 stay in scope. Ordering changed on the evidence above:
+
+    1. Plants into corpus v3 (CG-16)
+    2. CG-19 registry injection, as the RQ1 intervention arm
+    3. CG-17 LLM integration
+
+That ordering protects the evaluation chapter if the days run out. The
+spaCy-only baseline in audit_report_ch1-2_v2.csv must survive in the write-up
+alongside any hybrid figure, or the intervention has nothing to be measured
+against.
+
+Not doing: loosening pairing to paragraph level. The ceiling of twelve makes it
+not worth the precision cost.
+## CG-19 registry injection: built and measured (23 Sep)
+
+PhraseMatcher over the 103 registry keys. Spans spaCy never emitted are added to
+doc.ents labelled REGISTRY. Provenance rides on the LABEL rather than a custom
+Span extension, because labels are stored on the tokens and survive
+reassignment of doc.ents; span extension data is keyed on character offsets and
+was not verifiable without a live spaCy to test against.
+
+audit.py DELIBERATELY DOES NOT CALL IT. The audit is the spaCy-only baseline and
+has to stay that way or the before arm is destroyed.
+
+### Measured on corpus_ch1-2_v2
+
+                                 BEFORE    AFTER
+    entities in doc.ents            258      335
+    sentences with a Character      114      171
+    sentences with a Location        12       12
+    sentences with BOTH               3        5
+    pairs                             4        6
+    distinct Location names           4        4
+    distinct Character names         35       39
+
+    resolved BEFORE  Character 144  Organisation 18  Location 12  None 84
+    resolved AFTER   Character 220  Organisation 19  Location 12  None 84
+    sources  AFTER   spacy 257      registry 78
+
+78 spans injected, 13 distinct names, ZERO NOISE. Every one a genuine registry
+proper noun: Elior 57, Marek 5, Ren 3, Ric 3, Oren 2, Urien, High Warlord,
+Alric, Mira, Hollowmere pack, Kerenath, Count Halborn, Hector.
+
+THE RECONCILIATION IS EXACT. The 22 Sep audit counted 77 ABSENT occurrences.
+Injection added 78 spans: the 77 ABSENT plus one PARTIAL. Two instruments built
+independently, agreeing to the unit. Strongest evidence so far that the audit
+measures what it claims to.
+
+One spaCy span was displaced, and it is the right one: "Hollowmere" (PERSON) at
+ch2 p11 lost to the registry's longer "Hollowmere pack", which types correctly
+as Organisation. A boundary error fixed as a side effect.
+
+LOCATIONS UNCHANGED AT 12, exactly as predicted. Injection rescues characters.
+It does not and cannot fix the location scarcity, because that was never a
+detection failure.
+
+## CG-23 closed: paragraph provenance (23 Sep)
+
+Presence stays keyed on chapter. Paragraph index is carried as a
+non-identifying p.paragraphs list, deduplicated by a CASE clause. Six pairs, six
+Presence nodes, p.paragraphs populated on every row. All six triples distinct,
+so the dedup branch of the CASE was never exercised and remains untested.
+
+Both detection queries still return empty. NO CHARACTER IS AT TWO DIFFERENT
+LOCATIONS IN ONE CHAPTER. The graph is richer after injection and still cannot
+express a contradiction, because the prose does not contain one in the dimension
+the query models.
+
+## CG-17 LLM arm: first run, and it earned its place (23 Sep)
+
+Anthropic API. Model, effort and token budget pinned in config.py, because a run
+at one effort setting and a run at another are DIFFERENT EXPERIMENTS and the
+write-up has to name which produced the numbers.
+
+    LLM_MODEL       claude-sonnet-5
+    LLM_EFFORT      medium
+    LLM_MAX_TOKENS  32000
+
+One call for both chapters, so cross-chapter contradictions are reachable. The
+corpus is built by the same loader the pipeline uses, so the LLM and the graph
+read identical text.
+
+### THE DETERMINISM CLAIM WAS REVISED ON EVIDENCE
+
+The plan was temperature=0 as the reproducibility control. CURRENT CLAUDE MODELS
+DO NOT ACCEPT temperature AT ALL; the SDK removed it and the API rejects it. So
+that control does not exist.
+
+What remains is the control that mattered anyway: log every raw call, and run
+the evaluation several times to REPORT THE SPREAD rather than a single figure.
+This is a stronger position to defend, not a weaker one. It claims no
+reproducibility the method cannot deliver.
+
+Three failures before the first successful run, all recorded because each one is
+a methodological fact and not just a bug:
+
+1. temperature rejected outright.
+2. TWO RUNS DIED ON BUDGET. stop_reason max_tokens, first at 4,096 then at
+   16,000 output tokens, ENTIRELY THINKING, no text block. Adaptive thinking
+   counts against max_tokens and "high" is the default effort on this model, so
+   raising the budget alone changed nothing. Fixed by lowering effort to medium
+   AND raising the budget to 32,000.
+3. The SDK refuses a non-streaming call whose budget could exceed ten minutes.
+   Switched to streaming with get_final_message().
+
+Correction to my own reasoning, recorded: the thinking block was logged on the
+argument that it would give the model's reasoning as RQ4 evidence. IT DOES NOT.
+The block carries a 15,696-character signature and an EMPTY thinking field. The
+reasoning is encrypted. Logging the blocks was still right, since it is what
+diagnosed the budget failure, but the stated justification was wrong.
+
+### Successful run: 11,865 in / 10,543 out, $0.13, stop_reason end_turn
+
+TWO FINDINGS.
+
+    [low]    number / within-chapter    ch1:p61, ch1:p68
+             "over thirty" warriors against "the hundred and ten warriors here"
+
+    [medium] other / cross-chapter      ch1:p73, ch2:p35
+             Kasev and Dara "will leave in two days" against "have gone ahead
+             and arrived in New York"
+
+### Scored against the gold standard
+
+    recall, naturally occurring      0 / 2     missed GS-01 and GS-07
+    strict precision                 0 / 2
+    correct rejections, legitimate   8 / 9
+
+Finding 2 IS GS-08, same two locators. GS-08 is the row whose own notes read
+"the most valuable precision row in the set... A checker that flags this scores
+badly." It fired on the first run. The gold standard did its job.
+
+Finding 1 was not in the gold standard and was adjudicated by the author: NOT a
+contradiction. The thirty are the travelling party, five teams, with Dara, Kasev
+and Marek contributing twenty between them and the remaining ten to Mira and
+Johann. The hundred and ten are the garrison to be trained, whom Mira and Johann
+stay behind to train. Added as GS-14, a set-binding precision row, companion to
+GS-10 which binds intervals to subjects.
+
+Eight legitimate rows correctly went unflagged, including the clothing change,
+the two intervals bound to different subjects, and every alias row.
+
+### BOTH FALSE POSITIVES ARE BINDING ERRORS, WHICH IS WHAT THE GRAPH FIXES
+
+GS-08: read "will leave in two days" and "have gone ahead" as contradicting,
+when the second is the first having happened. Binding across TIME.
+
+GS-14: read two counts of different populations as two counts of one.
+Binding across SETS.
+
+In both the model had every word it needed and still attached a fact to the
+wrong entity. A graph does not make that error, because
+(c:Character)-[:IS_AT]->(p:Presence) binds by construction rather than by
+inference.
+
+THIS IS THE HYBRID ARGUMENT DEMONSTRATED RATHER THAN ASSERTED. The LLM reaches
+contradictions the graph cannot model at all, and loses precision on exactly the
+binding problems the graph solves structurally. Neither arm is sufficient.
+
+It correctly rejected GS-10, which is also a binding case. So it is not
+incapable at binding, it is UNRELIABLE at it. The inconsistency is the finding.
+
+### A THIRD CATEGORY THE GOLD STANDARD DOES NOT YET HAVE
+
+The author's ruling on GS-08 was that Eli "taking point" means acting as the
+point of contact, not travelling with the advance team, AND THAT A READER COULD
+PLAUSIBLY MAKE THE SAME MISREADING THE MODEL DID.
+
+So the narrative is consistent, the flag is a false positive against ground
+truth, and the text is genuinely ambiguous. For a tool whose user is the AUTHOR,
+a flag saying "a reader may think Eli went with them" is useful output, not a
+malfunction. GS-07 already distinguishes "a speaker can be wrong without the
+narrative being wrong". This is its neighbour: THE TEXT CAN MISLEAD WITHOUT THE
+NARRATIVE BEING WRONG.
+
+DECIDED: report precision twice. Strict precision against ground truth, and
+separately how many false positives identified a real ambiguity. Neither figure
+is honest alone.
+
+Consequence, deferred: if the "take point" line is revised, v2 is frozen so the
+change lands in v3 with the plants and GS-08's locators move. It is also a live
+instance of the retirement finding from GS-02 and GS-03, except THIS TIME THE
+TOOL CAUSED THE REVISION rather than ordinary editing. Worth its own line in the
+evaluation chapter.
+
+### Known limitations of this run
+
+One run, not three, so no variance figure yet. Effort fixed at medium; high at a
+64,000 budget is a second condition worth running as a reasoning-budget versus
+detection-quality comparison. Verification mode is not built: the graph flags
+nothing on the natural corpus, so there is nothing to verify until the plants
+land.
+## CG-17 verification arm, and the result the whole project was for (23 Sep)
+
+Verification was going to wait for plants, on the reasoning that the graph flags
+nothing so there is nothing to verify. WRONG. The gold standard IS a candidate
+set: 11 live rows, each with locators, anchors and an author-adjudicated ground
+truth. No plants and no graph required.
+
+### Method
+
+One call per row. The verifier receives THE TYPE, THE ENTITIES AND THE PASSAGES,
+which is what the graph would hand it. It NEVER receives the gold standard's own
+"what the contradiction is" column, because for several rows that column
+telegraphs the answer; GS-08's reads "by the same speaker to a different
+audience", which is most of the reasoning.
+
+Ground truth is taken mechanically from the Origin column: naturally occurring
+means a real contradiction, legitimate means not. No judgement applied at
+scoring time.
+
+Same model, effort and budget as the detection run. Every call logged to
+llm_runs/ under its row id.
+
+### Scorecard
+
+    true positives    0     false negatives  2     GS-01, GS-07
+    true negatives    8     false positives  1     GS-05
+    unparseable       0
+
+### GS-08 FLIPPED, AND THAT IS THE ARGUMENT
+
+Detection, reading the whole corpus, called GS-08 a CONTRADICTION at medium
+confidence. A false positive.
+
+Verification, handed the SAME TWO PASSAGES plus a type label, called it
+CONSISTENT at HIGH confidence:
+
+    "The passages describe sequential events, Kasev and Dara depart first,
+     then later arrive in New York ahead of the others, which is a natural
+     progression, not a contradiction."
+
+Same model. Same text. Opposite and correct answer. The only difference is that
+the candidate arrived PRE-BOUND instead of having to be found.
+
+This is a controlled comparison inside one model, not a comparison between
+systems, and it is stronger evidence for the hybrid than either arm's raw score.
+The architecture is not "LLM plus graph because two is better than one". It is
+"the LLM's failure mode is binding, and binding is what the graph does".
+
+### ALL THREE ERRORS HAVE ONE CAUSE
+
+GS-01 (missed): "the passages never mention Ciaran, Roisen, or Elior, so no
+contradiction involving those named individuals is present." It is RIGHT. The
+two paragraphs do not name them. The contradiction exists only if you know who
+the three generations are, which lives in the family graph.
+
+GS-07 (missed): could not resolve who "he" refers to.
+
+GS-05 (false positive): bound "she" in ch1 p21 to Elior, the nearest named
+antecedent, and concluded Elior changes gender.
+
+Every failure is ENTITY RESOLUTION THE PASSAGES DO NOT CONTAIN. That is exactly
+what a graph supplies and a passage does not. Three independent failures, one
+cause, and it is the cause the architecture predicts.
+
+### THE GS-05 FALSE POSITIVE IS PARTLY AN ARTEFACT OF MY TEST
+
+Checked p21 against p20 and p22. The paragraph is about Roisen throughout; she is
+named in p22. The model saw ...," thought Elior. She pulled up the long
+sleeves... and bound the pronoun to Elior. The prose is correct.
+
+But the test handed it p21 IN ISOLATION, because candidates were built from the
+gold standard's anchor locators alone. With the neighbours attached the pronoun
+is unambiguous. So this false positive measures my context window, not the
+architecture.
+
+SPECIFICATION DERIVED FROM THIS: a hybrid candidate must carry resolved entities
+AND adjacent paragraphs, not only the anchor passages. That is not a design
+guess, it is three failures with a shared cause pointing at the same fix.
+
+Craft note, not an error: the name "Elior" sits between "her desk" and "She
+pulled up", so the pronoun chain is briefly ambiguous around an intervening
+name. Same family as the "take point" case. Author's call; no change recommended.
+
+### Detection versus verification, same corpus, same day
+
+                        DETECTION        VERIFICATION
+    input               whole corpus     2 passages + type
+    recall (natural)    0 / 2            0 / 2
+    precision           0 / 2            0 / 1
+    correct rejections  8 / 9            8 / 9
+    GS-08               CONTRADICTION    CONSISTENT (high)
+
+NEITHER ARM DETECTED EITHER NATURALLY OCCURRING CONTRADICTION. Both missed GS-01
+and GS-07, for the same reason, in both modes. That negative result is consistent
+across two independent experiments and should be reported as prominently as the
+flip.
+
+### Known limitations
+
+One run per row, no variance figure. Effort fixed at medium. Candidates built
+from anchors only, which is the GS-05 artefact above. Ground truth for GS-07 is
+itself an author judgement about an ambiguous passage, so counting it as a
+contradiction the tool should catch is defensible but not neutral.
+## CG-14 age extraction, and a correction it forced (23 Sep)
+
+Kept in scope on the expectation that chapters 3 and 4 will contain ages, not
+because chapters 1 and 2 do. They contain NONE: no "years old", no "aged N", no
+"N-year-old", no "age of", not even the word "age". One "centuries", one
+"Ravensworth birthday".
+
+### The rule, written narrow on purpose
+
+Four surface forms and nothing inferred:
+
+    "<N> years old"    "aged <N>"    "<N>-year-old"    "turned <N>"
+
+Digits and written numbers both, since a world on a millennia scale will say
+"four hundred years old" long before it says "400". No birthdays, no date
+arithmetic, no inference of any kind.
+
+REGEX, NOT spaCy. spaCy labels "four hundred years old" as DATE and a bare
+number as CARDINAL, and neither label tells you it is an age. A narrow regex is
+honest about what the rule actually is, and it is the rule that gets written up.
+
+Binding follows pair_character_locations exactly: the character and the age must
+share a sentence. Deliberately the same rule, so both arms fail the same way and
+the write-up has ONE limitation to explain rather than two.
+
+Tested against eleven strings before wiring, including the three negatives that
+matter: "over thirty men and women", "the hundred and ten warriors here" and
+"years old news" all correctly yield nothing.
+
+### Positive AND negative control, because the corpus proves nothing
+
+Chapters 1 and 2 cannot exercise this code, so a corpus run is not evidence.
+src/control_age.py holds two hand-written pairs:
+
+    CONFLICTING  Roisen 400 in ch1, Roisen 300 in ch2   ->  1 inconsistency
+    CONSISTENT   Roisen 400 in ch1, Roisen 400 in ch2   ->  0 inconsistencies
+
+Both pass. The negative half is the important one: it catches a query that
+flags everything, which a positive control alone cannot.
+
+Corpus run afterwards: 148 paragraphs, 6 pairs, 0 ages, both queries empty.
+EXPECTED, not a failure.
+
+### THE CONTROL STORED 3 AGES, NOT 2, AND THAT IS THE FINDING
+
+Sentence two names two characters: "By then ROISEN was three hundred years old,
+or so ALRIC claimed." The binding rule attaches the age to every character in
+the sentence, so it produced Roisen=300 AND ALRIC=300. Alric is recorded as
+three hundred years old on the strength of a sentence that says nothing of the
+sort.
+
+It caused no false detection here only because Alric has one age and nothing to
+conflict with. On a fuller corpus it would.
+
+### CORRECTION TO THE CG-17 ENTRY WRITTEN EARLIER TONIGHT
+
+That entry says:
+
+    "A graph does not make that error, because
+     (c:Character)-[:IS_AT]->(p:Presence) binds by construction rather than by
+     inference."
+
+TOO STRONG, AND THIS CONTROL DISPROVES IT. The graph binds by construction, but
+the binding is only as good as the EXTRACTION RULE that built it, and a
+sentence-level cartesian product is a crude rule. pair_character_locations does
+the same thing: the six corpus pairs include Alric and Arsen both placed at
+Blackmere from the single sentence at ch2 p48.
+
+The honest version of the hybrid argument is narrower and still worth making:
+THE GRAPH MAKES BINDING EXPLICIT AND INSPECTABLE, which is why this failure is
+visible at all, rather than immune to binding error. The LLM's binding
+decisions are invisible and unauditable; the graph's are a row you can query.
+That is the defensible claim.
+
+### Decided
+
+KEEP THE CARTESIAN RULE. Fixing ages alone would leave two different binding
+rules to explain instead of one, and the location arm already ships this
+behaviour. One stated limitation across both arms.
+
+The schema now models an attribute the current corpus does not contain. That is
+itself worth reporting: the age query existed since CG-14 was written, was dead
+code until tonight, and meets real data for the first time in chapters 3 and 4.
