@@ -220,6 +220,9 @@ __marimo__/
 # Manuscript source text (author drafts, not part of the software artefact)
 manuscript/
 
-# Frozen evaluation corpus (author drafts + gold standard, not part of the software artefact)
-corpus/
+# Frozen evaluation corpus. Manuscript snapshots stay out. The gold standard is
+# tracked, because it is the instrument everything is scored against and its
+# history is the evidence that ground truth was not fitted to the results.
+corpus/*
+!corpus/corpus_gold_standard.csv
 audit_report.csv
