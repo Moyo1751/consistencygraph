@@ -1675,3 +1675,62 @@ behaviour. One stated limitation across both arms.
 The schema now models an attribute the current corpus does not contain. That is
 itself worth reporting: the age query existed since CG-14 was written, was dead
 code until tonight, and meets real data for the first time in chapters 3 and 4.
+## Registry retypes applied, and one reversed on evidence (24 Sep)
+
+The three edits recorded as done on 22 Sep but never made to the file have now
+been made, after re-checking each against the corpus rather than re-adopting
+them from this log. The guard adopted yesterday says a change is recorded as
+done only after it is verified in the artefact it claims to change; this is the
+first application of it, and it caught a wrong decision.
+
+### Ravensworth and Ravensworths to Organisation: CONFIRMED
+
+Five occurrences, four collective:
+
+    ch2 p6   "The Ravensworths are practically family"
+    ch2 p55  "the Ravensworths' private airstrip"
+    ch1 p14  "the Ravensworth birthday"
+    ch2 p36  "the Ravensworth team on the ground"
+    ch1 p14  "Alpha Malcolm Ravensworth"          <- the one surname use
+
+Four of five denote the family or the pack. Retype stands. "Alpha Malcolm
+Ravensworth" added as a Character key so the surname use is covered by a longer
+key and never falls through to the collective one.
+
+### Bare Kerenath to Character: REVERSED
+
+The 22 Sep reasoning was "no bare organisational use exists in the corpus".
+THE EVIDENCE SAYS THE OPPOSITE. Five occurrences:
+
+    ch1 p3   "the Kerenath shipping company"      the company
+    ch1 p3   "Kerenath Enterprises"               the company, existing key
+    ch1 p7   "Arseny Kerenath"                    existing Character key
+    ch1 p18  "Roisen Kedvara Kerenath"            existing Character key
+    ch2 p23  "Oren Kerenath"                      NOT a key, so bare Kerenath fired
+
+Every bare hit is either the company or a fragment of a longer personal name.
+Adding "Oren Kerenath" as a key removes the last one under longest-match-wins,
+leaving no bare surname use at all in chapters 1 and 2.
+
+The bible agrees: Kerenath is the mother's house name, and the registry already
+carries House Kerenath and Kerenath Enterprises as Organisations.
+
+BARE KERENATH STAYS ORGANISATION. Recorded as a decision reversed on evidence,
+not as a silent difference from what this log previously claimed.
+
+### Registry now
+
+    105 entries    Character 75    Organisation 20    Location 10
+
+Verified by lookup, not by agreement. Pipeline re-run afterwards: 148
+paragraphs, 6 pairs, 0 ages, both queries empty. Unchanged, as expected, since
+none of these keys is a Location.
+
+### What this says about the flat map
+
+Three of the five Kerenath occurrences are only correctly typed because a
+LONGER key exists to catch them. The registry does not resolve the ambiguity
+between a house name and a surname; it sidesteps it by enumerating the longer
+forms. That works while the forms are known and fails silently on any new one,
+which is the same fragility recorded on 24 Jul for name variants, surfacing in
+a third place.
