@@ -1,3 +1,5 @@
+import re
+
 from spacy.matcher import PhraseMatcher
 from spacy.util import filter_spans
 
@@ -11,6 +13,27 @@ _REGISTRY_MATCHER.add("REGISTRY", list(nlp.tokenizer.pipe(registry.keys())))
 
 REGISTRY_LABEL = "REGISTRY"
 
+
+_UNITS = {
+    "zero": 0, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6,
+    "seven": 7, "eight": 8, "nine": 9, "ten": 10, "eleven": 11, "twelve": 12,
+    "thirteen": 13, "fourteen": 14, "fifteen": 15, "sixteen": 16,
+    "seventeen": 17, "eighteen": 18, "nineteen": 19,
+}
+_TENS = {"twenty": 20, "thirty": 30, "forty": 40, "fifty": 50, "sixty": 60,
+         "seventy": 70, "eighty": 80, "ninety": 90}
+_SCALES = {"hundred": 100, "thousand": 1000}
+
+_NUM_WORDS = "|".join(list(_UNITS) + list(_TENS) + list(_SCALES) + ["and"])
+_NUMBER = rf"(?:\d+|(?:{_NUM_WORDS})(?:[\s\-](?:{_NUM_WORDS}))*)"
+
+# CG-14. Four surface forms, nothing inferred. No birthdays, no date arithmetic.
+_AGE_PATTERNS = [
+    re.compile(rf"\b({_NUMBER})\s+years?\s+old\b", re.I),
+    re.compile(rf"\baged\s+({_NUMBER})\b", re.I),
+    re.compile(rf"\b({_NUMBER})[\s\-]year[\s\-]old\b", re.I),
+    re.compile(rf"\bturned\s+({_NUMBER})\b", re.I),
+]
 
 def inject_registry_entities(doc):
     """Add registry keys spaCy missed to doc.ents.
@@ -91,3 +114,59 @@ def resolve_entity_types(doc):
         )
 
     return resolved_entities
+
+
+def parse_number(text):
+    """Digits or a written English number to int. None if it isn't one."""
+    text = text.lower().replace("-", " ")
+    if text.strip().isdigit():
+        return int(text.strip())
+
+    total = current = 0
+    seen = False
+    for word in text.split():
+        if word == "and":
+            continue
+        if word in _UNITS:
+            current += _UNITS[word]
+        elif word in _TENS:
+            current += _TENS[word]
+        elif word in _SCALES:
+            scale = _SCALES[word]
+            if scale == 100:
+                current = (current or 1) * 100
+            else:
+                total += (current or 1) * scale
+                current = 0
+        else:
+            return None
+        seen = True
+
+    return total + current if seen else None
+
+
+def extract_ages(doc, chapter, resolved_map):
+    """Ages bound to a character in the same sentence.
+
+    Same binding rule as pair_character_locations, so both fail the same way.
+    An age belonging to something other than a character ("a four-hundred-
+    year-old oath") binds to whoever is named alongside it.
+    """
+    mentions = []
+
+    for sent in doc.sents:
+        characters = [ent.text for ent in sent.ents if resolved_map.get(ent.text) == "Character"]
+        if not characters:
+            continue
+
+        for pattern in _AGE_PATTERNS:
+            for match in pattern.finditer(sent.text):
+                age = parse_number(match.group(1))
+                if age is None:
+                    continue
+                for character in characters:
+                    mentions.append(
+                        {"character": character, "age": age, "chapter": chapter}
+                    )
+
+    return mentions

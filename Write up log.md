@@ -1592,3 +1592,86 @@ One run per row, no variance figure. Effort fixed at medium. Candidates built
 from anchors only, which is the GS-05 artefact above. Ground truth for GS-07 is
 itself an author judgement about an ambiguous passage, so counting it as a
 contradiction the tool should catch is defensible but not neutral.
+## CG-14 age extraction, and a correction it forced (23 Sep)
+
+Kept in scope on the expectation that chapters 3 and 4 will contain ages, not
+because chapters 1 and 2 do. They contain NONE: no "years old", no "aged N", no
+"N-year-old", no "age of", not even the word "age". One "centuries", one
+"Ravensworth birthday".
+
+### The rule, written narrow on purpose
+
+Four surface forms and nothing inferred:
+
+    "<N> years old"    "aged <N>"    "<N>-year-old"    "turned <N>"
+
+Digits and written numbers both, since a world on a millennia scale will say
+"four hundred years old" long before it says "400". No birthdays, no date
+arithmetic, no inference of any kind.
+
+REGEX, NOT spaCy. spaCy labels "four hundred years old" as DATE and a bare
+number as CARDINAL, and neither label tells you it is an age. A narrow regex is
+honest about what the rule actually is, and it is the rule that gets written up.
+
+Binding follows pair_character_locations exactly: the character and the age must
+share a sentence. Deliberately the same rule, so both arms fail the same way and
+the write-up has ONE limitation to explain rather than two.
+
+Tested against eleven strings before wiring, including the three negatives that
+matter: "over thirty men and women", "the hundred and ten warriors here" and
+"years old news" all correctly yield nothing.
+
+### Positive AND negative control, because the corpus proves nothing
+
+Chapters 1 and 2 cannot exercise this code, so a corpus run is not evidence.
+src/control_age.py holds two hand-written pairs:
+
+    CONFLICTING  Roisen 400 in ch1, Roisen 300 in ch2   ->  1 inconsistency
+    CONSISTENT   Roisen 400 in ch1, Roisen 400 in ch2   ->  0 inconsistencies
+
+Both pass. The negative half is the important one: it catches a query that
+flags everything, which a positive control alone cannot.
+
+Corpus run afterwards: 148 paragraphs, 6 pairs, 0 ages, both queries empty.
+EXPECTED, not a failure.
+
+### THE CONTROL STORED 3 AGES, NOT 2, AND THAT IS THE FINDING
+
+Sentence two names two characters: "By then ROISEN was three hundred years old,
+or so ALRIC claimed." The binding rule attaches the age to every character in
+the sentence, so it produced Roisen=300 AND ALRIC=300. Alric is recorded as
+three hundred years old on the strength of a sentence that says nothing of the
+sort.
+
+It caused no false detection here only because Alric has one age and nothing to
+conflict with. On a fuller corpus it would.
+
+### CORRECTION TO THE CG-17 ENTRY WRITTEN EARLIER TONIGHT
+
+That entry says:
+
+    "A graph does not make that error, because
+     (c:Character)-[:IS_AT]->(p:Presence) binds by construction rather than by
+     inference."
+
+TOO STRONG, AND THIS CONTROL DISPROVES IT. The graph binds by construction, but
+the binding is only as good as the EXTRACTION RULE that built it, and a
+sentence-level cartesian product is a crude rule. pair_character_locations does
+the same thing: the six corpus pairs include Alric and Arsen both placed at
+Blackmere from the single sentence at ch2 p48.
+
+The honest version of the hybrid argument is narrower and still worth making:
+THE GRAPH MAKES BINDING EXPLICIT AND INSPECTABLE, which is why this failure is
+visible at all, rather than immune to binding error. The LLM's binding
+decisions are invisible and unauditable; the graph's are a row you can query.
+That is the defensible claim.
+
+### Decided
+
+KEEP THE CARTESIAN RULE. Fixing ages alone would leave two different binding
+rules to explain instead of one, and the location arm already ships this
+behaviour. One stated limitation across both arms.
+
+The schema now models an attribute the current corpus does not contain. That is
+itself worth reporting: the age query existed since CG-14 was written, was dead
+code until tonight, and meets real data for the first time in chapters 3 and 4.

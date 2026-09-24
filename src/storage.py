@@ -9,6 +9,12 @@ def store_character_age(name, age, chapter, driver):
             MERGE (c)-[:HAS_AGE]->(a:AgeMention {age: $age, chapter: $chapter})
         """, name=name, age=age, chapter=chapter)
 
+def store_ages(mentions, driver):
+    for mention in mentions:
+        store_character_age(
+            mention["character"], mention["age"], mention["chapter"], driver
+        )
+
 def store_character_location(name, location, chapter, paragraph, driver):
     with driver.session() as session:
         session.run("""
