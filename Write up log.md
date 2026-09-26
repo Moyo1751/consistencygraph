@@ -2063,3 +2063,38 @@ to change. Each of these failed that test at some point today.
   show the cost. The 23 Sep specification stands: candidates need adjacent
   paragraphs and resolved entities.
 - Optional second condition never run: effort high at a 64,000 budget.
+
+## Dependency-parse pairing re-examined and ruled out (25 Sep, recorded 26 Sep)
+
+The grammar-based pairing planned on 24 Jul (prepositions and verbs instead of
+raw co-occurrence) was deferred then because of the extra work it would add.
+Re-examined once the frozen corpus (v3) had been run through the pipeline,
+against the GS-15 plant in ch1 p27:
+
+    "With Zelkarev in Thornhaven, you need to stand in for him while he's away
+    at Kaldon."
+
+Parse, pinned versions (spaCy 3.8.13, en_core_web_sm 3.8.0), identical on the
+sentence alone and inside the whole p27 paragraph after normalise():
+
+    in Thornhaven   prep of Zelkarev          Thornhaven attaches to Zelkarev
+    at Kaldon       prep of away, of 's       Kaldon attaches to "he's away"
+    he              nsubj of 's               never linked back to Zelkarev
+
+A grammar-based rule pairs Zelkarev with Thornhaven and nothing else. Kaldon
+hangs off "he", and nothing in the pipeline resolves "he" to Zelkarev
+(coreference is out of scope), so the Kaldon half is dropped.
+
+CONSEQUENCE: Zelkarev would end up with one location, so the location query
+would NO LONGER FLAG GS-15. The current same-sentence rule pairs Zelkarev with
+both places because all three names share the sentence; it takes no notice of
+what is said about "he" or "him". That is right here by co-occurrence, not by
+understanding the sentence, and it is what makes GS-15 the graph's clearest
+finding: returned on every run, missed by all nine LLM calls (24 Sep tables).
+
+DECISION: ruled out. Adopting it would lose GS-15 unless coreference were solved
+as well.
+
+Parse re-checked on 26 Sep with the same pinned versions before this entry was
+written. Spare observation from the same parse: spaCy labels Zelkarev NORP; the
+registry types him as a Character.
