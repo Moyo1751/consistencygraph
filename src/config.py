@@ -9,8 +9,8 @@ nlp = spacy.load("en_core_web_sm")
 
 # pinned, never a floating alias — the evaluation must name the exact model
 LLM_MODEL = "claude-sonnet-5"
-LLM_EFFORT = "medium"
-LLM_MAX_TOKENS = 32000
+LLM_EFFORT = "high"
+LLM_MAX_TOKENS = 64000
 
 
 def get_driver():
