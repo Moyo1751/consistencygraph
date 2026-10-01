@@ -2266,3 +2266,32 @@ settings, so they are not a budget problem.
 
 Detected? in the gold standard stays the medium condition, which is the
 frozen system. This condition is reported alongside it, not in its place.
+
+## Li subtype column filled (1 Oct)
+
+All 43 live rows given a subtype from Li et al. (2026) Table 2, using the
+operational definitions in their Figure 9; agreed with the author. A legitimate
+row carries the subtype it could be mistaken for. Retired rows left blank. Done
+after the runs; no code reads the column, so no score changes.
+
+    Duration Contradictions        GS-01, 22, 23, 33, 38    look-alikes GS-08, 10
+    Absolute Time Contradictions   GS-34                    look-alike  GS-27
+    Simultaneity Contradictions    GS-07, 15, 19, 39        look-alike  GS-43
+    Knowledge Contradictions       GS-24
+    Skill Fluctuations                                      look-alike  GS-44
+    Geographical Contradictions    GS-20                    look-alikes GS-18, 26
+    Appearance Mismatches          GS-21, 37                look-alikes GS-09, 11, 40, 41
+    Nomenclature Confusions        GS-25, 28                look-alikes GS-04, 05, 06, 12,
+                                                            13, 17, 29, 30, 31, 42
+    Quantitative Mismatches        GS-16, 32, 35, 36, 45    look-alike  GS-14
+
+Judgement calls: GS-16 is Quantitative, not Duration (an age clash with no
+elapsed time, per Figure 9); GS-23 and GS-38 involve elapsed time, so Duration.
+GS-24 is Knowledge (Elior states where Oren is without knowing). GS-19 is
+Simultaneity (a person in two places); GS-20 is Geographical (a place in two
+locations). GS-12 is Nomenclature as the nearest fit for an ambiguous "his
+father".
+
+Coverage: 9 of Li's 19 subtypes. Nothing under Narrative & Style, Core Rules
+or Social Norms Violations, Causeless Effects, Causal Logic Violations,
+Abandoned Plot Elements, Memory Contradictions or Forgotten Abilities.
