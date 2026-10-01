@@ -2098,3 +2098,61 @@ as well.
 Parse re-checked on 26 Sep with the same pinned versions before this entry was
 written. Spare observation from the same parse: spaCy labels Zelkarev NORP; the
 registry types him as a Character.
+
+## CG-26 held-out set prepared: corpus v2, registry merge, gold standard (1 Oct)
+
+Branch CG-26-held-out-evaluation. Everything below was settled before any
+held-out run, so nothing in it was tuned on held-out results.
+
+CORPUS. corpus/corpus_ch1-4_v2: 4 chapters, 347 paragraphs, 12,972 words.
+Chapters 1 and 2 are corpus_ch1-2_v3 (the development split); chapters 3 and 4
+are the manuscript plus eight held-out substitutions. v1 and v2 differ in 17
+paragraphs. Chapters 1 and 2 were checked against v3 and match except ch1 p27,
+where a missing closing quotation mark was repaired. The text of every
+development anchor is unchanged.
+
+    corpus_ch1-4_v2.json  1f73667925d41ad1a4f1b655a79dff0ee2b4138a1a44a0bad516297b138c3759
+    corpus_ch1-4_v2.txt   6e43d4ee99f5813792b6e99dc0c24a47ff36935b3cdda9024eb19640d06949f6
+
+The JSON has a new layout: paragraphs sit in a flat paragraphs_data list with
+ids "ch1:p1", so corpus.py has to change to read it.
+
+REGISTRY. src/registry.json merged to 117 entries (80 Character, 24
+Organisation, 13 Location). The working copy for chapters 3 and 4 had been built
+on an older registry and would have reverted the 24 Sep work. Merged into the
+repo's 105 instead: added Bryson, Carter, Glenn, Greg, Gregory (Character);
+Black Thorns, Silent Meadows, Whispering Meadows (Location); Barren Hill,
+Graystone, New Dawn, Silver Fang (Organisation). The Ravensworth and
+Ravensworths retypes to Organisation and the keys "Alpha Malcolm Ravensworth"
+and "Oren Kerenath" are kept.
+
+GOLD STANDARD. 45 rows, 43 live: 18 development, 25 held-out (13 planted, 2
+naturally occurring, 10 legitimate). New Split column; Li subtype column added,
+still empty.
+
+1. LOCATORS UNIFIED TO "chN pM". The new rows used "ch4:p16" or gave no
+   paragraph number. verify.py's LOCATOR regex would have matched none of them
+   and sent empty passages for every held-out row. Each anchor was resolved
+   against v2 and rewritten. Two fixes came out of it: GS-45's second anchor is
+   p41, not p39, and GS-39 gained the anchor ch3 p140. All 43 live anchors now
+   resolve.
+
+2. GS-34. Its anchor "late October" is not in the text. Corrected, with the
+   author, to ch1 p6 "he couldn't possibly have needed it in late autumn here".
+   Chapter is now "1, 4"; description, ground truth and note updated.
+
+3. GS-24 CONVENTION (author, 1 Oct). A statement counts as a fact until the
+   text reveals it as a lie. Once revealed, it is still a contradiction, a
+   narrative one. GS-24 stays CONTRADICTION. Applies to GS-24 only.
+
+4. GS-07 AND GS-20 ARE TWO PROBLEMS IN ONE SENTENCE (ch1 p33). GS-07 is the
+   naturally occurring one: Roisen puts Oren at the crossing point, but he ran
+   off to Vienna proper as soon as they arrived (ch1 p57). GS-20 is the planted
+   one: the crossing point is placed in Kedmaon, when it is under the manor
+   outside Vienna (ch1 p37). GS-07's ground truth had said "not at Kedmaon",
+   which mixed the two; corrected. Labels unchanged.
+
+FROZEN SYSTEM. For the held-out run the only code changes allowed are the ones
+the new corpus forces: corpus.py reads v2, llm.py's prompt says four chapters,
+and verify.py takes held-out rows only. The pipeline rules, the queries, the
+registry and the prompts otherwise stay as they were on the development split.
