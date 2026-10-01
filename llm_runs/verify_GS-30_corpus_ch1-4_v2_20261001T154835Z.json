@@ -1,0 +1,17 @@
+{
+  "kind": "verify_GS-30",
+  "model": "claude-sonnet-5",
+  "corpus": "corpus_ch1-4_v2.json",
+  "timestamp": "20261001T154835Z",
+  "input_tokens": 323,
+  "output_tokens": 78,
+  "stop_reason": "end_turn",
+  "prompt": "A consistency checker has flagged the passages below as a possible Alias / coreference contradiction involving: Johann; Johnathan; Malcolm.\n\nDecide whether they actually contradict. Two statements contradict only if they cannot both be true of the same story world. Statements about different people, different times, different places or different groups do not contradict, and neither does a change that can legitimately occur.\n\nReturn JSON only:\n\n{\"verdict\": \"CONTRADICTION|CONSISTENT\", \"confidence\": \"high|medium|low\", \"reason\": \"one sentence\"}\n\nPASSAGES:\n\n[ch1:p59] \"He should be in the training room with Kasev, Dara, Johann, Mira, and Marek,\" she replied.\n\n[ch4:p48] Malcolm nodded in agreement as he sent a message to Gabriel via the pack link. Once he was done, he sent a message to his beta Johnathan to come back, then he signalled for Roisen and the others to join them as they walked towards another room.\n",
+  "content": [
+    {
+      "citations": null,
+      "text": "{\"verdict\": \"CONSISTENT\", \"confidence\": \"medium\", \"reason\": \"Johann and Johnathan appear in separate contexts with no explicit statement that they are the same or different person, so this is not a necessary contradiction.\"}",
+      "type": "text"
+    }
+  ]
+}

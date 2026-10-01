@@ -1,0 +1,17 @@
+{
+  "kind": "verify_GS-33",
+  "model": "claude-sonnet-5",
+  "corpus": "corpus_ch1-4_v2.json",
+  "timestamp": "20261001T155033Z",
+  "input_tokens": 454,
+  "output_tokens": 89,
+  "stop_reason": "end_turn",
+  "prompt": "A consistency checker has flagged the passages below as a possible Timeline contradiction involving: Ariana; Malcolm; Greg; Barren Hill; New Dawn; Glenn.\n\nDecide whether they actually contradict. Two statements contradict only if they cannot both be true of the same story world. Statements about different people, different times, different places or different groups do not contradict, and neither does a change that can legitimately occur.\n\nReturn JSON only:\n\n{\"verdict\": \"CONTRADICTION|CONSISTENT\", \"confidence\": \"high|medium|low\", \"reason\": \"one sentence\"}\n\nPASSAGES:\n\n[ch4:p42] She continued saying, \"This is where it starts to get weird. A week after that they caught the foreign scent again, only stronger meaning more unknown trespassers. Three months after that was when Greg stated they were attacked and Glenn's friend in patrol caught the same scent on that day.\"\n\n[ch3:p91] \"It started four months ago. A couple of rogues attacked Barren Hill along their southern borders. It wasn't much, just eight of them. They injured a couple of the patrols and ran off before reinforcements arrived. Then a month later, the same thing happened to Graystone about a mile away from where their border meets ours. And then a month after that a dozen rogues hit New Dawn injuring two warriors on patrol before being run off by the reinforcements.\"\n",
+  "content": [
+    {
+      "citations": null,
+      "text": "{\"verdict\": \"CONSISTENT\", \"confidence\": \"medium\", \"reason\": \"The two passages describe different timelines of events (scent trackings vs. rogue attacks on different territories) without any stated overlap that would require them to align, so they can coexist in the story world.\"}",
+      "type": "text"
+    }
+  ]
+}
