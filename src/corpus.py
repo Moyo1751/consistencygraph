@@ -6,9 +6,10 @@ import json
 # process happens to be started from (same pattern as registry.py's
 # REGISTRY_PATH, one directory up since corpus/ is a sibling of src/).
 # Pinned to a frozen snapshot, never the working manuscript. Every run reported
-# in the evaluation has to name the version it read, and v2's numbers stay
-# comparable only while v2 stays on disk untouched.
-CORPUS_PATH = Path(__file__).parent.parent / "corpus" / "corpus_ch1-2_v3.json"
+# in the evaluation has to name the version it read. ch1-4_v2 is the held-out
+# run. The development runs read ch1-2_v2 and ch1-2_v3, so both stay on disk
+# untouched.
+CORPUS_PATH = Path(__file__).parent.parent / "corpus" / "corpus_ch1-4_v2.json"
 
 # The corpus uses typographic (curly) punctuation throughout. Anchors in the
 # gold standard and entries in registry.json use plain ASCII quotes, so
