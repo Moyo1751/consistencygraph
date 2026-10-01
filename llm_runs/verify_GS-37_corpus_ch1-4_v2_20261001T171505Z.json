@@ -1,0 +1,22 @@
+{
+  "kind": "verify_GS-37",
+  "model": "claude-sonnet-5",
+  "corpus": "corpus_ch1-4_v2.json",
+  "timestamp": "20261001T171505Z",
+  "input_tokens": 316,
+  "output_tokens": 319,
+  "stop_reason": "end_turn",
+  "prompt": "A consistency checker has flagged the passages below as a possible Attribute contradiction involving: Annabelle; her wolf form.\n\nDecide whether they actually contradict. Two statements contradict only if they cannot both be true of the same story world. Statements about different people, different times, different places or different groups do not contradict, and neither does a change that can legitimately occur.\n\nReturn JSON only:\n\n{\"verdict\": \"CONTRADICTION|CONSISTENT\", \"confidence\": \"high|medium|low\", \"reason\": \"one sentence\"}\n\nPASSAGES:\n\n[ch3:p138] As he was speaking the silhouette of a wolf blurred past the tree line and started bounding towards them. This wolf's fur was such a bright orange that it looked like flowing flames. As the red furred wolf got closer you could make out what seemed to be clothes in its mouth. It suddenly leaped, shifting with rapid speed. By the time it landed, a woman stood in its place.\n",
+  "content": [
+    {
+      "signature": "EpEICqQBCBIYAipAOnxsGIJPdU+Y/IjWma1cVWlE5kMrypBTWecDZLHtsokhv6tRlAOHO/7R8gu5wLpO9kvQEIh6VhYCwmdQh8/GejIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRmMTkyMGY0MC1kNzAxLTQyYzQtOTc5Zi1hMjRlZjlmYTVkNTeaAREKD2NsYXVkZS1zb25uZXQtNagBmar61QYSDFj4QDicGxiA01pTXBoMkr+dHxO/Y4qa9pMHIjD7F+Sh+XDLLcG/06MXCn4Bf7rM4bGqfoZnunmHoo/Skq+5snizvc4Z4r7XB1Z7eYIqmQYRAR+Ty1vUvbsO3A8v7ewm10f1swUThn42cqiwk7y7cskPgAocsiMc+AdjUigViYtPOh6YdCxGkKRWNKJtw8CxIMrLs4Eo/DejdFMqG7MseHo+9tyOdiuWNA0fm6iOF1DHKBHSAee39gDe70HQq1DyklegXtpGNB03v3b0BGIwARiUZ9iYDs658rJX2AgwFPYe6lI5vh5ZBMxpfZcsOVxGdVd0A3L4i9XQQoQa7bZyNqtosL/+YvxFPNMNnRfZRtin+vojUNUkKo3ko23IgJDB1GwELqwRpjk5ZoxOQ2l37azIG1TSYtUJc96ZVg9q3EcrqAd+T1rHx5Al8BxeifqUnoijS0GlGs0l3TO9PGbdmG3JK+YIITA2yeElacJSKLBL55A8nOknR6eIN+6lrdh2qAx5EQrNA1y/md17b5xPSmNDWgNMaP845L65YmJTiBUDqctJe8lzdluyUKJO8w4q2Qi3qnais88/BDEecrkoLNuAZPf2av8ar+JQe0ebkpdkh+jMrvearS9UcCy1cvdRlZ+rsk95D8kW/Qv64Xswq3dYEC7ned7yGyKccg9dyEs02XCgrQiYdZrhmn+6xWaZTL1x/oGPC9RHI2MhmLzyTMevzYuCwdIzjdA9E5e1wEenn5c1P4kDgnAhrj2RVcv8p1hDAEkv6ltdLlUupk6blxIExCoqdsE0Q3CUaphcZsSvLTfFrhHL8LU+naehMUsbKSMoGKTOhRG/9WJI6Xg2jKYSANyrrA5D6VbGBdgLCAsJ+dm6dYoLNHFYaDCIWr9wZmNUiUAdRd5Ezjfwr89ma/HS9TC2G5ywx9TXbKFEEzgzCFtzoptYaIfJW3DFI8KULMZr0BmA4BZ0E1QEaKlMSkBk7LKj6yEzHbWcjp33hxRjVsDFWjeF43/0I1gOKTo4oQ/KfocgY+gaQBbgsWM9syVrfWbijm48JoTxPoQg0UBzPkifS4Ew6HYv4PWf/cSFxe8M3SeEijLuDEFuE9yyOyqYl7oI9cx3QZdQzwvqXsG3Q//p6FqJyma0z3lFstKVJKjdWmCT9SY9GAE=",
+      "thinking": "",
+      "type": "thinking"
+    },
+    {
+      "citations": null,
+      "text": "{\"verdict\": \"CONSISTENT\", \"confidence\": \"medium\", \"reason\": \"Only one passage is provided, describing Annabelle's wolf form as bright orange/red fur consistently; there's no second description to contradict it.\"}",
+      "type": "text"
+    }
+  ]
+}

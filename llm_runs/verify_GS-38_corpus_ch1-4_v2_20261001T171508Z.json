@@ -1,0 +1,22 @@
+{
+  "kind": "verify_GS-38",
+  "model": "claude-sonnet-5",
+  "corpus": "corpus_ch1-4_v2.json",
+  "timestamp": "20261001T171508Z",
+  "input_tokens": 426,
+  "output_tokens": 231,
+  "stop_reason": "end_turn",
+  "prompt": "A consistency checker has flagged the passages below as a possible Attribute / age contradiction involving: Roisen; Annabelle; Evelyn.\n\nDecide whether they actually contradict. Two statements contradict only if they cannot both be true of the same story world. Statements about different people, different times, different places or different groups do not contradict, and neither does a change that can legitimately occur.\n\nReturn JSON only:\n\n{\"verdict\": \"CONTRADICTION|CONSISTENT\", \"confidence\": \"high|medium|low\", \"reason\": \"one sentence\"}\n\nPASSAGES:\n\n[ch4:p27] Roisen replied before Annabelle and said, \"You couldn't have, she was two years old at the time, and she was at home with her grandparents throughout the party.\" Roisen turned to Annabelle and said, \"Forty years later and you're all grown up now and thirty-two years old.\"\n\n[ch3:p139] The woman quickly pulled on the clothes she had in her hand, the same ones that had been in the wolf's mouth. Then she blurred forward and raced towards the men. They could see a tall lithe young redhead racing towards them. She looked like she was just in her early twenties, but she wasn't. She was Annabelle Ravensworth, the youngest Ravensworth child. She was already in her forties this year.\n",
+  "content": [
+    {
+      "signature": "EtUFCqQBCBIYAipA1Qw8kbWxdx1Fpa9QTfgyzkuofrL6xBHBog1mIuFRHO3eowT+57KSVtaSyuN3fDAKqIQE3vxSbEE5tp5jda82BTIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRmMTkyMGY0MC1kNzAxLTQyYzQtOTc5Zi1hMjRlZjlmYTVkNTeaAREKD2NsYXVkZS1zb25uZXQtNagBnKr61QYSDChdf9obqqpNNkaODRoMJAHKzITVkxkwI7hIIjDg7pUCupi1+cNCjNz4ke3/uqEQvehvEQuii1Gm6VKs3UkqB3D0J1PuDzlUXEC7er8q3QMgQdv8LSr65GP+61H0H4V+HAGgA+pYmYa+Vy5l6P5n4kH+tWS3qXNvp3qs2lgF/WmoniPmzmBEvxfOKCfo7e9lW3B6jZAyIdQnoXnS76+ty6w8EkfRCL0IiTKLa/85iq4k5KTLkQi8muMRbD+OTXsV/iWUC9feGKsYDpcFYgNhRvr9cuf01TSXpxV7LJtAyNYqLFMuFRL51x+AVCiJtxpA0mK+jvqEEAfEO9EMC71u5CP8CWYtFXpyn7LSAzTU46ZwSyxo+4i5nS5Pr1bfEzHpuX0fR71B9WAPrTn0lCfVvtyMkSv+DA7QSsYJIKeOH+pUNp+PQU8SjoJICNo/ZO2XQxta+WaHJ5ZgcjzvcUj9zQZUVSpk1aT4K3kfvA/VccX31Zz9Hxh8DNpwDms9pW6hK98acQv3284JoA4hXzifKaDI6N1ZJhdtAhycZszRxCESaRpDSemUuN3jdSttVdUpj0mBkFcKh6EafCUyHp76uKrvUxdxks+5olU5laXmHCWZKYOVacnlTqklnceK4O2b8ZrNy3q70/KgCzCZYkgwupLJ4yYfn9DZpejg0x0mnDDcjnrE07VtqrBrYI4FeBQAPz7B7OnvGF8Djpi1YokxixcHHpbjdB7bVH8AIC0YAQ==",
+      "thinking": "",
+      "type": "thinking"
+    },
+    {
+      "citations": null,
+      "text": "{\"verdict\": \"CONTRADICTION\", \"confidence\": \"high\", \"reason\": \"Roisen states Annabelle is thirty-two years old, while the other passage says she is already in her forties.\"}",
+      "type": "text"
+    }
+  ]
+}

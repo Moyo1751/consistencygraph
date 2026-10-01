@@ -1,0 +1,22 @@
+{
+  "kind": "verify_GS-22",
+  "model": "claude-sonnet-5",
+  "corpus": "corpus_ch1-4_v2.json",
+  "timestamp": "20261001T171604Z",
+  "input_tokens": 368,
+  "output_tokens": 683,
+  "stop_reason": "end_turn",
+  "prompt": "A consistency checker has flagged the passages below as a possible Timeline contradiction involving: Roisen; Evelyn; Oren; Talia.\n\nDecide whether they actually contradict. Two statements contradict only if they cannot both be true of the same story world. Statements about different people, different times, different places or different groups do not contradict, and neither does a change that can legitimately occur.\n\nReturn JSON only:\n\n{\"verdict\": \"CONTRADICTION|CONSISTENT\", \"confidence\": \"high|medium|low\", \"reason\": \"one sentence\"}\n\nPASSAGES:\n\n[ch3:p40] Evelyn laughed and rolled her eyes, turning to Oren and Talia. She said, \"Wow it's been a while since I've seen these two. Last time I saw you guys, you were ten. You're all grown up. Everett, you remember them, don't you? It was at my 650th.\"\n\n[ch3:p51] \"Come to think of it. Did you ever get to meet Ariana? I know Talia and Oren met her forty years ago at Eve's six hundred and thirtieth, but you weren't there,\" asked Roisen.\n",
+  "content": [
+    {
+      "signature": "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",
+      "thinking": "",
+      "type": "thinking"
+    },
+    {
+      "citations": null,
+      "text": "{\"verdict\": \"CONTRADICTION\", \"confidence\": \"high\", \"reason\": \"If Oren and Talia were ten years old at Evelyn's 650th (20 years before the 630th, since 650-630=20), they would not yet have been born 40 years ago at the 630th where Roisen says they met Ariana.\"}",
+      "type": "text"
+    }
+  ]
+}

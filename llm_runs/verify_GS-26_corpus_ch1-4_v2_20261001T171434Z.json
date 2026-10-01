@@ -1,0 +1,22 @@
+{
+  "kind": "verify_GS-26",
+  "model": "claude-sonnet-5",
+  "corpus": "corpus_ch1-4_v2.json",
+  "timestamp": "20261001T171434Z",
+  "input_tokens": 342,
+  "output_tokens": 262,
+  "stop_reason": "end_turn",
+  "prompt": "A consistency checker has flagged the passages below as a possible Location / presence contradiction involving: Malcolm; the map.\n\nDecide whether they actually contradict. Two statements contradict only if they cannot both be true of the same story world. Statements about different people, different times, different places or different groups do not contradict, and neither does a change that can legitimately occur.\n\nReturn JSON only:\n\n{\"verdict\": \"CONTRADICTION|CONSISTENT\", \"confidence\": \"high|medium|low\", \"reason\": \"one sentence\"}\n\nPASSAGES:\n\n[ch3:p100] \"Barren Hill is north of your pack, yes?\" asked Roisen as she looked at the map on the wall behind Malcolm detailing Hollowmere and the territories surrounding it.\n\n[ch3:p120] Malcolm sat at his desk staring at the map to his right. He frowned slightly and sighed. They were testing his borders. As ridiculous as it seemed to him, the signs were there. It was obvious. He couldn't believe he had missed the signs.\n",
+  "content": [
+    {
+      "signature": "Eu0GCqQBCBIYAipA7P6Jeuu+omW2j9xzQ+T8a3o2ElmHrITSFA7TfXEY9dAVzIsOKDjLUG7eCD+XAgAgD5QWR0+85RtnQbYzR9kkOjIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRmMTkyMGY0MC1kNzAxLTQyYzQtOTc5Zi1hMjRlZjlmYTVkNTeaAREKD2NsYXVkZS1zb25uZXQtNagB+qn61QYSDMyAypukT6iAVIRnUhoMz79dK2QOWDaOZ8YeIjBNvdiqNgrrKed0+ARtbJ/LNoktmE8ayzC1JTOKnPANic894OZgMVd8MznEq/u6Q2Eq9QSLID+yQe7H5lrXP5D7udX9ngJF5fOfLZof5Q+QnJt0va10EhkPukCrkb4G5k5P5A5pok7uIJeawU8yRnmBtZL74JXhun6e8aNEZjNL7CxCi4sJSCzEcbk4A3Vioj6ssApEuxBLWMeXpiLz7GBCOJilRc5Iq9bXEEti8guX+ms0d12Cmz6u1K+08iUE8nQ36K9m1voSiuMPTO+YhfmutVy1qqQWUJ+oBcMxHePkCHBQNWAL3IlRR4TdnKYNplwfYFbk1HbWRTQFezMmeQMxg9gDkp3vv+y/VNrG2Qqgk6LSZHfuZ40ucDKshFBjV4e/pfliNSt0GkwFxkXjlNbzvYG2noPTQOdbcBVf8ce8uWnauXT4rqVxnJkrQ7cGeZ8/82wDOdPh/kg9h5kDCguZTZX2/SCsYe8QO3c6EbWz8FmI61AbGUSY1t5aWUpmECMVvH6U+hT6dgqJ5oRhdvakhkcKdgPAb8ziSN0VnDq4iMbtKm+iUWPrVjYwVU622VtiURshevYrQnDX9Mrmk5Tl/uzbcMh/SQu1041Y6N2TDIawUMkX78D5UMEarWqZid0nl+hMJF93FLs/EvBICkSjny2BWKKql4vYkMKNFeiELCY+hhQile4Iao+RgrLyJtdlgp58v/JxSigttTzZ6bnzQcJ/TXqch/4myJDU4L8QMMB3RYthosxypIfjNvmZn3bOB5FomOM3NuCShJ5mpLil+o0adQetI9BmZi2jhG+rub52nqaUxf+6tGjtBSu54OMwKzpkbGs9RVIDBvQ27oIR4ZCgOzqdlyyzl+gOSW22XxWIy5gm6y99XomqHb5XPazu5j+Byx3GbRgB",
+      "thinking": "",
+      "type": "thinking"
+    },
+    {
+      "citations": null,
+      "text": "{\"verdict\": \"CONSISTENT\", \"confidence\": \"medium\", \"reason\": \"The map's position relative to Malcolm can differ if he turned or moved between the two scenes, so 'behind' and 'to his right' aren't necessarily contradictory.\"}",
+      "type": "text"
+    }
+  ]
+}

@@ -2221,3 +2221,48 @@ Always missed: GS-21, 24, 28, 33, 37, 39, 45. Both naturally occurring rows
 (GS-21, GS-28) missed every pass. GS-24 missed every pass: the model accepted
 Elior's cover story, the case the GS-24 convention describes. All ten
 legitimate rows called CONSISTENT every pass.
+
+## CG-26 second condition: effort high, 64,000 tokens (1 Oct)
+
+The optional condition listed on 24 Sep and never run until now. Same corpus,
+prompts, code and gold standard; config.py changed in its own commit to
+LLM_EFFORT = "high" and LLM_MAX_TOKENS = 64000 (saved 16:43 UTC, before the
+first call). Model claude-sonnet-5. All 78 calls ended end_turn and every
+response parsed. The run files do not record effort; this condition is the
+files stamped 20261001T1649 to 20261001T1720. The graph arm does not use the
+model and was not rerun.
+
+Detection output roughly doubled: 27,297, 40,725 and 21,391 output tokens
+against 15,951, 12,995 and 9,154 at medium. The second run would not have fitted
+the old 32,000 budget.
+
+LLM DETECTION (three runs; 6, 7 and 6 findings).
+
+    run 1  GS-22, GS-23, GS-38           3 / 15
+    run 2  GS-23, GS-25, GS-34, GS-38    4 / 15
+    run 3  GS-23, GS-25, GS-38           3 / 15
+
+Found in any run: 5 of 15 (medium: 3). Found in 2 of 3 runs: GS-23, GS-25,
+GS-38 (medium: GS-22, GS-23, GS-38). New at high: GS-25 (runs 2 and 3) and
+GS-34 (run 2). No held-out legitimate row flagged. Outside the held-out split:
+GS-16 every run, GS-19 in runs 1 and 3; GS-14 not flagged. The Malcolm 650
+finding appeared in every run. Run 2 also flagged ch3 p27, where Evelyn is
+named "Heaven"; not in the gold standard.
+
+VERIFICATION MODE (three passes over the 25 held-out rows).
+
+    pass 1  TP 8  FN 7  TN 10  FP 0   P 1.00  R 0.53  F1 0.70
+    pass 2  TP 8  FN 7  TN 10  FP 0   P 1.00  R 0.53  F1 0.70
+    pass 3  TP 8  FN 7  TN 10  FP 0   P 1.00  R 0.53  F1 0.70
+
+All 25 rows gave the same verdict in all three passes. Same rows caught as
+medium pass 1 (GS-22, 23, 25, 32, 34, 35, 36, 38); GS-35, which flipped at
+medium, held at high. Same seven missed: GS-21, 24, 28, 33, 37, 39, 45.
+
+READING. More reasoning moved detection a little (two more rows reached in at
+least one run) and made verification stable, but did not change what
+verification gets right or wrong. The seven misses are the same at both
+settings, so they are not a budget problem.
+
+Detected? in the gold standard stays the medium condition, which is the
+frozen system. This condition is reported alongside it, not in its place.
