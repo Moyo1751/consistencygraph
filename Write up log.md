@@ -2159,3 +2159,65 @@ FROZEN SYSTEM. For the held-out run the only code changes allowed are the ones
 the new corpus forces: corpus.py reads v2, llm.py's prompt says four chapters,
 and verify.py takes held-out rows only. The pipeline rules, the queries, the
 registry and the prompts otherwise stay as they were on the development split.
+
+## CG-26 held-out results (1 Oct)
+
+Frozen system, corpus_ch1-4_v2. Last code change (verify.py, held-out rows
+only) saved about seven minutes before the first run. Model claude-sonnet-5,
+effort medium, 32,000 tokens, for every call. All 78 calls ended end_turn and
+every response parsed. Held-out split: 25 rows, 15 contradictions (13 planted,
+2 naturally occurring), 10 legitimate.
+
+GRAPH ARM (pipeline.py, once). 347 paragraphs, 20 pairs, 10 ages stored.
+Held-out: 0 of 15 found. 8 flags, none matching a gold standard row:
+
+    age       Roisen 108 (ch3) / 2 (ch4); 5 / 2; 108 / 32; 5 / 32
+    location  Elior Kaldon / Montana (ch3); Roisen Black Thorns / Thornhaven;
+              Roisen Kaldon / Thornhaven; Roisen Black Thorns / Kaldon (ch3)
+
+Every one comes from same-sentence pairing attaching a place or an age to the
+wrong person, or to the right person in the wrong sense: "the lady of Black
+Thorns" is a title; "Roisen's palace in Kaldon" is a flashback; Roisen's "He's
+in Thornhaven" is about someone else; 2 and 32 are Annabelle's ages in Roisen's
+line (ch4 p27); 108 and 5 are Elior's. The rule that makes GS-15 work by
+co-occurrence produces these. Development flags reproduced: GS-15 (Zelkarev)
+and GS-16 (Malcolm 520 / 630). GS-39 was out of reach: Graystone is typed
+Organisation, so the location query never sees it.
+
+LLM DETECTION (llm.py, three runs; 6, 6 and 5 findings; 27,865 input tokens
+each).
+
+    run 1  GS-22, GS-23, GS-38    3 / 15
+    run 2  GS-23, GS-38           2 / 15
+    run 3  GS-22, GS-23           2 / 15
+
+No held-out legitimate row flagged in any run. Outside the held-out split:
+GS-16 every run, GS-19 in runs 1 and 2, and GS-14 (legitimate, the thirty
+against the hundred and ten) flagged in run 3, a false positive on a
+development row.
+
+UNLISTED FINDING, every detection run: ch4 p15, Malcolm celebrates his "six
+hundred and fiftieth birthday". GS-16 covers 520 against 630 only. Not added
+to the gold standard after the run. RULED (author, 1 Oct): 650 is Malcolm's
+true age. The 630 in ch2 p33 should have read 650 and was a slip when
+writing. The finding is a real contradiction, so all three runs were right to
+flag it. It sits on the development side (GS-16's chapters against ch4), so
+it is reported as an unlisted finding and does not enter the held-out scores.
+
+COMBINED (graph or detection): the graph found nothing, so combined equals
+detection. Detected? filled for the 25 held-out rows: Yes for GS-22, GS-23,
+GS-38 (found in any run; a 2-of-3 majority gives the same rows). Metrics sheet,
+held-out: TP 3, FN 12, FP 0. Recall 0.20, precision 1.00, F1 0.33.
+
+VERIFICATION MODE (verify.py, three passes over the 25 held-out rows).
+
+    pass 1  TP 8  FN 7  TN 10  FP 0   P 1.00  R 0.53  F1 0.70
+    pass 2  TP 7  FN 8  TN 10  FP 0   P 1.00  R 0.47  F1 0.64
+    pass 3  TP 8  FN 7  TN 10  FP 0   P 1.00  R 0.53  F1 0.70
+
+24 of 25 rows gave the same verdict in all three passes; GS-35 flipped
+(caught in passes 1 and 3). Always caught: GS-22, 23, 25, 32, 34, 36, 38.
+Always missed: GS-21, 24, 28, 33, 37, 39, 45. Both naturally occurring rows
+(GS-21, GS-28) missed every pass. GS-24 missed every pass: the model accepted
+Elior's cover story, the case the GS-24 convention describes. All ten
+legitimate rows called CONSISTENT every pass.
