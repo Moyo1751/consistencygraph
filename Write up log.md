@@ -2104,18 +2104,21 @@ registry types him as a Character.
 Branch CG-26-held-out-evaluation. Everything below was settled before any
 held-out run, so nothing in it was tuned on held-out results.
 
-CORPUS. corpus/corpus_ch1-4_v2: 4 chapters, 347 paragraphs, 12,972 words.
+CORPUS. corpus/corpus_ch1-4_v2: 4 chapters, 347 paragraphs, 12,972 words of
+prose (the snapshot records 12,980, counting the four headings, as v3 does).
 Chapters 1 and 2 are corpus_ch1-2_v3 (the development split); chapters 3 and 4
 are the manuscript plus eight held-out substitutions. v1 and v2 differ in 17
 paragraphs. Chapters 1 and 2 were checked against v3 and match except ch1 p27,
 where a missing closing quotation mark was repaired. The text of every
 development anchor is unchanged.
 
-    corpus_ch1-4_v2.json  1f73667925d41ad1a4f1b655a79dff0ee2b4138a1a44a0bad516297b138c3759
-    corpus_ch1-4_v2.txt   6e43d4ee99f5813792b6e99dc0c24a47ff36935b3cdda9024eb19640d06949f6
+    corpus_ch1-4_v2.json  0335e529c04a644a4025f6988cee6aa95a3db04ab557663ad9a73b319087c003
+    corpus_ch1-4_v2.txt   a22f09ab3f6ff308c444e7ba42c018c147d5b253dde00c1286fd775eb174c281
 
-The JSON has a new layout: paragraphs sit in a flat paragraphs_data list with
-ids "ch1:p1", so corpus.py has to change to read it.
+Both files use v3's layout (chapters, then paragraphs, with each heading at index
+0), so load_paragraphs() reads v2 unchanged. Only CORPUS_PATH moves. The JSON
+records its source, corpus_ch1-4_v2.docx (sha256 c7b083644b7fb248...), and the
+paragraphs changed from v1.
 
 REGISTRY. src/registry.json merged to 117 entries (80 Character, 24
 Organisation, 13 Location). The working copy for chapters 3 and 4 had been built
