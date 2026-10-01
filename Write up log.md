@@ -2247,7 +2247,9 @@ GS-38 (medium: GS-22, GS-23, GS-38). New at high: GS-25 (runs 2 and 3) and
 GS-34 (run 2). No held-out legitimate row flagged. Outside the held-out split:
 GS-16 every run, GS-19 in runs 1 and 3; GS-14 not flagged. The Malcolm 650
 finding appeared in every run. Run 2 also flagged ch3 p27, where Evelyn is
-named "Heaven"; not in the gold standard.
+named "Heaven"; not in the gold standard. RULED (author, 1 Oct): a dictation
+error for "Evelyn". A real slip, so the flag is correct; reported as an
+unlisted finding and not scored.
 
 VERIFICATION MODE (three passes over the 25 held-out rows).
 
