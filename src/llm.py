@@ -12,7 +12,7 @@ RUNS_DIR = Path(__file__).parent.parent / "llm_runs"
 DETECTION_PROMPT = """You are checking a fiction manuscript for internal \
 contradictions.
 
-Below are two chapters, with each paragraph tagged [chN:pM].
+Below are four chapters, with each paragraph tagged [chN:pM].
 
 Report every place where two statements in the text cannot both be true of the \
 same story world. Judge only against the text itself. Do not report anything \
@@ -78,7 +78,7 @@ def _log_run(kind, prompt, message):
 def detect_inconsistencies(client=None):
     """Find contradictions in the frozen corpus, cold.
 
-    One call for both chapters so cross-chapter cases are reachable. findings is
+    One call for all four chapters so cross-chapter cases are reachable. findings is
     empty if the JSON won't parse; the log always holds the raw response.
     """
     client = client or get_llm_client()

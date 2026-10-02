@@ -1,0 +1,22 @@
+{
+  "kind": "verify_GS-30",
+  "model": "claude-sonnet-5",
+  "corpus": "corpus_ch1-4_v2.json",
+  "timestamp": "20261001T171626Z",
+  "input_tokens": 323,
+  "output_tokens": 160,
+  "stop_reason": "end_turn",
+  "prompt": "A consistency checker has flagged the passages below as a possible Alias / coreference contradiction involving: Johann; Johnathan; Malcolm.\n\nDecide whether they actually contradict. Two statements contradict only if they cannot both be true of the same story world. Statements about different people, different times, different places or different groups do not contradict, and neither does a change that can legitimately occur.\n\nReturn JSON only:\n\n{\"verdict\": \"CONTRADICTION|CONSISTENT\", \"confidence\": \"high|medium|low\", \"reason\": \"one sentence\"}\n\nPASSAGES:\n\n[ch1:p59] \"He should be in the training room with Kasev, Dara, Johann, Mira, and Marek,\" she replied.\n\n[ch4:p48] Malcolm nodded in agreement as he sent a message to Gabriel via the pack link. Once he was done, he sent a message to his beta Johnathan to come back, then he signalled for Roisen and the others to join them as they walked towards another room.\n",
+  "content": [
+    {
+      "signature": "Ep8ECqQBCBIYAipARLj2MX+UDK82yjgYEgTHOm4zHLNkQQw/U6vCz2epIoWYC9zBeHmBUroKskLXGBvMfEYbviz22mad/lnAx1wEYjIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRmMTkyMGY0MC1kNzAxLTQyYzQtOTc5Zi1hMjRlZjlmYTVkNTeaAREKD2NsYXVkZS1zb25uZXQtNagB6qr61QYSDBJVB2EY/iU0Wu2dBBoM9x6wsy5Y3bPewN79IjBpXDKJlEjHcyhYXIXuyJJmAmSZGAr0gb34I4BGHcF8wkFPeKZMMTwIX4Q3jJCExWEqpwI/szxyGQIpngt3N9UzlBICyTgdtKJPaUrXIPH8/8Qhj0jhrtJddURKMgbCDzZaB0ZGnq/LjEh0yIL5Yv/29dtAL7qIcbH+KtrUrCG2LDjtUEBdVp/au04dyVB+SkmDV3Z9Tx98tj58Tw/vewxXP4iDrwoSIPxhz3hbA34SxeBXY/J4L2+HOwqhjV235le3VGOC01Ej+lMyyRE7aGLnjqdCyDrFs11eYa0p8yMMxmZta12vpETxdypbVX2NegK/aDcIrAZjczcmfNG06EtTyUiXlYaX9JRTGx8ZweCa4aMObCpAcditq1iwTE4DGVoLuqBWqyVWjOZXfCsiLoXUydvvGl6g5SuammuhJlwPJ9DLBi7XgHjy64XWRIIElaFhnEyu94x8bI2lGAE=",
+      "thinking": "",
+      "type": "thinking"
+    },
+    {
+      "citations": null,
+      "text": "{\"verdict\": \"CONSISTENT\", \"confidence\": \"medium\", \"reason\": \"Johann and Johnathan appear to be distinct characters with no textual evidence linking them as the same person, so there's no actual contradiction.\"}",
+      "type": "text"
+    }
+  ]
+}

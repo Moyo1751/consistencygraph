@@ -1,0 +1,22 @@
+{
+  "kind": "verify_GS-37",
+  "model": "claude-sonnet-5",
+  "corpus": "corpus_ch1-4_v2.json",
+  "timestamp": "20261001T155041Z",
+  "input_tokens": 316,
+  "output_tokens": 132,
+  "stop_reason": "end_turn",
+  "prompt": "A consistency checker has flagged the passages below as a possible Attribute contradiction involving: Annabelle; her wolf form.\n\nDecide whether they actually contradict. Two statements contradict only if they cannot both be true of the same story world. Statements about different people, different times, different places or different groups do not contradict, and neither does a change that can legitimately occur.\n\nReturn JSON only:\n\n{\"verdict\": \"CONTRADICTION|CONSISTENT\", \"confidence\": \"high|medium|low\", \"reason\": \"one sentence\"}\n\nPASSAGES:\n\n[ch3:p138] As he was speaking the silhouette of a wolf blurred past the tree line and started bounding towards them. This wolf's fur was such a bright orange that it looked like flowing flames. As the red furred wolf got closer you could make out what seemed to be clothes in its mouth. It suddenly leaped, shifting with rapid speed. By the time it landed, a woman stood in its place.\n",
+  "content": [
+    {
+      "signature": "Eq4DCqQBCBIYAipAGm5wJKKTrwoVUd5Ob0jlWTrxODcAI0XhHVOMm65sZe9lZ90QoD4yfB2EeBnSna6AN0IFxBNZWywPhCtTJQ9tTTIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRmMTkyMGY0MC1kNzAxLTQyYzQtOTc5Zi1hMjRlZjlmYTVkNTeaAREKD2NsYXVkZS1zb25uZXQtNagB0YL61QYSDORL98tYUkeDQ8DPJRoM9XyaBIejZuyKGS77IjC9Z76dFLu69x4sma+xfEQ2ICybiwsLfrwlA8TAz6hYN3++xqAXY8NTyFdfpGy02BwqtgHhXIPiKMw7umMnHNybJrzz9BtZN/Rmoi4sqjnr+ypPBPjcRZIpjaRKDaceNvK6ZSmfnB7U/Gg7va3LiuGZGj4DN+SyXg54N8okQi6TGEEasq1FxDwqBb9syf8rtaY+RIAoiw825EbO4XG66n0Ff5mhgu1q1PFenqPpeRfrOtBHyY/veWOckjidD5cNdJJ6YkE6cMPkOvI9oPYh4KLqENulKnRa0SlmNNRROTZbD3BJSKZZna9AAhgB",
+      "thinking": "",
+      "type": "thinking"
+    },
+    {
+      "citations": null,
+      "text": "{\"verdict\": \"CONSISTENT\", \"confidence\": \"low\", \"reason\": \"Only one passage describing Annabelle's wolf form is provided, with no conflicting description elsewhere to contradict it.\"}",
+      "type": "text"
+    }
+  ]
+}

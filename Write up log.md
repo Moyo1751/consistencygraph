@@ -2098,3 +2098,202 @@ as well.
 Parse re-checked on 26 Sep with the same pinned versions before this entry was
 written. Spare observation from the same parse: spaCy labels Zelkarev NORP; the
 registry types him as a Character.
+
+## CG-26 held-out set prepared: corpus v2, registry merge, gold standard (1 Oct)
+
+Branch CG-26-held-out-evaluation. Everything below was settled before any
+held-out run, so nothing in it was tuned on held-out results.
+
+CORPUS. corpus/corpus_ch1-4_v2: 4 chapters, 347 paragraphs, 12,972 words of
+prose (the snapshot records 12,980, counting the four headings, as v3 does).
+Chapters 1 and 2 are corpus_ch1-2_v3 (the development split); chapters 3 and 4
+are the manuscript plus eight held-out substitutions. v1 and v2 differ in 17
+paragraphs. Chapters 1 and 2 were checked against v3 and match except ch1 p27,
+where a missing closing quotation mark was repaired. The text of every
+development anchor is unchanged.
+
+    corpus_ch1-4_v2.json  0335e529c04a644a4025f6988cee6aa95a3db04ab557663ad9a73b319087c003
+    corpus_ch1-4_v2.txt   a22f09ab3f6ff308c444e7ba42c018c147d5b253dde00c1286fd775eb174c281
+
+Both files use v3's layout (chapters, then paragraphs, with each heading at index
+0), so load_paragraphs() reads v2 unchanged. Only CORPUS_PATH moves. The JSON
+records its source, corpus_ch1-4_v2.docx (sha256 c7b083644b7fb248...), and the
+paragraphs changed from v1.
+
+REGISTRY. src/registry.json merged to 117 entries (80 Character, 24
+Organisation, 13 Location). The working copy for chapters 3 and 4 had been built
+on an older registry and would have reverted the 24 Sep work. Merged into the
+repo's 105 instead: added Bryson, Carter, Glenn, Greg, Gregory (Character);
+Black Thorns, Silent Meadows, Whispering Meadows (Location); Barren Hill,
+Graystone, New Dawn, Silver Fang (Organisation). The Ravensworth and
+Ravensworths retypes to Organisation and the keys "Alpha Malcolm Ravensworth"
+and "Oren Kerenath" are kept.
+
+GOLD STANDARD. 45 rows, 43 live: 18 development, 25 held-out (13 planted, 2
+naturally occurring, 10 legitimate). New Split column; Li subtype column added,
+still empty.
+
+1. LOCATORS UNIFIED TO "chN pM". The new rows used "ch4:p16" or gave no
+   paragraph number. verify.py's LOCATOR regex would have matched none of them
+   and sent empty passages for every held-out row. Each anchor was resolved
+   against v2 and rewritten. Two fixes came out of it: GS-45's second anchor is
+   p41, not p39, and GS-39 gained the anchor ch3 p140. All 43 live anchors now
+   resolve.
+
+2. GS-34. Its anchor "late October" is not in the text. Corrected, with the
+   author, to ch1 p6 "he couldn't possibly have needed it in late autumn here".
+   Chapter is now "1, 4"; description, ground truth and note updated.
+
+3. GS-24 CONVENTION (author, 1 Oct). A statement counts as a fact until the
+   text reveals it as a lie. Once revealed, it is still a contradiction, a
+   narrative one. GS-24 stays CONTRADICTION. Applies to GS-24 only.
+
+4. GS-07 AND GS-20 ARE TWO PROBLEMS IN ONE SENTENCE (ch1 p33). GS-07 is the
+   naturally occurring one: Roisen puts Oren at the crossing point, but he ran
+   off to Vienna proper as soon as they arrived (ch1 p57). GS-20 is the planted
+   one: the crossing point is placed in Kedmaon, when it is under the manor
+   outside Vienna (ch1 p37). GS-07's ground truth had said "not at Kedmaon",
+   which mixed the two; corrected. Labels unchanged.
+
+FROZEN SYSTEM. For the held-out run the only code changes allowed are the ones
+the new corpus forces: corpus.py reads v2, llm.py's prompt says four chapters,
+and verify.py takes held-out rows only. The pipeline rules, the queries, the
+registry and the prompts otherwise stay as they were on the development split.
+
+## CG-26 held-out results (1 Oct)
+
+Frozen system, corpus_ch1-4_v2. Last code change (verify.py, held-out rows
+only) saved about seven minutes before the first run. Model claude-sonnet-5,
+effort medium, 32,000 tokens, for every call. All 78 calls ended end_turn and
+every response parsed. Held-out split: 25 rows, 15 contradictions (13 planted,
+2 naturally occurring), 10 legitimate.
+
+GRAPH ARM (pipeline.py, once). 347 paragraphs, 20 pairs, 10 ages stored.
+Held-out: 0 of 15 found. 8 flags, none matching a gold standard row:
+
+    age       Roisen 108 (ch3) / 2 (ch4); 5 / 2; 108 / 32; 5 / 32
+    location  Elior Kaldon / Montana (ch3); Roisen Black Thorns / Thornhaven;
+              Roisen Kaldon / Thornhaven; Roisen Black Thorns / Kaldon (ch3)
+
+Every one comes from same-sentence pairing attaching a place or an age to the
+wrong person, or to the right person in the wrong sense: "the lady of Black
+Thorns" is a title; "Roisen's palace in Kaldon" is a flashback; Roisen's "He's
+in Thornhaven" is about someone else; 2 and 32 are Annabelle's ages in Roisen's
+line (ch4 p27); 108 and 5 are Elior's. The rule that makes GS-15 work by
+co-occurrence produces these. Development flags reproduced: GS-15 (Zelkarev)
+and GS-16 (Malcolm 520 / 630). GS-39 was out of reach: Graystone is typed
+Organisation, so the location query never sees it.
+
+LLM DETECTION (llm.py, three runs; 6, 6 and 5 findings; 27,865 input tokens
+each).
+
+    run 1  GS-22, GS-23, GS-38    3 / 15
+    run 2  GS-23, GS-38           2 / 15
+    run 3  GS-22, GS-23           2 / 15
+
+No held-out legitimate row flagged in any run. Outside the held-out split:
+GS-16 every run, GS-19 in runs 1 and 2, and GS-14 (legitimate, the thirty
+against the hundred and ten) flagged in run 3, a false positive on a
+development row.
+
+UNLISTED FINDING, every detection run: ch4 p15, Malcolm celebrates his "six
+hundred and fiftieth birthday". GS-16 covers 520 against 630 only. Not added
+to the gold standard after the run. RULED (author, 1 Oct): 650 is Malcolm's
+true age. The 630 in ch2 p33 should have read 650 and was a slip when
+writing. The finding is a real contradiction, so all three runs were right to
+flag it. It sits on the development side (GS-16's chapters against ch4), so
+it is reported as an unlisted finding and does not enter the held-out scores.
+
+COMBINED (graph or detection): the graph found nothing, so combined equals
+detection. Detected? filled for the 25 held-out rows: Yes for GS-22, GS-23,
+GS-38 (found in any run; a 2-of-3 majority gives the same rows). Metrics sheet,
+held-out: TP 3, FN 12, FP 0. Recall 0.20, precision 1.00, F1 0.33.
+
+VERIFICATION MODE (verify.py, three passes over the 25 held-out rows).
+
+    pass 1  TP 8  FN 7  TN 10  FP 0   P 1.00  R 0.53  F1 0.70
+    pass 2  TP 7  FN 8  TN 10  FP 0   P 1.00  R 0.47  F1 0.64
+    pass 3  TP 8  FN 7  TN 10  FP 0   P 1.00  R 0.53  F1 0.70
+
+24 of 25 rows gave the same verdict in all three passes; GS-35 flipped
+(caught in passes 1 and 3). Always caught: GS-22, 23, 25, 32, 34, 36, 38.
+Always missed: GS-21, 24, 28, 33, 37, 39, 45. Both naturally occurring rows
+(GS-21, GS-28) missed every pass. GS-24 missed every pass: the model accepted
+Elior's cover story, the case the GS-24 convention describes. All ten
+legitimate rows called CONSISTENT every pass.
+
+## CG-26 second condition: effort high, 64,000 tokens (1 Oct)
+
+The optional condition listed on 24 Sep and never run until now. Same corpus,
+prompts, code and gold standard; config.py changed in its own commit to
+LLM_EFFORT = "high" and LLM_MAX_TOKENS = 64000 (saved 16:43 UTC, before the
+first call). Model claude-sonnet-5. All 78 calls ended end_turn and every
+response parsed. The run files do not record effort; this condition is the
+files stamped 20261001T1649 to 20261001T1720. The graph arm does not use the
+model and was not rerun.
+
+Detection output roughly doubled: 27,297, 40,725 and 21,391 output tokens
+against 15,951, 12,995 and 9,154 at medium. The second run would not have fitted
+the old 32,000 budget.
+
+LLM DETECTION (three runs; 6, 7 and 6 findings).
+
+    run 1  GS-22, GS-23, GS-38           3 / 15
+    run 2  GS-23, GS-25, GS-34, GS-38    4 / 15
+    run 3  GS-23, GS-25, GS-38           3 / 15
+
+Found in any run: 5 of 15 (medium: 3). Found in 2 of 3 runs: GS-23, GS-25,
+GS-38 (medium: GS-22, GS-23, GS-38). New at high: GS-25 (runs 2 and 3) and
+GS-34 (run 2). No held-out legitimate row flagged. Outside the held-out split:
+GS-16 every run, GS-19 in runs 1 and 3; GS-14 not flagged. The Malcolm 650
+finding appeared in every run. Run 2 also flagged ch3 p27, where Evelyn is
+named "Heaven"; not in the gold standard. RULED (author, 1 Oct): a dictation
+error for "Evelyn". A real slip, so the flag is correct; reported as an
+unlisted finding and not scored.
+
+VERIFICATION MODE (three passes over the 25 held-out rows).
+
+    pass 1  TP 8  FN 7  TN 10  FP 0   P 1.00  R 0.53  F1 0.70
+    pass 2  TP 8  FN 7  TN 10  FP 0   P 1.00  R 0.53  F1 0.70
+    pass 3  TP 8  FN 7  TN 10  FP 0   P 1.00  R 0.53  F1 0.70
+
+All 25 rows gave the same verdict in all three passes. Same rows caught as
+medium pass 1 (GS-22, 23, 25, 32, 34, 35, 36, 38); GS-35, which flipped at
+medium, held at high. Same seven missed: GS-21, 24, 28, 33, 37, 39, 45.
+
+READING. More reasoning moved detection a little (two more rows reached in at
+least one run) and made verification stable, but did not change what
+verification gets right or wrong. The seven misses are the same at both
+settings, so they are not a budget problem.
+
+Detected? in the gold standard stays the medium condition, which is the
+frozen system. This condition is reported alongside it, not in its place.
+
+## Li subtype column filled (1 Oct)
+
+All 43 live rows given a subtype from Li et al. (2026) Table 2, using the
+operational definitions in their Figure 9; agreed with the author. A legitimate
+row carries the subtype it could be mistaken for. Retired rows left blank. Done
+after the runs; no code reads the column, so no score changes.
+
+    Duration Contradictions        GS-01, 22, 23, 33, 38    look-alikes GS-08, 10
+    Absolute Time Contradictions   GS-34                    look-alike  GS-27
+    Simultaneity Contradictions    GS-07, 15, 19, 39        look-alike  GS-43
+    Knowledge Contradictions       GS-24
+    Skill Fluctuations                                      look-alike  GS-44
+    Geographical Contradictions    GS-20                    look-alikes GS-18, 26
+    Appearance Mismatches          GS-21, 37                look-alikes GS-09, 11, 40, 41
+    Nomenclature Confusions        GS-25, 28                look-alikes GS-04, 05, 06, 12,
+                                                            13, 17, 29, 30, 31, 42
+    Quantitative Mismatches        GS-16, 32, 35, 36, 45    look-alike  GS-14
+
+Judgement calls: GS-16 is Quantitative, not Duration (an age clash with no
+elapsed time, per Figure 9); GS-23 and GS-38 involve elapsed time, so Duration.
+GS-24 is Knowledge (Elior states where Oren is without knowing). GS-19 is
+Simultaneity (a person in two places); GS-20 is Geographical (a place in two
+locations). GS-12 is Nomenclature as the nearest fit for an ambiguous "his
+father".
+
+Coverage: 9 of Li's 19 subtypes. Nothing under Narrative & Style, Core Rules
+or Social Norms Violations, Causeless Effects, Causal Logic Violations,
+Abandoned Plot Elements, Memory Contradictions or Forgotten Abilities.

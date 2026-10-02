@@ -1,0 +1,17 @@
+{
+  "kind": "verify_GS-26",
+  "model": "claude-sonnet-5",
+  "corpus": "corpus_ch1-4_v2.json",
+  "timestamp": "20261001T154829Z",
+  "input_tokens": 342,
+  "output_tokens": 78,
+  "stop_reason": "end_turn",
+  "prompt": "A consistency checker has flagged the passages below as a possible Location / presence contradiction involving: Malcolm; the map.\n\nDecide whether they actually contradict. Two statements contradict only if they cannot both be true of the same story world. Statements about different people, different times, different places or different groups do not contradict, and neither does a change that can legitimately occur.\n\nReturn JSON only:\n\n{\"verdict\": \"CONTRADICTION|CONSISTENT\", \"confidence\": \"high|medium|low\", \"reason\": \"one sentence\"}\n\nPASSAGES:\n\n[ch3:p100] \"Barren Hill is north of your pack, yes?\" asked Roisen as she looked at the map on the wall behind Malcolm detailing Hollowmere and the territories surrounding it.\n\n[ch3:p120] Malcolm sat at his desk staring at the map to his right. He frowned slightly and sighed. They were testing his borders. As ridiculous as it seemed to him, the signs were there. It was obvious. He couldn't believe he had missed the signs.\n",
+  "content": [
+    {
+      "citations": null,
+      "text": "{\"verdict\": \"CONSISTENT\", \"confidence\": \"medium\", \"reason\": \"The map's position relative to Malcolm (behind him vs to his side) can differ as he moves or turns, so these are not necessarily contradictory.\"}",
+      "type": "text"
+    }
+  ]
+}

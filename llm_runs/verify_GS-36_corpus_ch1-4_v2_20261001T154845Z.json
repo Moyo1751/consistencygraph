@@ -1,0 +1,17 @@
+{
+  "kind": "verify_GS-36",
+  "model": "claude-sonnet-5",
+  "corpus": "corpus_ch1-4_v2.json",
+  "timestamp": "20261001T154845Z",
+  "input_tokens": 669,
+  "output_tokens": 80,
+  "stop_reason": "end_turn",
+  "prompt": "A consistency checker has flagged the passages below as a possible Number / set contradiction involving: Malcolm; Ariana; Barren Hill; the rogues.\n\nDecide whether they actually contradict. Two statements contradict only if they cannot both be true of the same story world. Statements about different people, different times, different places or different groups do not contradict, and neither does a change that can legitimately occur.\n\nReturn JSON only:\n\n{\"verdict\": \"CONTRADICTION|CONSISTENT\", \"confidence\": \"high|medium|low\", \"reason\": \"one sentence\"}\n\nPASSAGES:\n\n[ch3:p91] \"It started four months ago. A couple of rogues attacked Barren Hill along their southern borders. It wasn't much, just eight of them. They injured a couple of the patrols and ran off before reinforcements arrived. Then a month later, the same thing happened to Graystone about a mile away from where their border meets ours. And then a month after that a dozen rogues hit New Dawn injuring two warriors on patrol before being run off by the reinforcements.\"\n\n[ch4:p44] Ariana continued, \"That's not all. Glenn's cousin is mated and married to a male from Barren Hill and his cousin mentioned that her husband who's one of the warriors there had received a mind link about a rogue attack and by the time they got there, they only saw the injured pack warriors and four haggard figures running off.\"\n\n[ch4:p45] Not giving her father time to digest that, Ariana got to her final point saying, \"The final nail in the coffin though was that on the day of the attack at New Dawn, Glenn's friend on patrol caught the same foreign scent off the rogues that attacked, and what really makes this whole mess scarier is what we realised after confirming all the points. They attacked in small numbers, only enough to draw some attention before running off and not once did they try to take anything or anyone. The whole situation screams it was a recon job, and they've been doing the same here. That plus the Barren Hill patrol jumping to thrice the usual number screams somethings off and they know it.\"\n",
+  "content": [
+    {
+      "citations": null,
+      "text": "{\"verdict\": \"CONTRADICTION\", \"confidence\": \"medium\", \"reason\": \"ch3 states eight rogues attacked Barren Hill while ch4 describes the same Barren Hill attack as involving only four haggard figures.\"}",
+      "type": "text"
+    }
+  ]
+}

@@ -32,11 +32,11 @@ PASSAGES:
 
 
 def load_candidates():
-    """Live gold standard rows as verification candidates.
+    """Live held-out gold standard rows as verification candidates.
 
-    Ground truth is read from the Ground truth label column. Inferring it from
-    Origin scored every planted row as consistent the moment Origin gained a
-    third value.
+    Development rows were scored on v3 and are not re-sent. Ground truth is
+    read from the Ground truth label column. Inferring it from Origin scored
+    every planted row as consistent the moment Origin gained a third value.
     """
     paragraphs = {(p.chapter, p.index): normalise(p.text) for p in load_paragraphs()}
     candidates = []
@@ -44,6 +44,8 @@ def load_candidates():
     with open(GOLD_PATH, encoding="utf-8-sig", newline="") as f:
         for row in csv.DictReader(f):
             if (row.get("Status") or "").strip().upper() == "RETIRED":
+                continue
+            if (row.get("Split") or "").strip() != "held-out":
                 continue
 
             locators = []
