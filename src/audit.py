@@ -1,3 +1,8 @@
+"""spaCy-only audit of the corpus against the registry.
+
+No injection, so this is the baseline. Prints a report and writes audit_report.csv.
+"""
+
 import csv
 import re
 from collections import Counter, defaultdict
@@ -13,6 +18,7 @@ OUTPUT_CSV = Path(__file__).parent.parent / "audit_report.csv"
 
 
 def build_registry_pattern(keys) -> re.Pattern:
+    """One regex for every registry key, longest first so the full name wins."""
     ordered_keys = sorted(keys, key=len, reverse=True)
     alternation = "|".join(re.escape(key) for key in ordered_keys)
     return re.compile(rf"\b(?:{alternation})\b")
@@ -22,6 +28,7 @@ REGISTRY_PATTERN = build_registry_pattern(registry.keys())
 
 
 def classify_occurrence(occ_start: int, occ_end: int, entity_spans) -> str:
+    """How spaCy saw one registry key: EXACT, CONTAINED, PARTIAL or ABSENT."""
     overlapping = [(s, e) for s, e in entity_spans if s < occ_end and e > occ_start]
     if not overlapping:
         return "ABSENT"
@@ -33,6 +40,7 @@ def classify_occurrence(occ_start: int, occ_end: int, entity_spans) -> str:
 
 
 def main():
+    """Runs the audit over the whole corpus."""
     paragraphs = load_paragraphs()
 
     run_date = date.today().isoformat()
@@ -86,6 +94,7 @@ def main():
                 else:
                     corrections[pair] += 1
 
+        # second pass: find each registry key in the raw text and check what spaCy made of it
         for match in REGISTRY_PATTERN.finditer(text):
             key = match.group(0)
             occ_start, occ_end = match.span()

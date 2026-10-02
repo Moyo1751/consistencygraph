@@ -1,3 +1,8 @@
+"""CG-23 funnel: what the corpus yields before and after registry injection.
+
+Entities, resolved types, sentences with a character and a location, and pairs.
+"""
+
 from collections import Counter
 
 from config import nlp
@@ -10,6 +15,7 @@ from extraction import (
 
 
 def new_counts():
+    """Empty tallies for one column of the table."""
     return {
         "entities": 0,
         "sentences": 0,
@@ -24,6 +30,7 @@ def new_counts():
 
 
 def count_into(counts, doc, para):
+    """Adds one paragraph to a column."""
     # resolved_map is keyed on entity text, so it has to be rebuilt after
     # injection or the after column counts against a stale entity set.
     resolved = resolve_entity_types(doc)
@@ -78,6 +85,7 @@ def measure_both(paragraphs):
 
 
 def pair_key(pair):
+    """What makes two pairs the same, for the gained-pairs list."""
     return (pair["chapter"], pair["paragraph"], pair["character"], pair["location"])
 
 

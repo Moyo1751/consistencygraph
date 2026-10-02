@@ -1,3 +1,5 @@
+"""LLM detection mode: the whole corpus in one call, findings back as JSON."""
+
 import json
 from datetime import datetime, timezone
 from pathlib import Path
@@ -7,7 +9,7 @@ from corpus import CORPUS_PATH, load_paragraphs, normalise
 
 RUNS_DIR = Path(__file__).parent.parent / "llm_runs"
 
-# prompt is an instrument — versioned like code. Says nothing about what counts
+# The prompt is an instrument, versioned like code. It says nothing about what counts
 # as legitimate change; naming clothes or hairstyles would hand it the precision test.
 DETECTION_PROMPT = """You are checking a fiction manuscript for internal \
 contradictions.

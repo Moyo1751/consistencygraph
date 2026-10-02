@@ -1,4 +1,11 @@
+"""Graph reads. One Cypher query per contradiction type."""
+
+
 def find_age_inconsistencies(driver):
+    """Same character, two different ages in two different chapters.
+
+    a1.chapter < a2.chapter returns each pair once and skips same-chapter pairs.
+    """
     with driver.session() as session:
         result = session.run("""
             MATCH (c:Character)-[:HAS_AGE]->(a1:AgeMention)
@@ -15,6 +22,10 @@ def find_age_inconsistencies(driver):
         return issues
 
 def find_location_inconsistencies(driver):
+    """Same character at two different places in one chapter.
+
+    < rather than <> so each pair comes back once, in alphabetical order.
+    """
     with driver.session() as session:
         result = session.run("""
             MATCH (c:Character)-[:IS_AT]->(p1:Presence)-[:LOCATION]->(l1:Location)

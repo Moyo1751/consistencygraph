@@ -21,6 +21,7 @@ CONSISTENT = [
 
 
 def run(passages, driver):
+    """Stores the ages in the passages and runs the age query."""
     clear_database(driver)
     stored = 0
     for chapter, text in passages:

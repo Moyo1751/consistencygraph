@@ -1,3 +1,5 @@
+"""Loads the frozen corpus as numbered paragraphs."""
+
 from pathlib import Path
 from typing import NamedTuple
 import json
@@ -23,6 +25,7 @@ _PUNCTUATION_MAP = {
 
 
 def normalise(text: str) -> str:
+    """Curly quotes to straight ones."""
     for typographic, ascii_equivalent in _PUNCTUATION_MAP.items():
         text = text.replace(typographic, ascii_equivalent)
     return text
@@ -35,6 +38,7 @@ class Paragraph(NamedTuple):
 
 
 def load_paragraphs() -> list[Paragraph]:
+    """Every paragraph in reading order. Index 0 is the chapter heading, so it is skipped."""
     with open(CORPUS_PATH, encoding="utf-8") as f:
         data = json.load(f)
 

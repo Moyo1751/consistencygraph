@@ -1,3 +1,8 @@
+"""Runs the corpus through extraction and storage, then both detection queries.
+
+Clears the database first, so every run starts from an empty graph.
+"""
+
 from config import nlp, get_driver
 from extraction import inject_registry_entities, pair_character_locations, resolve_entity_types
 from storage import store_pairs, clear_database
@@ -18,9 +23,10 @@ if __name__ == "__main__":
     for para in paragraphs:
         text = normalise(para.text)
         doc = nlp(text)
-        inject_registry_entities(doc)
+        inject_registry_entities(doc)  # add registry names spaCy missed
         resolved = resolve_entity_types(doc)
         resolved_map = {ent["text"]: ent["resolved_type"] for ent in resolved}
+        # same-sentence binding for both locations and ages
         pairs = pair_character_locations(doc, para.chapter, para.index, resolved_map)
         pair_count += len(pairs)
         store_pairs(pairs, driver)

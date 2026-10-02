@@ -1,3 +1,5 @@
+"""LLM verification mode: one held-out candidate per call, scored against the gold standard."""
+
 import csv
 import json
 import re
@@ -10,8 +12,8 @@ from llm import _log_run
 GOLD_PATH = Path(__file__).parent.parent / "corpus" / "corpus_gold_standard.csv"
 LOCATOR = re.compile(r"ch\s*(\d+)\s*p\s*(\d+)", re.I)
 
-# never pass the gold standard's own description of a candidate — several rows
-# telegraph the answer. type, entities and passages only, as the graph would.
+# Never pass the gold standard's own description of a candidate: several rows
+# telegraph the answer. Type, entities and passages only, as the graph would.
 VERIFY_PROMPT = """A consistency checker has flagged the passages below as a \
 possible {type} contradiction involving: {entities}.
 
@@ -70,6 +72,7 @@ def load_candidates():
 
 
 def verify_candidate(candidate, client=None):
+    """Asks the model about one candidate. Returns the parsed verdict and the log path."""
     client = client or get_llm_client()
     prompt = VERIFY_PROMPT.format(
         type=candidate["type"],
@@ -106,6 +109,7 @@ def verify_candidate(candidate, client=None):
 
 
 def main():
+    """Runs every held-out candidate and prints the confusion counts."""
     client = get_llm_client()
     candidates = load_candidates()
     counts = {"tp": 0, "fp": 0, "tn": 0, "fn": 0, "bad": 0}

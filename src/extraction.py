@@ -1,3 +1,5 @@
+"""Text to facts: registry injection, type resolution, character-location pairs and ages."""
+
 import re
 
 from spacy.matcher import PhraseMatcher
@@ -14,6 +16,7 @@ _REGISTRY_MATCHER.add("REGISTRY", list(nlp.tokenizer.pipe(registry.keys())))
 REGISTRY_LABEL = "REGISTRY"
 
 
+# Number words for parse_number and the age patterns.
 _UNITS = {
     "zero": 0, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6,
     "seven": 7, "eight": 8, "nine": 9, "ten": 10, "eleven": 11, "twelve": 12,
@@ -59,9 +62,10 @@ def inject_registry_entities(doc):
 
 
 def extract(text: str, chapter: int) -> list[dict[str, str | int]]:
+    """Raw spaCy entities for one passage, before any resolution."""
     doc = nlp(text)
 
-    # returns all labels intentionally — filter at consumer, keeping the RQ1 baseline honest
+    # all labels kept on purpose; filter later so the RQ1 baseline stays honest
     result = [
         {
             "text": ent.text,
@@ -77,6 +81,10 @@ def extract(text: str, chapter: int) -> list[dict[str, str | int]]:
 
 
 def pair_character_locations(doc, chapter, paragraph, resolved_map):
+    """Every character paired with every location named in the same sentence.
+
+    A journey (two places in one sentence) gives two pairs. Known limitation.
+    """
     character_location_pairs = []
 
     for sent in doc.sents:
@@ -99,6 +107,10 @@ def pair_character_locations(doc, chapter, paragraph, resolved_map):
 
 
 def resolve_entity_types(doc):
+    """Registry type if the name is listed, otherwise the spaCy label mapping.
+
+    The spaCy label is kept next to the resolved type so the audit can compare them.
+    """
     resolved_entities = []
     for ent in doc.ents:
         text = ent.text
