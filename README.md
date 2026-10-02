@@ -21,10 +21,10 @@ Repository: <https://github.com/Moyo1751/consistencygraph>
 - **A running Neo4j instance.** Developed against Neo4j 2026.02 via Neo4j Desktop, on the
   default Bolt port `7687`.
 - **An Anthropic API key**, for the LLM arm only.
-- **The corpus file.** The scripts read `corpus/corpus_ch1-4_v2.json`. The manuscript is not
-  published, so only the gold standard (`corpus/corpus_gold_standard.csv`) is in the repository.
-  To run on your own text, supply a JSON file in the same shape (see `src/corpus.py`) and point
-  `CORPUS_PATH` at it.
+
+The corpus is included, so the scripts run straight after cloning. They read
+`corpus/corpus_ch1-4_v2.json`; to run on your own text, supply a JSON file in the same shape
+(see `src/corpus.py`) and point `CORPUS_PATH` at it.
 
 The spaCy model (`en_core_web_sm` 3.8.0) is pinned in `requirements.txt`, so there is no
 separate download step.
@@ -101,7 +101,11 @@ consistencygraph/
   SCHEMA.md                 Graph schema and the reasons for it
   Write up log.md           Development log
   corpus/
-    corpus_gold_standard.csv  Gold standard; the corpus itself is not published
+    corpus_ch1-4_v2.json      Held-out run corpus (chapters 1 to 4); what the scripts read
+    corpus_ch1-2_v2.json      Development snapshots (chapters 1 and 2)
+    corpus_ch1-2_v3.json
+    *.txt                     Readable copies, paragraphs tagged [chN:pM] as in the gold standard
+    corpus_gold_standard.csv  Gold standard every result is scored against
   llm_runs/                 Raw record of every LLM call
   src/
     config.py               .env loading, shared spaCy model, Neo4j driver, LLM client and settings

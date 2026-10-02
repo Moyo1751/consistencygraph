@@ -220,9 +220,9 @@ __marimo__/
 # Manuscript source text (author drafts, not part of the software artefact)
 manuscript/
 
-# Frozen evaluation corpus. Manuscript snapshots stay out. The gold standard is
-# tracked, because it is the instrument everything is scored against and its
-# history is the evidence that ground truth was not fitted to the results.
-corpus/*
-!corpus/corpus_gold_standard.csv
+# Frozen evaluation corpus. The JSON snapshots the code reads and their .txt
+# copies are tracked so the repo runs after cloning. The .docx sources stay out.
+# The gold standard is tracked because it is the instrument everything is scored
+# against, and its history shows ground truth was not fitted to the results.
+corpus/*.docx
 audit_report.csv
