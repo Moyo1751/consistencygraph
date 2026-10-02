@@ -5,11 +5,10 @@ Clears the database first, so every run starts from an empty graph.
 
 from config import nlp, get_driver
 from extraction import inject_registry_entities, pair_character_locations, resolve_entity_types
-from storage import store_pairs, clear_database
+from storage import store_pairs, clear_database, store_ages
 from detection import find_age_inconsistencies, find_location_inconsistencies
 from corpus import load_paragraphs, normalise
 from extraction import extract_ages, inject_registry_entities, pair_character_locations, resolve_entity_types
-from storage import clear_database, store_ages, store_pairs
 
 
 if __name__ == "__main__":
